@@ -1,0 +1,7 @@
+.press-shadow {
+  box-shadow: 8px 8px;
+}
+.press-shadow:active {
+  box-shadow: 3px 3px;
+  transform: translateY(0.2rem) translateX(0.2rem);
+}
