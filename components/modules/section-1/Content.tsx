@@ -1,8 +1,14 @@
+// "use client";
 import Button from "@/components/elements/Button";
 import { delaGothicOne } from "@/styles/fonts";
 import Hero from "./Hero";
 
+// import { useSession } from "next-auth/react";
+
 const Content = () => {
+  // const { data: session } = useSession();
+  // console.log({ session });
+
   return (
     <div className="h-[720px] flex flex-col justify-center text-primary-white gap-10">
       <p className={`${delaGothicOne.className} text-6xl`}>
@@ -15,7 +21,7 @@ const Content = () => {
         often.
       </p>
       <div className="flex gap-7 items-center">
-        <Button text="Get Started" />
+        <Button path="tes" text="Get Started" />
         <i className="bg-primary-white h-8 w-px">&nbsp;</i>
         <button className="text-xl">Open Video</button>
       </div>
