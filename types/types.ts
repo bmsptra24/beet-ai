@@ -12,3 +12,17 @@ export type textProps = {
 export type pathProps = {
   path: string;
 };
+
+export type callbackProps = {
+  callback: () => void;
+};
+
+export type Authorize = {
+  email: string;
+  password: string;
+} | null;
+
+export type Prompt = {
+  author: string;
+  message: string;
+};

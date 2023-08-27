@@ -1,4 +1,5 @@
-import Button from "@/components/elements/Button";
+// "use server";
+import Button, { ButtonLogin } from "@/components/elements/Button";
 import logo from "@/public/icons/logo.svg";
 import Link from "next/link";
 
@@ -26,7 +27,7 @@ const Header = () => {
         </Link>
       </div>
       <div className="w-[8rem] flex justify-end">
-        <Button path={"/home"} text="Log In" />
+        <ButtonLogin/>
       </div>
     </div>
   );

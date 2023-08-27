@@ -30,6 +30,7 @@
     "gtts": "^0.2.1",
     "openai": "^4.1.0",
     "prisma": "^5.2.0",
+    "react-icons": "^4.10.1",
     "tiktok-live-connector": "^1.0.5"
   }
 }

@@ -2,22 +2,26 @@ import prisma from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 type Table = "user";
 
-// type Id = { id: number };
-// type Name = { name: string };
-// type Username = { username: string };
-// type Email = { email: string };
-// type EmailBackup = { emailBackup: string };
-// type Password = { password: string };
-// type CreatedAt = { createdAt: Date };
+type Id = { id: number };
+type Name = { name: string };
+type Username = { username: string };
+type Email = { email: string };
+type EmailBackup = { emailBackup: string };
+type Password = { password: string };
+type CreatedAt = { createdAt: Date };
 
-type Where = Prisma.UserWhereUniqueInput;
-type Data = Prisma.UserCreateInput;
+export type Where = Prisma.UserWhereUniqueInput;
+export type Data = Prisma.UserCreateInput;
+export type User = Email | Password;
 
 export const prismaFindMany = async (table: Table) => {
   return await prisma?.[`${table}`].findMany();
 };
 
-export const prismaFindUnique = async (table: Table, where: Where) => {
+export const prismaFindUnique = async (
+  table: Table,
+  where: Prisma.UserWhereUniqueInput
+): Promise<User | null> => {
   return await prisma?.[`${table}`].findUnique({ where: where });
 };
 
