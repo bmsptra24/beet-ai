@@ -1,5 +1,5 @@
 "use client";
-import { ytGetLiveChat } from "@/sevices/ytGetLiveChat";
+import { ytGetLiveChat } from "@/utils/services/ytGetLiveChat";
 import { generateAiAnswer } from "@/utils/openai";
 import React, { useState } from "react";
 import "@/styles/button.css";

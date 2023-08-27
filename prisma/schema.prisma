@@ -11,11 +11,22 @@ datasource db {
 }
 
 model User {
-  id          Int      @id @default(autoincrement())
+  id          Int       @id @default(autoincrement())
   name        String
-  username    String   @unique
-  email       String   @unique
-  emailBackup String?  @unique
+  username    String    @unique
+  email       String    @unique
+  emailBackup String?   @unique
   password    String
-  createdAt   DateTime @default(now())
+  role        String    @default("user")
+  createdAt   DateTime  @default(now())
+  Project     Project[]
+}
+
+model Project {
+  id               Int      @id @default(autoincrement())
+  livestreamingKey String
+  aiRole           String
+  userId           Int
+  user             User     @relation(fields: [userId], references: [id])
+  createdAt        DateTime @default(now())
 }
