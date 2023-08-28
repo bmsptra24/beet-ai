@@ -1,24 +1,37 @@
 "use client";
 import { Dropdown, Input, Textarea } from "@/components/elements/Input";
 import { generateAiAnswer } from "@/utils/openai";
+import { prismaFindUniqueProject, prismaUpdateProject } from "@/utils/prisma";
 import { ytGetLiveChat } from "@/utils/services/ytGetLiveChat";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const Configuration = () => {
-  const [livestreamId, setLivestreamId] = useState(
-    "siapa itu naruto dan apakah filnmnya seru?"
-  );
-  const [avatarName, setAvatarName] = useState("Minato");
-  const [aiRole, setAiRole] = useState(
-    "Tugas utamaku adalah membantu menjawab pertanyaan kalian dengan cara yang menarik dan informatif."
-  );
-  const [livestreamTopic, setLivestreamTopic] = useState(
-    "Membahas film naruto"
-  );
-  const [mood, setMood] = useState("happy");
-  const [platform, setPlatform] = useState("youtube");
-  const [language, setLanguage] = useState("indonesia");
-  const [aiKnowlagge, setAiKnowlagge] = useState("Kamu dibuat pada 27-8-2023");
+  const dummyId = 1;
+
+  const [livestreamId, setLivestreamId] = useState(" ");
+  const [avatarName, setAvatarName] = useState(" ");
+  const [aiRole, setAiRole] = useState(" ");
+  const [livestreamTopic, setLivestreamTopic] = useState(" ");
+  const [mood, setMood] = useState(" ");
+  const [platform, setPlatform] = useState(" ");
+  const [language, setLanguage] = useState(" ");
+  const [aiKnowlagge, setAiKnowlagge] = useState(" ");
+
+  useEffect(() => {
+    const initState = async () => {
+      const project = await prismaFindUniqueProject({ id: dummyId });
+
+      setLivestreamId(project?.livestreamingId || "");
+      setAvatarName(project?.avatarName || "");
+      setAiRole(project?.aiRole || "");
+      setLivestreamTopic(project?.livestreamTopic || "");
+      setMood(project?.mood || "");
+      setPlatform(project?.platform || "");
+      setLanguage(project?.language || "");
+      setAiKnowlagge(project?.aiKnowlagge || "");
+    };
+    initState();
+  }, []);
 
   const handlerGetChatLive = async (livestreamId: string) => {
     console.log(await ytGetLiveChat(livestreamId, 500));
@@ -37,6 +50,7 @@ const Configuration = () => {
       )
     );
   };
+
   return (
     <>
       <div className="flex grow flex-col gap-5">
@@ -47,6 +61,12 @@ const Configuration = () => {
             setState={setLivestreamId}
             state={livestreamId}
             className="grow"
+            callback={() =>
+              prismaUpdateProject({
+                where: { id: 1 },
+                data: { livestreamingId: livestreamId },
+              })
+            }
           />
           <button
             onClick={() => handlerGetChatLive(livestreamId)}
@@ -59,26 +79,75 @@ const Configuration = () => {
           placeholder="Your Cool Avatar Name"
           setState={setAvatarName}
           state={avatarName}
+          callback={() =>
+            prismaUpdateProject({
+              where: { id: 1 },
+              data: { avatarName: avatarName },
+            })
+          }
         />
-        <Input placeholder="your-ai-role" setState={setAiRole} state={aiRole} />
+        <Input
+          placeholder="your-ai-role"
+          setState={setAiRole}
+          state={aiRole}
+          callback={() =>
+            prismaUpdateProject({
+              where: { id: 1 },
+              data: { aiRole: aiRole },
+            })
+          }
+        />
         <Input
           placeholder="your-livestream-topic"
           setState={setLivestreamTopic}
           state={livestreamTopic}
+          callback={() =>
+            prismaUpdateProject({
+              where: { id: 1 },
+              data: { livestreamTopic: livestreamTopic },
+            })
+          }
         />
 
-        <Dropdown setState={setMood} state={mood}>
+        <Dropdown
+          setState={setMood}
+          state={mood}
+          callback={() =>
+            prismaUpdateProject({
+              where: { id: 1 },
+              data: { mood: mood },
+            })
+          }
+        >
           <option value="happy">Happy</option>
           <option value="sad">Sad</option>
           <option value="angry">Angry</option>
         </Dropdown>
 
-        <Dropdown setState={setPlatform} state={platform}>
+        <Dropdown
+          setState={setPlatform}
+          state={platform}
+          callback={() =>
+            prismaUpdateProject({
+              where: { id: 1 },
+              data: { platform: platform },
+            })
+          }
+        >
           <option value="youtube">Youtube</option>
           <option value="tiktok">Tiktok</option>
         </Dropdown>
 
-        <Dropdown setState={setLanguage} state={language}>
+        <Dropdown
+          setState={setLanguage}
+          state={language}
+          callback={() =>
+            prismaUpdateProject({
+              where: { id: 1 },
+              data: { language: language },
+            })
+          }
+        >
           <option value="indonesia">Indonesia</option>
           <option value="english">English</option>
         </Dropdown>
@@ -87,6 +156,12 @@ const Configuration = () => {
           placeholder="your-ai-knowlage"
           state={aiKnowlagge}
           setState={setAiKnowlagge}
+          callback={() =>
+            prismaUpdateProject({
+              where: { id: 1 },
+              data: { aiKnowlagge: aiKnowlagge },
+            })
+          }
         />
       </div>
       <div>

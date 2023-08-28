@@ -1,11 +1,13 @@
 import { ClassName, OnChangeTextarea, SetState } from "@/types/types";
-import React, { ReactNode } from "react";
+import { prismaUpdateProject } from "@/utils/prisma";
+import React, { ReactNode, useEffect } from "react";
 
 type InputProps = {
   placeholder: string;
   state: string;
   setState: SetState<string>;
   className?: ClassName;
+  callback: (event: string) => void;
 };
 
 export const Input: React.FC<InputProps> = ({
@@ -13,14 +15,22 @@ export const Input: React.FC<InputProps> = ({
   state,
   setState,
   className = "",
+  callback,
 }) => {
+  useEffect(() => {
+    if (state === " ") return;
+    callback(state);
+  }, [state]);
+
   return (
     <input
       className={`${className} press-shadow-sm p-2 bg-primary-white`}
       type="text"
       placeholder={placeholder}
       value={state}
-      onChange={(event) => setState(event.target.value)}
+      onChange={async (event) => {
+        setState(event.target.value);
+      }}
     />
   );
 };
@@ -30,6 +40,7 @@ type DropdownProps = {
   state: string;
   setState: SetState<string>;
   className?: ClassName;
+  callback: (event: string) => void;
 };
 
 export const Dropdown: React.FC<DropdownProps> = ({
@@ -37,12 +48,21 @@ export const Dropdown: React.FC<DropdownProps> = ({
   state,
   setState,
   className = "",
+  callback,
 }) => {
+  useEffect(() => {
+    if (state === " ") return;
+    callback(state);
+  }, [state]);
+
   return (
     <select
-      className="press-shadow-sm p-2 bg-primary-white"
+      className={`${className} press-shadow-sm p-2 bg-primary-white`}
       value={state}
-      onChange={(event) => setState(event.target.value)}
+      onChange={(event) => {
+        setState(event.target.value);
+        callback(event.target.value);
+      }}
     >
       {children}
     </select>
@@ -54,6 +74,7 @@ type TextareaProps = {
   state: string;
   setState: SetState<string>;
   className?: ClassName;
+  callback: (event: string) => void;
 };
 
 export const Textarea: React.FC<TextareaProps> = ({
@@ -61,13 +82,22 @@ export const Textarea: React.FC<TextareaProps> = ({
   state,
   setState,
   className = "",
+  callback,
 }) => {
+  useEffect(() => {
+    if (state === " ") return;
+    callback(state);
+  }, [state]);
+
   return (
     <textarea
       className={`${className} press-shadow-sm p-2 bg-primary-white`}
       placeholder={placeholder}
       value={state}
-      onChange={(event) => setState(event.target.value)}
+      onChange={(event) => {
+        setState(event.target.value);
+        callback(event.target.value);
+      }}
     />
   );
 };

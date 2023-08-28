@@ -1,38 +1,61 @@
+"use server";
 import prisma from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
-type Table = "user";
 
-type Id = { id: number };
-type Name = { name: string };
-type Username = { username: string };
-type Email = { email: string };
-type EmailBackup = { emailBackup: string };
-type Password = { password: string };
-type CreatedAt = { createdAt: Date };
+export type Where =
+  | Prisma.UserWhereUniqueInput
+  | Prisma.ProjectWhereUniqueInput;
 
-export type Where = Prisma.UserWhereUniqueInput;
-export type Data = Prisma.UserCreateInput;
-export type User = Email | Password;
+type WhereUser = Prisma.UserWhereUniqueInput;
+type WhereProject = Prisma.ProjectWhereUniqueInput;
 
-export const prismaFindMany = async (table: Table) => {
-  return await prisma?.[`${table}`].findMany();
+export const prismaFindManyUsers = async () => {
+  return prisma.user.findMany();
 };
 
-export const prismaFindUnique = async (
-  table: Table,
-  where: Prisma.UserWhereUniqueInput
-): Promise<User | null> => {
-  return await prisma?.[`${table}`].findUnique({ where: where });
+export const prismaFindManyProjects = async () => {
+  return prisma.project.findMany();
 };
 
-export const prismaCreate = async (table: Table, data: Data) => {
-  return await prisma?.[`${table}`].create({ data });
+export const prismaFindUniqueUser = async (where: WhereUser) => {
+  return prisma.user.findUnique({ where });
 };
 
-export const prismaUpdate = async (table: Table, where: Where, data: Data) => {
-  return await prisma?.[`${table}`].update({ where, data });
+export const prismaFindUniqueProject = async (where: WhereProject) => {
+  return prisma.project.findUnique({ where });
 };
 
-export const prismaDelete = async (table: Table, where: Where) => {
-  return await prisma?.[`${table}`].deleteMany({ where });
+export const prismaCreateUser = async (data: Prisma.UserCreateInput) => {
+  return prisma.user.create({ data });
+};
+
+export const prismaCreateProject = async (data: Prisma.ProjectCreateInput) => {
+  return prisma.project.create({ data });
+};
+
+export const prismaUpdateUser = async (
+  where: WhereUser,
+  data: Prisma.UserUpdateInput
+) => {
+  return prisma.user.update({ where, data });
+};
+
+export const prismaUpdateProject = async ({
+  where,
+  data,
+}: Prisma.ProjectUpdateWithWhereUniqueWithoutUserInput) => {
+  try {
+    const response: any = await prisma.project.update({ where, data });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const prismaDeleteUser = async (where: WhereUser) => {
+  return prisma.user.deleteMany({ where });
+};
+
+export const prismaDeleteProject = async (where: WhereProject) => {
+  return prisma.project.deleteMany({ where });
 };
