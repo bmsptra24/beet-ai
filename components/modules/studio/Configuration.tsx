@@ -1,5 +1,6 @@
 "use client";
 import { Dropdown, Input, Textarea } from "@/components/elements/Input";
+import { TestSound } from "@/components/test/TestSound";
 import { generateAiAnswer } from "@/utils/openai";
 import { prismaFindUniqueProject, prismaUpdateProject } from "@/utils/prisma";
 import { ytGetLiveChat } from "@/utils/services/ytGetLiveChat";
@@ -53,6 +54,7 @@ const Configuration = () => {
 
   return (
     <>
+      <TestSound />
       <div className="flex grow flex-col gap-5">
         <p className="text-4xl">Configuration</p>
         <div className="flex gap-5">
@@ -73,6 +75,29 @@ const Configuration = () => {
             className="flex px-3 bg-primary-white items-center justify-between press-shadow-sm press-sm"
           >
             <p className="grow">Connect</p>
+          </button>
+          <button
+            onClick={() => {
+              const text = "Hai nama kamu siapa ya";
+
+              const synth = window.speechSynthesis;
+
+              const utterance = new SpeechSynthesisUtterance(text);
+
+              // Cari voice dengan bahasa Indonesia (jika tersedia)
+              const voices = synth.getVoices();
+              const indonesianVoice = voices.find(
+                (voice) => voice.lang === "id-ID"
+              );
+              if (indonesianVoice) {
+                utterance.voice = indonesianVoice;
+              }
+
+              synth.speak(utterance);
+            }}
+            className="flex px-3 bg-primary-white items-center justify-between press-shadow-sm press-sm"
+          >
+            <p className="grow">TEST</p>
           </button>
         </div>
         <Input
@@ -166,6 +191,7 @@ const Configuration = () => {
       </div>
       <div>
         <button
+          disabled
           onClick={() => handlerGenerateAnswer()}
           className="flex text-3xl bg-primary-white px-3 items-center justify-between press-shadow-sm press-sm"
         >
