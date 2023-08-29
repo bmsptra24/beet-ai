@@ -1,3 +1,13 @@
+"use client";
+export const textToSpeech = (text: string) => {
+  console.log("speech start", text);
+
+  const synth = window.speechSynthesis;
+
+  const utterance = new SpeechSynthesisUtterance(text);
+
+  return synth.speak(utterance);
+};
 // import audioWorkletModuleUrl from "./audioWorkletProcessor"; // Replace with the correct path
 // import { getSoundLevel } from "./sound"; // Import your function here
 

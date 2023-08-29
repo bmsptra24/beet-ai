@@ -74,7 +74,7 @@ type TextareaProps = {
   state: string;
   setState: SetState<string>;
   className?: ClassName;
-  callback: (event: string) => void;
+  callback?: (event: string) => void;
 };
 
 export const Textarea: React.FC<TextareaProps> = ({
@@ -86,6 +86,7 @@ export const Textarea: React.FC<TextareaProps> = ({
 }) => {
   useEffect(() => {
     if (state === " ") return;
+    if (callback === undefined) return;
     callback(state);
   }, [state]);
 
@@ -96,6 +97,7 @@ export const Textarea: React.FC<TextareaProps> = ({
       value={state}
       onChange={(event) => {
         setState(event.target.value);
+        if (callback === undefined) return;
         callback(event.target.value);
       }}
     />

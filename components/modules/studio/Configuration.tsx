@@ -84,15 +84,6 @@ const Configuration = () => {
 
               const utterance = new SpeechSynthesisUtterance(text);
 
-              // Cari voice dengan bahasa Indonesia (jika tersedia)
-              const voices = synth.getVoices();
-              const indonesianVoice = voices.find(
-                (voice) => voice.lang === "id-ID"
-              );
-              if (indonesianVoice) {
-                utterance.voice = indonesianVoice;
-              }
-
               synth.speak(utterance);
             }}
             className="flex px-3 bg-primary-white items-center justify-between press-shadow-sm press-sm"
