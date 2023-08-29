@@ -1,3 +1,19 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.mouth-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  height: 200px; /* Adjust as needed */
+  overflow: hidden;
+}
+
+.mouth {
+  width: 80px;
+  background-color: #ff0000; /* Red mouth color */
+  border-radius: 50% 50% 0 0;
+  transform-origin: bottom center;
+  transition: height 0.1s ease-in-out;
+}

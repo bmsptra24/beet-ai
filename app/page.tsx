@@ -5,13 +5,16 @@ import Content3 from "@/components/modules/section-3/Content";
 import Content4 from "@/components/modules/section-4/Content";
 import Content5 from "@/components/modules/section-5/Content";
 import Section from "@/components/modules/Section";
+import { NextAuthProvider } from "@/app/providers";
 
 export default function Home() {
   return (
     <>
       <Section color="bg-primary-one">
         <Header />
-        <Content1 />
+        <NextAuthProvider>
+          <Content1 />
+        </NextAuthProvider>
       </Section>
       <Section color="bg-primary-white">
         <Content2 />
