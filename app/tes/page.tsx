@@ -7,7 +7,6 @@ import {
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { User } from "@/components/test/user.component";
-import { prismaFindMany } from "@/utils/prisma";
 export default async function Home() {
   const session = await getServerSession(authOptions);
   // console.log(session);

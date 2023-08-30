@@ -1,6 +1,12 @@
+@import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz@10..48&family=Dela+Gothic+One&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --bricolage-grotesque: "Bricolage Grotesque", sans-serif;
+  --dela-gothic-one: "Bricolage Grotesque", sans-serif;
+}
 
 .mouth-container {
   display: flex;

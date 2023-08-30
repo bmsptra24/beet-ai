@@ -1,17 +1,17 @@
-"use server";
+// "use server";
 
-import { prismaOperations } from "@/utils/prisma";
+// import {} from "@/utils/prisma";
 
-export const tesServer = async () => {
-  return await prismaOperations.findManyProjects();
-  //   return await prismaOperations.createProject({
-  //     aiRole:
-  //       "Tugas utamaku adalah membantu menjawab pertanyaan kalian dengan cara yang menarik dan informatif.",
-  //     livestreamingKey: "siapa itu naruto dan apakah filnmnya seru?",
-  //     user: {
-  //       connect: {
-  //         username: "bmsptra24",
-  //       },
-  //     },
-  //   });
-};
+// export const tesServer = async () => {
+//   return await prismaOperations.findManyProjects();
+//   //   return await prismaOperations.createProject({
+//   //     aiRole:
+//   //       "Tugas utamaku adalah membantu menjawab pertanyaan kalian dengan cara yang menarik dan informatif.",
+//   //     livestreamingKey: "siapa itu naruto dan apakah filnmnya seru?",
+//   //     user: {
+//   //       connect: {
+//   //         username: "bmsptra24",
+//   //       },
+//   //     },
+//   //   });
+// };

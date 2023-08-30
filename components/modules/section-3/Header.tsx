@@ -26,7 +26,7 @@ const Header = () => {
         </Link>
       </div>
       <div className="w-[8rem] flex justify-end">
-        <Button text="Log In" />
+        <Button callback={() => console.log("clicked")} text="Log In" />
       </div>
     </div>
   );
