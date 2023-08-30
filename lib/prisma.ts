@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import "global.d.ts";
 
 let prisma: PrismaClient;
 

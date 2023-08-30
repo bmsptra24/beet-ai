@@ -1,6 +1,6 @@
 import { Authorize } from "@/types/types";
 import { validation } from "@/utils/authorize";
-import { User, prismaFindUnique } from "@/utils/prisma";
+import { prismaFindUniqueUser } from "@/utils/prisma";
 import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
@@ -34,7 +34,7 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials): Promise<any> {
-        const user = await prismaFindUnique("user", {
+        const user = await prismaFindUniqueUser({
           email: credentials?.email,
         });
         if (await validation(user, credentials as any)) {
@@ -52,6 +52,7 @@ export const authOptions: NextAuthOptions = {
       }
 
       // if (url === process.env.URL + "/home") return console.log(2);
+      return url;
     },
   },
 };
