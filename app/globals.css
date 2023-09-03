@@ -23,3 +23,50 @@
   transform-origin: bottom center;
   transition: height 0.1s ease-in-out;
 }
+
+.press-shadow {
+  box-shadow: 8px 8px;
+}
+.press-shadow:active {
+  box-shadow: 3px 3px;
+  transform: translateY(0.2rem) translateX(0.2rem);
+}
+
+.press-shadow-sm {
+  border: 1px solid rgb(29 32 25 / var(--tw-border-opacity));
+  border-radius: 0.375rem;
+  box-shadow: 4px 4px;
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 50ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  --tw-border-opacity: 1;
+}
+.press-sm {
+  border: 1px solid rgb(29 32 25 / var(--tw-border-opacity));
+  box-shadow: 4px 4px;
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 50ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  --tw-border-opacity: 1;
+}
+.press-sm-active:active {
+  box-shadow: 2px 2px;
+  transform: translateY(0.2rem) translateX(0.2rem);
+}
+
+.press-md {
+  border: 1px solid rgb(29 32 25 / var(--tw-border-opacity));
+  box-shadow: 8px 8px;
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 50ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  --tw-border-opacity: 1;
+}
+
+.press-md-active:active {
+  box-shadow: 3px 3px;
+  transform: translateY(0.2rem) translateX(0.2rem);
+}
