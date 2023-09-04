@@ -2,15 +2,13 @@ import React from "react";
 import { AiOutlinePlus } from "react-icons/ai";
 import { useRouter } from "next/navigation";
 
-export const Card = ({
-  title,
-  platform,
-  path = "#",
-}: {
+type Props = {
   title: string;
   platform: string;
   path: string;
-}) => {
+};
+
+export const Card: React.FC<Props> = ({ title, platform, path = "#" }) => {
   const router = useRouter();
 
   return (

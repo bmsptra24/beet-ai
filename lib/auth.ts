@@ -1,4 +1,3 @@
-import { Authorize } from "@/types/types";
 import { validation } from "@/utils/authorize";
 import { prismaFindUniqueUser } from "@/utils/prisma";
 import type { NextAuthOptions } from "next-auth";
@@ -11,20 +10,6 @@ export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       name: "Sign in",
-      // credentials: {
-      //   name: { label: "Name", type: "text", placeholder: "Your Cool Name" },
-      //   username: {
-      //     label: "Username",
-      //     type: "text",
-      //     placeholder: "your_amazing_username",
-      //   },
-      //   email: {
-      //     label: "Email",
-      //     type: "email",
-      //     placeholder: "example@example.com",
-      //   },
-      //   password: { label: "Password", type: "password" },
-      // },
       credentials: {
         email: {
           label: "Email",
@@ -49,15 +34,5 @@ export const authOptions: NextAuthOptions = {
   ],
   pages: {
     signIn: "/app/sign/in",
-  },
-  callbacks: {
-    async redirect({ url, baseUrl }) {
-      if (url === baseUrl + "/") {
-        return "/home";
-      }
-
-      // if (url === process.env.URL + "/home") return console.log(2);
-      return url;
-    },
   },
 };

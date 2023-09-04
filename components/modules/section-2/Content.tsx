@@ -1,7 +1,7 @@
 import { delaGothicOne } from "@/styles/fonts";
 import hero from "@/public/images/hero.svg";
 
-const Content = () => {
+const Content: React.FC = () => {
   return (
     <div className="h-[720px] flex items-center justify-center text-primary-black gap-10">
       <div className="flex flex-col gap-10">

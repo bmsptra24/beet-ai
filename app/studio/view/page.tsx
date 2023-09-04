@@ -2,7 +2,7 @@
 // import { getSoundLevel } from "@/utils/sound";
 import React, { useEffect, useState } from "react";
 
-const page = () => {
+const page: React.FC = () => {
   const [micLevel, setMicLevel] = useState(0);
 
   const getSoundLevell = () => {

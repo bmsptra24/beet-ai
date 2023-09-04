@@ -5,18 +5,17 @@ import React, { useRef } from "react";
 import googleIcon from "@/public/icons/google.svg";
 import { signIn } from "next-auth/react";
 
-const SignIn = () => {
+const SignIn: React.FC = () => {
   const email = useRef("");
   const password = useRef("");
 
   const onSubmit = async () => {
-    const result = await signIn("credentials", {
+    await signIn("credentials", {
       email: email.current,
       password: password.current,
       redirect: true,
       callbackUrl: "/home",
     });
-    console.log({ result });
   };
   return (
     <main className="min-h-screen relative text-xl flex items-stretch bg-primary-one">

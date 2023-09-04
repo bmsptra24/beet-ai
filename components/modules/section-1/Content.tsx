@@ -1,6 +1,7 @@
-import Button from "@/components/elements/Button";
+import Button, { ButtonSignUp } from "@/components/elements/Button";
 import { delaGothicOne } from "@/styles/fonts";
 import Hero from "./Hero";
+import { useRouter } from "next/navigation";
 
 // import { useSession } from "next-auth/react";
 
@@ -20,13 +21,7 @@ const Content = () => {
         often.
       </p>
       <div className="flex gap-7 items-center">
-        <Button
-          callback={async () => {
-            "use server";
-            console.log("hi");
-          }}
-          text="Get Started"
-        />
+        <ButtonSignUp />
         <i className="bg-primary-white h-8 w-px">&nbsp;</i>
         <button className="text-xl">Open Video</button>
       </div>

@@ -6,7 +6,7 @@ import googleIcon from "@/public/icons/google.svg";
 import { prismaCreateUser } from "@/utils/prisma";
 import { useRouter } from "next/navigation";
 
-const page = () => {
+const page: React.FC = () => {
   const name = useRef("");
   const username = useRef("");
   const email = useRef("");
