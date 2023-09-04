@@ -4,12 +4,16 @@ import Link from "next/link";
 import React, { useRef } from "react";
 import googleIcon from "@/public/icons/google.svg";
 import { signIn } from "next-auth/react";
+import isEmail from "validator/lib/isEmail";
 
 const SignIn: React.FC = () => {
   const email = useRef("");
   const password = useRef("");
 
   const onSubmit = async () => {
+    if (password.current === "") throw "Invalid Password!";
+    if (!isEmail(email.current)) throw "Invalid Email!";
+
     await signIn("credentials", {
       email: email.current,
       password: password.current,
@@ -32,7 +36,7 @@ const SignIn: React.FC = () => {
             type="text"
             className="border border-primary-black py-6 px-3 text-base w-full h-10 rounded-lg press-sm"
             placeholder="email"
-            onChange={(e) => (email.current = e.target.value)}
+            onChange={(e) => (email.current = e.target.value.toLowerCase())}
           />
           <input
             type="password"

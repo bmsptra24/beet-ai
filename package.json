@@ -28,12 +28,14 @@
   },
   "devDependencies": {
     "@types/nodemailer": "^6.4.9",
+    "@types/validator": "^13.11.1",
     "fluent-ffmpeg": "^2.1.2",
     "googleapis": "^126.0.0",
     "gtts": "^0.2.1",
     "openai": "^3.3.0",
     "prisma": "^5.2.0",
     "react-icons": "^4.10.1",
-    "tiktok-live-connector": "^1.0.5"
+    "tiktok-live-connector": "^1.0.5",
+    "validator": "^13.11.0"
   }
 }

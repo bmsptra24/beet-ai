@@ -6,6 +6,8 @@ import googleIcon from "@/public/icons/google.svg";
 import { prismaCreateUser } from "@/utils/prisma";
 import { sendEmail } from "@/utils/sendEmail";
 import { signIn } from "next-auth/react";
+import isEmail from "validator/lib/isEmail";
+import isEmpty from "validator/lib/isEmpty";
 
 const page: React.FC = () => {
   const name = useRef("");
@@ -15,9 +17,11 @@ const page: React.FC = () => {
   const confirmPassword = useRef("");
 
   const onSubmit = async () => {
-    // ! add another validation
-    if (password.current === "") throw "Invalid Input!";
-    if (email.current === "") throw "Invalid Input!";
+    if (isEmpty(password.current, { ignore_whitespace: true }))
+      throw "Password can't be empty!";
+    if (password.current.length > 8) throw "Password must be 8 words long!";
+    if (password.current === confirmPassword.current) throw "Invalid Password!";
+    if (!isEmail(email.current)) throw "Invalid Email!";
 
     try {
       await prismaCreateUser({
@@ -58,7 +62,7 @@ const page: React.FC = () => {
             type="text"
             className="border border-primary-black py-6 px-3 text-base w-full h-10 rounded-lg press-sm"
             placeholder="email"
-            onChange={(e) => (email.current = e.target.value)}
+            onChange={(e) => (email.current = e.target.value.toLowerCase())}
           />
           <input
             type="password"
