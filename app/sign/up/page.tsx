@@ -3,11 +3,13 @@ import { bricolageGrotesque, delaGothicOne } from "@/styles/fonts";
 import Link from "next/link";
 import React, { useRef } from "react";
 import googleIcon from "@/public/icons/google.svg";
-import { prismaCreateUser } from "@/utils/prisma";
+import { prismaCreateUser, prismaCreateVerification } from "@/utils/prisma";
 import { sendEmail } from "@/utils/sendEmail";
 import { signIn } from "next-auth/react";
 import isEmail from "validator/lib/isEmail";
 import isEmpty from "validator/lib/isEmpty";
+import equals from "validator/lib/equals";
+import { generateCode } from "@/utils/generateNumber";
 
 const page: React.FC = () => {
   const name = useRef("");
@@ -17,10 +19,13 @@ const page: React.FC = () => {
   const confirmPassword = useRef("");
 
   const onSubmit = async () => {
+    console.log(password, confirmPassword);
+
     if (isEmpty(password.current, { ignore_whitespace: true }))
       throw "Password can't be empty!";
-    if (password.current.length > 8) throw "Password must be 8 words long!";
-    if (password.current === confirmPassword.current) throw "Invalid Password!";
+    if (password.current.length < 7) throw "Password must be 8 words long!";
+    if (!equals(password.current, confirmPassword.current))
+      throw "Invalid Password!";
     if (!isEmail(email.current)) throw "Invalid Email!";
 
     try {
@@ -81,8 +86,13 @@ const page: React.FC = () => {
             style={bricolageGrotesque.style}
             onClick={async () => {
               try {
-                await sendEmail();
                 await onSubmit();
+                const code = generateCode();
+                await prismaCreateVerification({
+                  code,
+                  user: { connect: { email: email.current } },
+                });
+                await sendEmail(email.current, code);
                 await signIn("credentials", {
                   email: email.current,
                   password: password.current,

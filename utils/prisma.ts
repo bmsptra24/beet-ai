@@ -1,13 +1,12 @@
 "use server";
 import prisma from "@/lib/prisma";
+import { Project, User, Verification } from "@/types/types";
 import { Prisma } from "@prisma/client";
 
-export type Where =
-  | Prisma.UserWhereUniqueInput
-  | Prisma.ProjectWhereUniqueInput;
-
 type WhereUser = Prisma.UserWhereUniqueInput;
+type IncludeUser = Prisma.UserInclude;
 type WhereProject = Prisma.ProjectWhereUniqueInput;
+type WhereVerification = Prisma.VerificationWhereUniqueInput;
 
 export const prismaFindManyUsers = async () => {
   return prisma.user.findMany();
@@ -17,12 +16,28 @@ export const prismaFindManyProjects = async () => {
   return prisma.project.findMany();
 };
 
-export const prismaFindUniqueUser = async (where: WhereUser) => {
-  return prisma.user.findUnique({ where });
+export const prismaFindManyVerifications = async () => {
+  return prisma.verification.findMany();
+};
+
+export const prismaFindUniqueUser = async (
+  where: WhereUser,
+  include?: IncludeUser
+): Promise<User | null> => {
+  return prisma.user.findUnique({
+    where,
+    include,
+  });
 };
 
 export const prismaFindUniqueProject = async (where: WhereProject) => {
   return prisma.project.findUnique({ where });
+};
+
+export const prismaFindUniqueVerification = async (
+  where: WhereVerification
+) => {
+  return prisma.verification.findUnique({ where });
 };
 
 export const prismaCreateUser = async (data: Prisma.UserCreateInput) => {
@@ -31,6 +46,12 @@ export const prismaCreateUser = async (data: Prisma.UserCreateInput) => {
 
 export const prismaCreateProject = async (data: Prisma.ProjectCreateInput) => {
   return prisma.project.create({ data });
+};
+
+export const prismaCreateVerification = async (
+  data: Prisma.VerificationCreateInput
+) => {
+  return prisma.verification.create({ data });
 };
 
 export const prismaUpdateUser = async (
@@ -52,10 +73,26 @@ export const prismaUpdateProject = async ({
   }
 };
 
+export const prismaUpdateVerification = async ({
+  where,
+  data,
+}: Prisma.VerificationUpdateWithWhereUniqueWithoutUserInput) => {
+  try {
+    const response: any = await prisma.verification.update({ where, data });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const prismaDeleteUser = async (where: WhereUser) => {
   return prisma.user.deleteMany({ where });
 };
 
 export const prismaDeleteProject = async (where: WhereProject) => {
   return prisma.project.deleteMany({ where });
+};
+
+export const prismaDeleteVerification = async (where: WhereVerification) => {
+  return prisma.verification.deleteMany({ where });
 };
