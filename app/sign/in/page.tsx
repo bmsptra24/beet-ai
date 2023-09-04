@@ -1,22 +1,34 @@
 "use client";
 import { bricolageGrotesque, delaGothicOne } from "@/styles/fonts";
 import Link from "next/link";
-import React, { useRef } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import googleIcon from "@/public/icons/google.svg";
 import { signIn } from "next-auth/react";
 import isEmail from "validator/lib/isEmail";
 
 const SignIn: React.FC = () => {
-  const email = useRef("");
-  const password = useRef("");
+  const [input, setInput] = useState({ email: "", password: "" });
+  const rememberMe = useRef(false);
+
+  useEffect(() => {
+    const email = localStorage.getItem("email") || "";
+    const password = localStorage.getItem("password") || "";
+    setInput({ email, password });
+  }, []);
 
   const onSubmit = async () => {
-    if (password.current === "") throw "Invalid Password!";
-    if (!isEmail(email.current)) throw "Invalid Email!";
+    if (input.password === "") throw "Invalid Password!";
+    if (!isEmail(input.email)) throw "Invalid Email!";
+
+    // save to local
+    if (rememberMe.current) {
+      localStorage.setItem("email", input.email);
+      localStorage.setItem("password", input.password);
+    }
 
     await signIn("credentials", {
-      email: email.current,
-      password: password.current,
+      email: input.email,
+      password: input.password,
       redirect: true,
       callbackUrl: "/home",
     });
@@ -34,15 +46,19 @@ const SignIn: React.FC = () => {
           </p>
           <input
             type="text"
+            value={input.email}
             className="border border-primary-black py-6 px-3 text-base w-full h-10 rounded-lg press-sm"
             placeholder="email"
-            onChange={(e) => (email.current = e.target.value.toLowerCase())}
+            onChange={(e) =>
+              setInput({ ...input, email: e.target.value.toLowerCase() })
+            }
           />
           <input
             type="password"
+            defaultValue={input.password}
             className="border border-primary-black py-6 px-3 text-base w-full h-10 rounded-lg press-sm"
             placeholder="password"
-            onChange={(e) => (password.current = e.target.value)}
+            onChange={(e) => setInput({ ...input, password: e.target.value })}
           />
           <div className="flex justify-between w-full px-2 text-sm">
             <div className="flex gap-1">
@@ -51,6 +67,7 @@ const SignIn: React.FC = () => {
                 name="remember-me"
                 id="remember-me"
                 className="w-4 cursor-pointer"
+                onChange={() => (rememberMe.current = !rememberMe.current)}
               />
               <label htmlFor="remember-me" className="cursor-pointer">
                 Remember me
