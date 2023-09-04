@@ -4,7 +4,8 @@ import Link from "next/link";
 import React, { useRef } from "react";
 import googleIcon from "@/public/icons/google.svg";
 import { prismaCreateUser } from "@/utils/prisma";
-import { useRouter } from "next/navigation";
+import { sendEmail } from "@/utils/sendEmail";
+import { signIn } from "next-auth/react";
 
 const page: React.FC = () => {
   const name = useRef("");
@@ -12,8 +13,6 @@ const page: React.FC = () => {
   const email = useRef("");
   const password = useRef("");
   const confirmPassword = useRef("");
-
-  const router = useRouter();
 
   const onSubmit = async () => {
     // ! add another validation
@@ -78,11 +77,17 @@ const page: React.FC = () => {
             style={bricolageGrotesque.style}
             onClick={async () => {
               try {
+                await sendEmail();
                 await onSubmit();
+                await signIn("credentials", {
+                  email: email.current,
+                  password: password.current,
+                  redirect: true,
+                  callbackUrl: "/sign/verification",
+                });
               } catch (error) {
                 throw error;
               }
-              router.push("/home");
             }}
           >
             Continue
