@@ -1,5 +1,4 @@
-// "use server";
-import Button, { ButtonSignIn } from "@/components/elements/Button";
+import { ButtonSignIn } from "@/components/elements/Button";
 import logo from "@/public/icons/logo.svg";
 import Link from "next/link";
 

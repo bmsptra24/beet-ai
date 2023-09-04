@@ -1,7 +1,6 @@
-import Button, { ButtonSignUp } from "@/components/elements/Button";
+import { ButtonSignUp } from "@/components/elements/Button";
 import { delaGothicOne } from "@/styles/fonts";
 import Hero from "./Hero";
-import { useRouter } from "next/navigation";
 
 // import { useSession } from "next-auth/react";
 

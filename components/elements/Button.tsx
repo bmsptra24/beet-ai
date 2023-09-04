@@ -1,8 +1,7 @@
 "use client";
-import { callbackProps, pathProps, textProps } from "@/types/types";
-import "@/styles/button.css";
+import { callbackProps } from "@/types/types";
 import { useRouter } from "next/navigation";
-import { HTMLAttributes, ReactNode } from "react";
+import { ReactNode } from "react";
 
 type buttonProps = {
   text: ReactNode;
