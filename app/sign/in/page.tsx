@@ -91,7 +91,12 @@ const SignIn: React.FC = () => {
             <p className="text-base text-slate-400">or</p>
             <hr className="border-slate-400 w-full" />
           </div>
-          <button className="flex press-sm press-sm-active rounded-lg w-full p-3 justify-center items-center relative text-base">
+          <button
+            onClick={async () => {
+              signIn("google", { redirect: true, callbackUrl: "/home" });
+            }}
+            className="flex press-sm press-sm-active rounded-lg w-full p-3 justify-center items-center relative text-base"
+          >
             <img
               src={googleIcon.src}
               alt="google-icon"
