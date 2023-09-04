@@ -1,10 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
+import { withAuth } from "next-auth/middleware";
 
 const middleware = (req: NextRequest) => {
   return NextResponse.next();
 };
-export default middleware;
 
-export const config = {
-  matcher: ["/home/:path*", "/api/admin/:path*"],
-};
+export default withAuth(middleware, {
+  callbacks: {
+    authorized: ({ req, token }) => {
+      const urlStartWith = (searchString: string) =>
+        req.nextUrl.pathname.startsWith(searchString);
+
+      if (urlStartWith("/home") && !token) return false;
+      if (urlStartWith("/studio") && !token) return false;
+
+      return true;
+    },
+  },
+});
