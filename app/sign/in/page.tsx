@@ -32,7 +32,6 @@ const SignIn: React.FC = () => {
 
   const onSubmit = async () => {
     if (!(await isValid(input))) throw "Invalid Input!";
-    console.log("passed");
 
     if (rememberMe.current) {
       // save to local
@@ -40,12 +39,12 @@ const SignIn: React.FC = () => {
       localStorage.setItem("password", input.password);
     }
 
-    // await signIn("credentials", {
-    //   email: input.email,
-    //   password: input.password,
-    //   redirect: true,
-    //   callbackUrl: "/home",
-    // });
+    await signIn("credentials", {
+      email: input.email,
+      password: input.password,
+      redirect: true,
+      callbackUrl: "/home",
+    });
   };
   return (
     <main className="min-h-screen relative text-xl flex items-stretch bg-primary-one">
