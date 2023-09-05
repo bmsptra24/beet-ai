@@ -5,15 +5,14 @@ import { useRouter } from "next/navigation";
 type Props = {
   title: string;
   platform: string;
-  path: string;
 };
 
-export const Card: React.FC<Props> = ({ title, platform, path = "#" }) => {
+export const Card: React.FC<Props> = ({ title, platform }) => {
   const router = useRouter();
 
   return (
     <button
-      onClick={() => router.push(path)}
+      onClick={() => router.push("/studio")}
       className="rounded-xl h-52 w-72 bg-primary-white border-primary-black border-2 press-shadow flex flex-col justify-between text-base p-5"
     >
       <div className="w-full grow flex flex-col justify-center items-center gap-3">
@@ -26,8 +25,12 @@ export const Card: React.FC<Props> = ({ title, platform, path = "#" }) => {
 };
 
 export const CardAddproject = () => {
+  const router = useRouter();
   return (
-    <button className="rounded-xl h-52 w-72 bg-primary-white border-primary-one border-2 press-shadow flex flex-col justify-between text-base text-primary-one">
+    <button
+      onClick={() => router.push("/studio")}
+      className="rounded-xl h-52 w-72 bg-primary-white border-primary-one border-2 press-shadow flex flex-col justify-between text-base text-primary-one"
+    >
       <div className="w-full grow flex flex-col justify-center items-center gap-3">
         <AiOutlinePlus className="text-4xl" />
         <p>Add project</p>

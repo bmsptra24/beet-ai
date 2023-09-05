@@ -1,5 +1,7 @@
+"use server";
 import { Prompt } from "@/types/types";
 import axios from "axios";
+console.log("tes");
 
 export const generateAiAnswer = async (
   prompt: Prompt,
@@ -43,7 +45,7 @@ export const generateAiAnswer = async (
   const params = new URLSearchParams({
     data: JSON.stringify(input),
   }).toString();
-  const link = `${"http://localhost:3000/api/openai"}?${params}`;
+  const link = `${process.env.URL}/api/openai?${params}`;
   const data = await axios
     .get(link)
     .then((data) => data.data)

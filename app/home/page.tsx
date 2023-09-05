@@ -20,11 +20,11 @@ const page: React.FC = () => {
       ></img>
       <section className="grid grid-cols-3 justify-items-center gap-10 w-fit absolute top-48 z-20 pb-10">
         <CardAddproject />
-        <Card path="/studio" title="Minato" platform="Youtube" />
-        <Card path="/studio" title="Minato" platform="Youtube" />
-        <Card path="/studio" title="Minato" platform="Youtube" />
-        <Card path="/studio" title="Minato" platform="Youtube" />
-        <Card path="/studio" title="Minato" platform="Youtube" />
+        <Card title="Minato" platform="Youtube" />
+        <Card title="Minato" platform="Youtube" />
+        <Card title="Minato" platform="Youtube" />
+        <Card title="Minato" platform="Youtube" />
+        <Card title="Minato" platform="Youtube" />
       </section>
     </main>
   );

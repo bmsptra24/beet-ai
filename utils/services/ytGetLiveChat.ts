@@ -3,6 +3,7 @@ interface LiveChatMessage {
   author: string;
   message: string;
 }
+console.log("tes");
 
 const fetchData = async (url: string) => {
   try {
