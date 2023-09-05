@@ -1,4 +1,5 @@
 "use server";
+import { template } from "@/components/modules/email-verification/template";
 import { generateCode } from "./generateNumber";
 import { prismaCreateVerification } from "./prisma";
 import nodemailer from "nodemailer";
@@ -24,7 +25,6 @@ export const sendCode = async (email: string) => {
 
 export const sendEmail = async (email: string, code: number) => {
   try {
-
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
@@ -37,8 +37,7 @@ export const sendEmail = async (email: string, code: number) => {
       from: process.env.NODEMAILER_EMAIL,
       to: email,
       subject: "Hi",
-      text: "Hello world? || " + code,
-      html: "<b>Hello world?</b> " + code,
+      html: template(code),
     });
 
     console.log("Message sent: %s", info.messageId);

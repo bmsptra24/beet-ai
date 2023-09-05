@@ -47,6 +47,7 @@ const SignIn: React.FC = () => {
     await signIn("credentials", {
       email: input.email,
       password: input.password,
+      redirect: false,
     });
   };
   return (
