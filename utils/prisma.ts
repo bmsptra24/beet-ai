@@ -65,8 +65,7 @@ export const prismaUpdateProject = async ({
   data,
 }: Prisma.ProjectUpdateWithWhereUniqueWithoutUserInput) => {
   try {
-    const response: any = await prisma.project.update({ where, data });
-    return response;
+    return await prisma.project.update({ where, data });
   } catch (error) {
     throw error;
   }

@@ -5,6 +5,8 @@ import React, { useRef, useEffect, useState } from "react";
 import googleIcon from "@/public/icons/google.svg";
 import { signIn } from "next-auth/react";
 import isEmail from "validator/lib/isEmail";
+import { prismaFindUniqueUser } from "@/utils/prisma";
+import { User } from "@/types/types";
 
 const SignIn: React.FC = () => {
   const [input, setInput] = useState({ email: "", password: "" });
@@ -16,12 +18,20 @@ const SignIn: React.FC = () => {
     setInput({ email, password });
   }, []);
 
-  const onSubmit = async () => {
+  const isValid = async (input: { email: string; password: string }) => {
     if (input.password === "") throw "Invalid Password!";
     if (!isEmail(input.email)) throw "Invalid Email!";
+    const user: User = await prismaFindUniqueUser({ email: input.email });
+    if (!user) throw "User not found!";
+    if (!user.status) throw "User not verified!";
+    return true;
+  };
 
-    // save to local
+  const onSubmit = async () => {
+    if (!(await isValid(input))) throw "Invalid Input!";
+
     if (rememberMe.current) {
+      // save to local
       localStorage.setItem("email", input.email);
       localStorage.setItem("password", input.password);
     }
@@ -73,7 +83,9 @@ const SignIn: React.FC = () => {
                 Remember me
               </label>
             </div>
-            <Link href="#">Forgot password?</Link>
+            <Link href="#" className="underline hover:no-underline">
+              Forgot password?
+            </Link>
           </div>
           <button
             className="bg-primary-four w-full py-3 rounded-lg press-sm press-sm-active font-bold"
@@ -84,7 +96,9 @@ const SignIn: React.FC = () => {
           </button>
           <div className="flex text-sm gap-1">
             <p>Dont have an account?</p>
-            <Link href={"/sign/up"}>Sign Up</Link>
+            <Link href={"/sign/up"} className="underline hover:no-underline">
+              Sign Up
+            </Link>
           </div>
           <div className="flex justify-between items-center gap-2 w-full">
             <hr className="border-slate-400 w-full" />
@@ -106,7 +120,7 @@ const SignIn: React.FC = () => {
           </button>
           <p className="text-xs text-center">
             by Continuing, you accept our{" "}
-            <Link href={"#"} className="underline">
+            <Link href={"#"} className="underline hover:no-underline">
               Terms and Conditions, Privacy Policy
             </Link>
           </p>

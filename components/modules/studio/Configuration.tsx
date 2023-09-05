@@ -63,12 +63,19 @@ const Configuration = () => {
             setState={setLivestreamId}
             state={livestreamId}
             className="grow"
-            callback={() =>
-              prismaUpdateProject({
-                where: { id: 1 },
-                data: { livestreamingId: livestreamId },
-              })
-            }
+            callback={() => {
+              try {
+                prismaUpdateProject({
+                  where: { id: 0 },
+                  data: { livestreamingId: livestreamId },
+                }).catch((error) => {
+                  if (error?.digest === "2750255691")
+                    alert("Project not found!");
+                });
+              } catch (error) {
+                throw error;
+              }
+            }}
           />
           <button
             onClick={() => handlerGetChatLive(livestreamId)}

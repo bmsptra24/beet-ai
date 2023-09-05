@@ -3,13 +3,12 @@ import { bricolageGrotesque, delaGothicOne } from "@/styles/fonts";
 import Link from "next/link";
 import React, { useRef } from "react";
 import googleIcon from "@/public/icons/google.svg";
-import { prismaCreateUser, prismaCreateVerification } from "@/utils/prisma";
-import { sendEmail } from "@/utils/sendEmail";
+import { prismaCreateUser } from "@/utils/prisma";
 import { signIn } from "next-auth/react";
 import isEmail from "validator/lib/isEmail";
 import isEmpty from "validator/lib/isEmpty";
 import equals from "validator/lib/equals";
-import { generateCode } from "@/utils/generateNumber";
+import { sendCode } from "@/utils/authorize";
 
 const page: React.FC = () => {
   const name = useRef("");
@@ -18,14 +17,25 @@ const page: React.FC = () => {
   const password = useRef("");
   const confirmPassword = useRef("");
 
-  const onSubmit = async () => {
-    if (isEmpty(password.current, { ignore_whitespace: true }))
+  const isValid = (
+    email: string,
+    password: string,
+    confirmPassword: string
+  ) => {
+    if (isEmpty(password, { ignore_whitespace: true }))
       throw "Password can't be empty!";
-    if (password.current.length < 7) throw "Password must be 8 words long!";
-    if (!equals(password.current, confirmPassword.current))
-      throw "Invalid Password!";
-    if (!isEmail(email.current)) throw "Invalid Email!";
+    if (password.length < 7) throw "Password must be 8 words long!";
+    if (!equals(password, confirmPassword)) throw "Invalid Password!";
+    if (!isEmail(email)) throw "Invalid Email!";
+    return true;
+  };
 
+  const onSubmit = async () => {
+    // validation
+    if (isValid(email.current, password.current, confirmPassword.current))
+      return;
+
+    // create user, send code, go to verification page
     try {
       await prismaCreateUser({
         name: name.current,
@@ -33,9 +43,14 @@ const page: React.FC = () => {
         email: email.current,
         password: password.current,
       });
+      await sendCode(email.current);
+      await signIn("credentials", {
+        email: email.current,
+        password: password.current,
+        redirect: true,
+        callbackUrl: "/sign/verification",
+      });
     } catch (error) {
-      console.log({ error });
-
       throw error;
     }
   };
@@ -44,7 +59,6 @@ const page: React.FC = () => {
     <main className="min-h-screen relative text-xl flex items-stretch bg-primary-one">
       <section className="absolute inset-0 flex justify-center items-center ">
         <div className="h-[39rem] w-[24rem] gap-1 bg-primary-white press-md rounded-lg flex flex-col justify-between items-center p-8">
-          {/* welcome */}
           <p
             style={delaGothicOne.style}
             className="flex justify-center items-center min-h-[4rem] text-2xl"
@@ -84,33 +98,15 @@ const page: React.FC = () => {
           <button
             className="bg-primary-four w-full py-3 rounded-lg press-sm press-sm-active font-bold"
             style={bricolageGrotesque.style}
-            onClick={async () => {
-              try {
-                await onSubmit();
-                const code = generateCode();
-                await prismaCreateVerification({
-                  code,
-                  user: { connect: { email: email.current } },
-                });
-                await sendEmail(email.current, code);
-                await signIn("credentials", {
-                  email: email.current,
-                  password: password.current,
-                  redirect: true,
-                  callbackUrl: "/sign/verification",
-                });
-              } catch (error) {
-                throw error;
-              }
-            }}
+            onClick={onSubmit}
           >
             Continue
           </button>
           <div className="flex text-sm gap-1">
             <p>Dont have an account?</p>
-            <Link href={"/sign/in"}>Sign In</Link>
+            <Link href={"/sign/in"} className="underline hover:no-underline">Sign In</Link>
           </div>
-          <div className="flex justify-between items-center gap-2 w-full">
+          {/* <div className="flex justify-between items-center gap-2 w-full">
             <hr className="border-slate-400 w-full" />
             <p className="text-base text-slate-400">or</p>
             <hr className="border-slate-400 w-full" />
@@ -122,10 +118,10 @@ const page: React.FC = () => {
               className="absolute left-3 w-7"
             />
             <p>Continue with Google</p>
-          </button>
+          </button> */}
           <p className="text-xs text-center">
             by Continuing, you accept our{" "}
-            <Link href={"#"} className="underline">
+            <Link href={"#"} className="underline hover:no-underline">
               Terms and Conditions, Privacy Policy
             </Link>
           </p>
