@@ -56,7 +56,7 @@ export type User = {
   password?: string;
   status?: boolean;
   role?: string;
-  createdAt?: string | null; // Jika Anda ingin mengonversi ini ke tipe Date, Anda dapat menggunakan tipe Date
+  createdAt?: string | null;
   Verification?: Verification[];
   Project?: Project[];
 };
@@ -65,7 +65,7 @@ export type Verification = {
   id?: number;
   code?: number;
   userId?: number;
-  createdAt?: string | null; // Jika Anda ingin mengonversi ini ke tipe Date, Anda dapat menggunakan tipe Date
+  createdAt?: string | null;
 };
 
 export type Project = {

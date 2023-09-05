@@ -19,8 +19,6 @@ const page: React.FC = () => {
   const confirmPassword = useRef("");
 
   const onSubmit = async () => {
-    console.log(password, confirmPassword);
-
     if (isEmpty(password.current, { ignore_whitespace: true }))
       throw "Password can't be empty!";
     if (password.current.length < 7) throw "Password must be 8 words long!";
@@ -36,6 +34,8 @@ const page: React.FC = () => {
         password: password.current,
       });
     } catch (error) {
+      console.log({ error });
+
       throw error;
     }
   };

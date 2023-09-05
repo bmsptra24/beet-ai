@@ -1,6 +1,7 @@
 import React from "react";
 import { RxTriangleDown } from "react-icons/rx";
 import Configuration from "@/components/modules/studio/Configuration";
+import Control from "@/components/modules/studio/Control";
 
 const page: React.FC = () => {
   return (

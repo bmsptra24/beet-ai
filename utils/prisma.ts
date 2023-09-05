@@ -1,7 +1,6 @@
 "use server";
 import prisma from "@/lib/prisma";
-import { Project, User, Verification } from "@/types/types";
-import { Prisma } from "@prisma/client";
+import { Prisma, Project, User, Verification } from "@prisma/client";
 
 type WhereUser = Prisma.UserWhereUniqueInput;
 type IncludeUser = Prisma.UserInclude;
@@ -23,7 +22,7 @@ export const prismaFindManyVerifications = async () => {
 export const prismaFindUniqueUser = async (
   where: WhereUser,
   include?: IncludeUser
-): Promise<User | null> => {
+): Promise<any> => {
   return prisma.user.findUnique({
     where,
     include,
