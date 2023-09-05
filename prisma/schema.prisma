@@ -11,15 +11,17 @@ datasource db {
 }
 
 model User {
-  id          Int       @id @default(autoincrement())
-  name        String
-  username    String    @unique
-  email       String    @unique
-  emailBackup String?   @unique
-  password    String
-  role        String    @default("user")
-  createdAt   DateTime  @default(now())
-  Project     Project[]
+  id           Int            @id @default(autoincrement())
+  name         String
+  username     String         @unique
+  email        String         @unique
+  emailBackup  String?        @unique
+  password     String
+  status       Boolean        @default(false)
+  role         String         @default("user")
+  createdAt    DateTime       @default(now())
+  Project      Project[]
+  Verification Verification[]
 }
 
 model Project {
@@ -35,4 +37,12 @@ model Project {
   userId          Int
   user            User     @relation(fields: [userId], references: [id])
   createdAt       DateTime @default(now())
+}
+
+model Verification {
+  id        Int      @id @default(autoincrement())
+  code      Int      @unique
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
 }

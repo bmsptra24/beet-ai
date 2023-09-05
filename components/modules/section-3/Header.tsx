@@ -2,7 +2,7 @@ import Button from "@/components/elements/Button";
 import logo from "@/public/icons/logo.svg";
 import Link from "next/link";
 
-const Header = () => {
+const Header: React.FC = () => {
   return (
     <div className="flex justify-between items-center h-28 text-lg absolute left-0 right-0 top-0 z-10">
       <div>

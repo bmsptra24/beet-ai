@@ -46,3 +46,38 @@ export type Placeholder =
   | undefined;
 
 export type SetState<T> = React.Dispatch<React.SetStateAction<T>>;
+
+export type User = {
+  id?: number;
+  name?: string;
+  username?: string;
+  email?: string;
+  emailBackup?: null | string;
+  password?: string;
+  status?: boolean;
+  role?: string;
+  createdAt?: string | null;
+  Verification?: Verification[];
+  Project?: Project[];
+};
+
+export type Verification = {
+  id?: number;
+  code?: number;
+  userId?: number;
+  createdAt?: string | null;
+};
+
+export type Project = {
+  id?: number;
+  aiRole?: string;
+  aiKnowlagge?: string;
+  avatarName?: string;
+  language?: string;
+  livestreamTopic?: string;
+  livestreamingId?: string;
+  mood?: string;
+  platform?: string;
+  userId?: number;
+  createdAt?: Date | null;
+};

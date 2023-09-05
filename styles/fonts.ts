@@ -3,7 +3,6 @@ import "@/app/globals.css";
 
 export const bricolageGrotesque = Bricolage_Grotesque({
   subsets: ["latin"],
-  weight: "400",
   variable: "--bricolage-grotesque",
 });
 

@@ -1,30 +1,48 @@
 "use client";
-import { callbackProps, pathProps, textProps } from "@/types/types";
-import "@/styles/button.css";
-import { signIn } from "next-auth/react";
+import { callbackProps } from "@/types/types";
+import { useRouter } from "next/navigation";
+import { ReactNode } from "react";
 
-const Button = ({ text, callback }: textProps & callbackProps) => {
+type buttonProps = {
+  text: ReactNode;
+  className?: string;
+} & callbackProps;
+
+const Button: React.FC<buttonProps> = ({ text, callback, className = "" }) => {
+  const router = useRouter();
   return (
     <button
       onClick={() => callback()}
-      className="bg-primary-white px-5 py-2 rounded text-primary-black text-xl press-shadow border border-primary-black transition-all ease-in-out"
+      className={`${className} bg-primary-white px-5 py-2 rounded text-primary-black text-xl press-shadow border border-primary-black transition-all ease-in-out`}
     >
       {text}
     </button>
   );
 };
-export const ButtonLogin = () => {
+export const ButtonSignIn = () => {
+  const router = useRouter();
   return (
-    <button
-      onClick={() => {
+    <Button
+      text="Log In"
+      callback={() => {
         // const session = await getServerSession(authOptions);
         //! buat logic jika user teraunticated maka dia langsung ke home, jika tidak dia akan login
-        signIn();
+        router.push("/sign/in");
       }}
       className="bg-primary-white px-5 py-2 rounded text-primary-black text-xl press-shadow border border-primary-black transition-all ease-in-out"
-    >
-      Log In
-    </button>
+    />
+  );
+};
+export const ButtonSignUp = () => {
+  const router = useRouter();
+  return (
+    <Button
+      text="Get Started"
+      callback={() => {
+        router.push("/sign/up");
+      }}
+      className="bg-primary-white px-5 py-2 rounded text-primary-black text-xl press-shadow border border-primary-black transition-all ease-in-out"
+    />
   );
 };
 

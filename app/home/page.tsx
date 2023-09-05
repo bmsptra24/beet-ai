@@ -1,15 +1,19 @@
 "use client";
-import { ytGetLiveChat } from "@/utils/services/ytGetLiveChat";
-import { generateAiAnswer } from "@/utils/openai";
-import React, { useState } from "react";
-import "@/styles/button.css";
 
-import { AiOutlinePlus } from "react-icons/ai";
 import { Card, CardAddproject } from "@/components/elements/Card";
+import { signOut } from "next-auth/react";
 
-const page = () => {
+const page: React.FC = () => {
   return (
     <main className="min-h-screen relative text-xl flex flex-col overflow-y-scroll items-center bg-primary-tree/25">
+      <button
+        className="absolute right-10 top-10 p-3 bg-primary-one z-50 rounded-xl text-primary-white press-md press-md-active"
+        onClick={() => {
+          signOut({ redirect: true, callbackUrl: "/sign/in" });
+        }}
+      >
+        Sign Out
+      </button>
       <img
         src="https://static.vecteezy.com/system/resources/previews/023/870/218/original/telephone-pole-on-dreamy-night-sky-lo-fi-chill-wallpaper-electrical-cables-on-evening-sky-2d-cartoon-landscape-illustration-vaporwave-background-80s-retro-album-art-synthwave-aesthetics-vector.jpg"
         className="bg-primary-one h-[24rem] w-full object-cover absolute left-0 right-0 z-10"

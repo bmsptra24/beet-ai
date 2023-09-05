@@ -1,8 +1,8 @@
-import { Authorize } from "@/types/types";
 import { validation } from "@/utils/authorize";
 import { prismaFindUniqueUser } from "@/utils/prisma";
 import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google";
 
 export const authOptions: NextAuthOptions = {
   session: {
@@ -11,20 +11,6 @@ export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       name: "Sign in",
-      // credentials: {
-      //   name: { label: "Name", type: "text", placeholder: "Your Cool Name" },
-      //   username: {
-      //     label: "Username",
-      //     type: "text",
-      //     placeholder: "your_amazing_username",
-      //   },
-      //   email: {
-      //     label: "Email",
-      //     type: "email",
-      //     placeholder: "example@example.com",
-      //   },
-      //   password: { label: "Password", type: "password" },
-      // },
       credentials: {
         email: {
           label: "Email",
@@ -44,15 +30,12 @@ export const authOptions: NextAuthOptions = {
         }
       },
     }),
+    GoogleProvider({
+      clientId: process.env.GOOGLE_ID || "",
+      clientSecret: process.env.GOOGLE_SECRET || "",
+    }),
   ],
-  callbacks: {
-    async redirect({ url, baseUrl }) {
-      if (url === baseUrl + "/") {
-        return "/home";
-      }
-
-      // if (url === process.env.URL + "/home") return console.log(2);
-      return url;
-    },
+  pages: {
+    signIn: "/app/sign/in",
   },
 };

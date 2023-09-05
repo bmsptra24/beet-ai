@@ -7,7 +7,7 @@ import Content5 from "@/components/modules/section-5/Content";
 import Section from "@/components/modules/Section";
 import { NextAuthProvider } from "@/app/providers";
 
-export default function Home() {
+const Home: React.FC = () => {
   return (
     <>
       <Section color="bg-primary-one">
@@ -30,4 +30,5 @@ export default function Home() {
       </Section>
     </>
   );
-}
+};
+export default Home;

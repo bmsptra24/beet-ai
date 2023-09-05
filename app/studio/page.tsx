@@ -1,10 +1,9 @@
 import React from "react";
 import { RxTriangleDown } from "react-icons/rx";
-import "@/styles/button.css";
 import Configuration from "@/components/modules/studio/Configuration";
 import Control from "@/components/modules/studio/Control";
 
-const page = () => {
+const page: React.FC = () => {
   return (
     <main className="min-h-screen relative text-xl flex items-stretch bg-primary-tree">
       <section className="w-72 bg-primary-one ">
@@ -20,8 +19,8 @@ const page = () => {
           </button>
         </div>
         <div className="p-3 flex ">
-          {/* <Configuration /> */}
-          <Control />
+          <Configuration />
+          {/* <Control /> */}
         </div>
       </section>
     </main>
