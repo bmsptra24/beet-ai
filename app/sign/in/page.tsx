@@ -22,13 +22,17 @@ const SignIn: React.FC = () => {
     if (input.password === "") throw "Invalid Password!";
     if (!isEmail(input.email)) throw "Invalid Email!";
     const user: User = await prismaFindUniqueUser({ email: input.email });
+    if (input.password !== user.password) throw "Invalid Password!";
     if (!user) throw "User not found!";
     if (!user.status) throw "User not verified!";
+    console.log(user);
+
     return true;
   };
 
   const onSubmit = async () => {
     if (!(await isValid(input))) throw "Invalid Input!";
+    console.log("passed");
 
     if (rememberMe.current) {
       // save to local
@@ -36,12 +40,12 @@ const SignIn: React.FC = () => {
       localStorage.setItem("password", input.password);
     }
 
-    await signIn("credentials", {
-      email: input.email,
-      password: input.password,
-      redirect: true,
-      callbackUrl: "/home",
-    });
+    // await signIn("credentials", {
+    //   email: input.email,
+    //   password: input.password,
+    //   redirect: true,
+    //   callbackUrl: "/home",
+    // });
   };
   return (
     <main className="min-h-screen relative text-xl flex items-stretch bg-primary-one">
