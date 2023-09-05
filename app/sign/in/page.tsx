@@ -16,6 +16,7 @@ const SignIn: React.FC = () => {
   const { data: session, status } = useSession();
 
   useEffect(() => {
+    if (status === "authenticated") router.push("/home");
     const email = localStorage.getItem("email") || "";
     const password = localStorage.getItem("password") || "";
     setInput({ email, password });
@@ -23,7 +24,7 @@ const SignIn: React.FC = () => {
 
   useEffect(() => {
     if (status === "authenticated") router.push("/home");
-  }, [status]);
+  }, [session]);
 
   const isValid = async (input: { email: string; password: string }) => {
     if (input.password === "") throw "Invalid Password!";
