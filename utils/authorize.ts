@@ -24,6 +24,7 @@ export const sendCode = async (email: string) => {
 
 export const sendEmail = async (email: string, code: number) => {
   try {
+
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {

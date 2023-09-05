@@ -32,7 +32,7 @@ const page: React.FC = () => {
 
   const onSubmit = async () => {
     // validation
-    if (isValid(email.current, password.current, confirmPassword.current))
+    if (!isValid(email.current, password.current, confirmPassword.current))
       return;
 
     // create user, send code, go to verification page
@@ -44,12 +44,14 @@ const page: React.FC = () => {
         password: password.current,
       });
       await sendCode(email.current);
+      console.log("Code sended!");
       await signIn("credentials", {
         email: email.current,
         password: password.current,
         redirect: true,
         callbackUrl: "/sign/verification",
       });
+      console.log("User signed!");
     } catch (error) {
       throw error;
     }
@@ -104,7 +106,9 @@ const page: React.FC = () => {
           </button>
           <div className="flex text-sm gap-1">
             <p>Dont have an account?</p>
-            <Link href={"/sign/in"} className="underline hover:no-underline">Sign In</Link>
+            <Link href={"/sign/in"} className="underline hover:no-underline">
+              Sign In
+            </Link>
           </div>
           {/* <div className="flex justify-between items-center gap-2 w-full">
             <hr className="border-slate-400 w-full" />

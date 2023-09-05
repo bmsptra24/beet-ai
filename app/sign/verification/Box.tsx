@@ -10,6 +10,7 @@ const Box = () => {
   // ! also go this page if user login and not verificated
 
   const { data: session, status } = useSession();
+
   const code = useRef(0);
   const email = session?.user?.email || "";
   const router = useRouter();

@@ -3,14 +3,17 @@ import { bricolageGrotesque, delaGothicOne } from "@/styles/fonts";
 import Link from "next/link";
 import React, { useRef, useEffect, useState } from "react";
 import googleIcon from "@/public/icons/google.svg";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import isEmail from "validator/lib/isEmail";
 import { prismaFindUniqueUser } from "@/utils/prisma";
 import { User } from "@/types/types";
+import { useRouter } from "next/navigation";
 
 const SignIn: React.FC = () => {
   const [input, setInput] = useState({ email: "", password: "" });
   const rememberMe = useRef(false);
+  const router = useRouter();
+  const { data: session, status } = useSession();
 
   useEffect(() => {
     const email = localStorage.getItem("email") || "";
@@ -18,15 +21,17 @@ const SignIn: React.FC = () => {
     setInput({ email, password });
   }, []);
 
+  useEffect(() => {
+    if (status === "authenticated") router.push("/home");
+  }, [status]);
+
   const isValid = async (input: { email: string; password: string }) => {
     if (input.password === "") throw "Invalid Password!";
     if (!isEmail(input.email)) throw "Invalid Email!";
     const user: User = await prismaFindUniqueUser({ email: input.email });
-    if (input.password !== user.password) throw "Invalid Password!";
     if (!user) throw "User not found!";
+    if (input.password !== user.password) throw "Invalid Password!";
     if (!user.status) throw "User not verified!";
-    console.log(user);
-
     return true;
   };
 
@@ -42,8 +47,6 @@ const SignIn: React.FC = () => {
     await signIn("credentials", {
       email: input.email,
       password: input.password,
-      redirect: true,
-      callbackUrl: "/home",
     });
   };
   return (
