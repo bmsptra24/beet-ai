@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 
 const SignIn: React.FC = () => {
   const [input, setInput] = useState({ email: "", password: "" });
+  const [warning, setWarning] = useState("");
   const rememberMe = useRef(false);
   const router = useRouter();
   const { data: session, status } = useSession();
@@ -26,18 +27,23 @@ const SignIn: React.FC = () => {
   //   if (status === "authenticated") router.push("/home");
   // }, [session]);
 
+  const invalid = (message: string) => {
+    setWarning(message);
+    throw new Error(message);
+  };
+
   const isValid = async (input: { email: string; password: string }) => {
-    if (input.password === "") throw "Invalid Password!";
-    if (!isEmail(input.email)) throw "Invalid Email!";
+    if (input.password.length === 0) return invalid("Invalid Password!");
+    if (!isEmail(input.email)) return invalid("Invalid Email!");
     const user: User = await prismaFindUniqueUser({ email: input.email });
-    if (!user) throw "User not found!";
-    if (input.password !== user.password) throw "Invalid Password!";
-    if (!user.status) throw "User not verified!";
+    if (!user) return invalid("User not found!");
+    if (input.password !== user.password) return invalid("Invalid Password!");
+    if (!user.status) return invalid("User not verified!");
     return true;
   };
 
   const onSubmit = async () => {
-    if (!(await isValid(input))) throw "Invalid Input!";
+    if ((await isValid(input)) !== true) throw "Invalid Input!";
 
     if (rememberMe.current) {
       // save to local
@@ -55,7 +61,7 @@ const SignIn: React.FC = () => {
   return (
     <main className="min-h-screen relative text-xl flex items-stretch bg-primary-one">
       <section className="absolute inset-0 flex justify-center items-center ">
-        <div className="h-[35rem] w-[24rem] bg-primary-white press-md rounded-lg flex flex-col justify-between items-center p-8">
+        <div className="h-[35rem] w-[24rem] relative bg-primary-white press-md rounded-lg flex flex-col justify-between items-center p-8">
           {/* welcome */}
           <p
             style={delaGothicOne.style}
@@ -63,21 +69,26 @@ const SignIn: React.FC = () => {
           >
             Welcome Back!
           </p>
+          <p className="text-xs text-red-500 absolute top-[100px]">{warning}</p>
           <input
             type="text"
             value={input.email}
             className="border border-primary-black py-6 px-3 text-base w-full h-10 rounded-lg press-sm"
             placeholder="email"
-            onChange={(e) =>
-              setInput({ ...input, email: e.target.value.toLowerCase() })
-            }
+            onChange={(e) => {
+              setInput({ ...input, email: e.target.value.toLowerCase() });
+              setWarning("");
+            }}
           />
           <input
             type="password"
             defaultValue={input.password}
             className="border border-primary-black py-6 px-3 text-base w-full h-10 rounded-lg press-sm"
             placeholder="password"
-            onChange={(e) => setInput({ ...input, password: e.target.value })}
+            onChange={(e) => {
+              setInput({ ...input, password: e.target.value });
+              setWarning("");
+            }}
           />
           <div className="flex justify-between w-full px-2 text-sm">
             <div className="flex gap-1">

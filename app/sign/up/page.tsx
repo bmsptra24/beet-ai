@@ -1,7 +1,7 @@
 "use client";
 import { bricolageGrotesque, delaGothicOne } from "@/styles/fonts";
 import Link from "next/link";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import googleIcon from "@/public/icons/google.svg";
 import { prismaCreateUser } from "@/utils/prisma";
 import { signIn } from "next-auth/react";
@@ -16,23 +16,45 @@ const page: React.FC = () => {
   const email = useRef("");
   const password = useRef("");
   const confirmPassword = useRef("");
+  const [warning, setWarning] = useState("");
+
+  const invalid = (message: string) => {
+    setWarning(message);
+    throw new Error(message);
+  };
 
   const isValid = (
+    name: string,
+    username: string,
     email: string,
     password: string,
     confirmPassword: string
   ) => {
+    if (isEmpty(name, { ignore_whitespace: true }))
+      return invalid("Name can't be empty!");
+    if (isEmpty(username, { ignore_whitespace: true }))
+      return invalid("Username can't be empty!");
+    if (isEmpty(email, { ignore_whitespace: true }))
+      return invalid("Email can't be empty!");
     if (isEmpty(password, { ignore_whitespace: true }))
-      throw "Password can't be empty!";
-    if (password.length < 7) throw "Password must be 8 words long!";
-    if (!equals(password, confirmPassword)) throw "Invalid Password!";
-    if (!isEmail(email)) throw "Invalid Email!";
+      return invalid("Password can't be empty!");
+    if (password.length < 7) return invalid("Password must be 8 words long!");
+    if (!equals(password, confirmPassword)) return invalid("Invalid Password!");
+    if (!isEmail(email)) return invalid("Invalid Email!");
     return true;
   };
 
   const onSubmit = async () => {
     // validation
-    if (!isValid(email.current, password.current, confirmPassword.current))
+    if (
+      !isValid(
+        name.current,
+        username.current,
+        email.current,
+        password.current,
+        confirmPassword.current
+      )
+    )
       return;
 
     // create user, send code, go to verification page
@@ -67,6 +89,7 @@ const page: React.FC = () => {
           >
             Create your account!
           </p>
+          <p className="text-xs text-red-500 absolute top-[140px]">{warning}</p>
           <input
             type="text"
             className="border border-primary-black py-6 px-3 text-base w-full h-10 rounded-lg press-sm"

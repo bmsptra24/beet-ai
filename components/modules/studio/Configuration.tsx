@@ -1,38 +1,36 @@
 "use client";
 import { Dropdown, Input, Textarea } from "@/components/elements/Input";
 import { TestSound } from "@/components/test/TestSound";
+import { currProjectAction } from "@/store/actions/currIdProject.slice";
+import { RootState } from "@/store/store";
 import { generateAiAnswer } from "@/utils/openai";
-import { prismaFindUniqueProject, prismaUpdateProject } from "@/utils/prisma";
+import { prismaUpdateProject } from "@/utils/prisma";
 import { ytGetLiveChat } from "@/utils/services/ytGetLiveChat";
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
 const Configuration = () => {
-  const dummyId = 1;
-
-  const [livestreamId, setLivestreamId] = useState(" ");
-  const [avatarName, setAvatarName] = useState(" ");
-  const [aiRole, setAiRole] = useState(" ");
-  const [livestreamTopic, setLivestreamTopic] = useState(" ");
-  const [mood, setMood] = useState(" ");
-  const [platform, setPlatform] = useState(" ");
-  const [language, setLanguage] = useState(" ");
-  const [aiKnowlagge, setAiKnowlagge] = useState(" ");
-
-  useEffect(() => {
-    const initState = async () => {
-      const project = await prismaFindUniqueProject({ id: dummyId });
-
-      setLivestreamId(project?.livestreamingId || "");
-      setAvatarName(project?.avatarName || "");
-      setAiRole(project?.aiRole || "");
-      setLivestreamTopic(project?.livestreamTopic || "");
-      setMood(project?.mood || "");
-      setPlatform(project?.platform || "");
-      setLanguage(project?.language || "");
-      setAiKnowlagge(project?.aiKnowlagge || "");
-    };
-    initState();
-  }, []);
+  const {
+    aiKnowlagge,
+    aiRole,
+    avatarName,
+    id,
+    language,
+    livestreamTopic,
+    livestreamingId,
+    mood,
+    platform,
+  } = useSelector((state: RootState) => state.currProject);
+  const {
+    setAiKnowlagge,
+    setAiRole,
+    setAvatarName,
+    setLanguage,
+    setLivestreamTopic,
+    setLivestreamingId,
+    setMood,
+    setPlatform,
+  } = currProjectAction;
 
   const handlerGetChatLive = async (livestreamId: string) => {
     console.log(await ytGetLiveChat(livestreamId, 500));
@@ -41,7 +39,7 @@ const Configuration = () => {
   const handlerGenerateAnswer = async () => {
     console.log(
       await generateAiAnswer(
-        { author: "Bimbim", message: livestreamId },
+        { author: "Bimbim", message: livestreamingId },
         avatarName,
         aiRole,
         livestreamTopic,
@@ -60,14 +58,14 @@ const Configuration = () => {
         <div className="flex gap-5">
           <Input
             placeholder="your-livestream-id"
-            setState={setLivestreamId}
-            state={livestreamId}
+            setState={setLivestreamingId}
+            state={livestreamingId}
             className="grow"
             callback={() => {
               try {
                 prismaUpdateProject({
                   where: { id: 0 },
-                  data: { livestreamingId: livestreamId },
+                  data: { livestreamingId },
                 }).catch((error) => {
                   if (error?.digest === "2750255691")
                     alert("Project not found!");
@@ -78,7 +76,7 @@ const Configuration = () => {
             }}
           />
           <button
-            onClick={() => handlerGetChatLive(livestreamId)}
+            onClick={() => handlerGetChatLive(livestreamingId)}
             className="flex px-3 bg-primary-white items-center justify-between press-shadow-sm press-sm"
           >
             <p className="grow">Connect</p>
@@ -104,8 +102,8 @@ const Configuration = () => {
           state={avatarName}
           callback={() =>
             prismaUpdateProject({
-              where: { id: 1 },
-              data: { avatarName: avatarName },
+              where: { id },
+              data: { avatarName },
             })
           }
         />
@@ -115,8 +113,8 @@ const Configuration = () => {
           state={aiRole}
           callback={() =>
             prismaUpdateProject({
-              where: { id: 1 },
-              data: { aiRole: aiRole },
+              where: { id },
+              data: { aiRole },
             })
           }
         />
@@ -126,8 +124,8 @@ const Configuration = () => {
           state={livestreamTopic}
           callback={() =>
             prismaUpdateProject({
-              where: { id: 1 },
-              data: { livestreamTopic: livestreamTopic },
+              where: { id },
+              data: { livestreamTopic },
             })
           }
         />
@@ -137,7 +135,7 @@ const Configuration = () => {
           state={mood}
           callback={() =>
             prismaUpdateProject({
-              where: { id: 1 },
+              where: { id },
               data: { mood: mood },
             })
           }
@@ -152,8 +150,8 @@ const Configuration = () => {
           state={platform}
           callback={() =>
             prismaUpdateProject({
-              where: { id: 1 },
-              data: { platform: platform },
+              where: { id },
+              data: { platform },
             })
           }
         >
@@ -166,8 +164,8 @@ const Configuration = () => {
           state={language}
           callback={() =>
             prismaUpdateProject({
-              where: { id: 1 },
-              data: { language: language },
+              where: { id },
+              data: { language },
             })
           }
         >
@@ -181,8 +179,8 @@ const Configuration = () => {
           setState={setAiKnowlagge}
           callback={() =>
             prismaUpdateProject({
-              where: { id: 1 },
-              data: { aiKnowlagge: aiKnowlagge },
+              where: { id },
+              data: { aiKnowlagge },
             })
           }
         />

@@ -1,6 +1,9 @@
 import React from "react";
 import { AiOutlinePlus } from "react-icons/ai";
 import { useRouter } from "next/navigation";
+import { prismaCreateProject } from "@/utils/prisma";
+import { useDispatch } from "react-redux";
+import { initState } from "@/store/actions/currIdProject.slice";
 
 type Props = {
   title: string;
@@ -26,9 +29,42 @@ export const Card: React.FC<Props> = ({ title, platform }) => {
 
 export const CardAddproject = () => {
   const router = useRouter();
+  const dispatch = useDispatch();
   return (
     <button
-      onClick={() => router.push("/studio")}
+      onClick={async () => {
+        // create new project
+        const {
+          id,
+          aiKnowlagge,
+          aiRole,
+          avatarName,
+          language,
+          livestreamTopic,
+          livestreamingId,
+          mood,
+          platform,
+        } = await prismaCreateProject({
+          user: { connect: { email: "admin@prisma.io" } },
+        });
+
+        // set state
+        dispatch(
+          initState({
+            id,
+            aiKnowlagge,
+            aiRole,
+            avatarName,
+            language,
+            livestreamingId,
+            livestreamTopic,
+            mood,
+            platform,
+          })
+        );
+
+        router.push("/studio");
+      }}
       className="rounded-xl h-52 w-72 bg-primary-white border-primary-one border-2 press-shadow flex flex-col justify-between text-base text-primary-one"
     >
       <div className="w-full grow flex flex-col justify-center items-center gap-3">
