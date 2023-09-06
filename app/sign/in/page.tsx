@@ -21,11 +21,10 @@ const SignIn: React.FC = () => {
     setInput({ email, password });
   }, []);
 
-  useEffect(() => {
-    if (status === "authenticated") console.log("user authenticated");
-
-    if (status === "authenticated") router.push("/home");
-  }, [session]);
+  // useEffect(() => {
+  //   if (status === "authenticated") console.log("user authenticated");
+  //   if (status === "authenticated") router.push("/home");
+  // }, [session]);
 
   const isValid = async (input: { email: string; password: string }) => {
     if (input.password === "") throw "Invalid Password!";
@@ -49,7 +48,8 @@ const SignIn: React.FC = () => {
     await signIn("credentials", {
       email: input.email,
       password: input.password,
-      redirect: false,
+      redirect: true,
+      callbackUrl: "/home",
     });
   };
   return (

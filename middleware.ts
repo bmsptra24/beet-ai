@@ -10,6 +10,8 @@ export default withAuth(middleware, {
     authorized: ({ req, token }) => {
       const urlStartWith = (searchString: string) =>
         req.nextUrl.pathname.startsWith(searchString);
+
+      // ! prod: { token: null }
       console.log({ token });
 
       if (urlStartWith("/home") && !token) return false;
