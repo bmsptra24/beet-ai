@@ -21,8 +21,8 @@ const page: React.FC = () => {
             </button>
           </div>
           <div className="p-3 flex ">
-            <Configuration />
-            {/* <Control /> */}
+            {/* <Configuration /> */}
+            <Control />
           </div>
         </section>
       </main>

@@ -1,18 +1,7 @@
+import { CurrProjectProps } from "@/types/types";
 import { createSlice } from "@reduxjs/toolkit";
 
-type Props = {
-  id: number;
-  livestreamingId: string;
-  avatarName: string;
-  aiRole: string;
-  livestreamTopic: string;
-  mood: string;
-  platform: string;
-  language: string;
-  aiKnowlagge: string;
-};
-
-const initialState: Props = {
+const initialState: CurrProjectProps = {
   id: 0,
   livestreamingId: " ",
   avatarName: " ",

@@ -82,7 +82,7 @@ export type Project = {
   createdAt?: Date | null;
 };
 
-export type currProjectProps = {
+export type CurrProjectProps = {
   id: number;
   livestreamingId: string;
   avatarName: string;
