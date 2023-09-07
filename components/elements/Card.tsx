@@ -1,21 +1,41 @@
 import React from "react";
 import { AiOutlinePlus } from "react-icons/ai";
 import { useRouter } from "next/navigation";
-import { prismaCreateProject } from "@/utils/prisma";
+import {
+  prismaCreateProject,
+  prismaFindManyProjects,
+  prismaFindUniqueProject,
+  prismaUpdateProject,
+} from "@/utils/prisma";
 import { useDispatch } from "react-redux";
 import { initState } from "@/store/actions/currIdProject.slice";
 
 type Props = {
+  id: number;
   title: string;
   platform: string;
 };
 
-export const Card: React.FC<Props> = ({ title, platform }) => {
+export const Card: React.FC<Props> = ({ id, title, platform }) => {
   const router = useRouter();
+  const dispatch = useDispatch();
 
   return (
     <button
-      onClick={() => router.push("/studio")}
+      onClick={async () => {
+        // Update last open project
+        await prismaUpdateProject({
+          where: {
+            user: { email: "admin@prisma.io" },
+            id: id,
+          },
+          data: {
+            lastOpenAt: new Date().toJSON(),
+          },
+        });
+
+        router.push("/studio");
+      }}
       className="rounded-xl h-52 w-72 bg-primary-white border-primary-black border-2 press-shadow flex flex-col justify-between text-base p-5"
     >
       <div className="w-full grow flex flex-col justify-center items-center gap-3">
@@ -45,7 +65,21 @@ export const CardAddproject = () => {
           mood,
           platform,
         } = await prismaCreateProject({
-          user: { connect: { email: "admin@prisma.io" } },
+          data: {
+            user: { connect: { email: "admin@prisma.io" } },
+          },
+        });
+
+        console.log({
+          id,
+          aiKnowlagge,
+          aiRole,
+          avatarName,
+          language,
+          livestreamTopic,
+          livestreamingId,
+          mood,
+          platform,
         });
 
         // set state

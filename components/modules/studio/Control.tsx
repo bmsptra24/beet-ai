@@ -25,7 +25,9 @@ const Control = () => {
       setMessages(await ytGetLiveChat("I5vS0buvbwI", 10));
 
       const initState = async () => {
-        const project = await prismaFindUniqueProject({ id: dummyId });
+        const project = await prismaFindUniqueProject({
+          where: { id: dummyId },
+        });
 
         setLivestreamId(project?.livestreamingId || "");
         setAvatarName(project?.avatarName || "");

@@ -29,13 +29,14 @@ model Project {
   aiRole          String   @default("")
   aiKnowlagge     String   @default("")
   avatarName      String   @default("")
-  language        String   @default("")
+  language        String   @default("english")
   livestreamTopic String   @default("")
   livestreamingId String   @default("")
-  mood            String   @default("")
-  platform        String   @default("")
+  mood            String   @default("happy")
+  platform        String   @default("youtube")
   userId          Int
   user            User     @relation(fields: [userId], references: [id])
+  lastOpenAt      DateTime @default(now())
   createdAt       DateTime @default(now())
 }
 

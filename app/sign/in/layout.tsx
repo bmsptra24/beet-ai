@@ -1,5 +1,5 @@
 import { NextAuthProvider } from "@/app/providers";
-export default function DashboardLayout({
+export default function Layout({
   children,
 }: {
   children: React.ReactNode;

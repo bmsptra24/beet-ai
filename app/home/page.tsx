@@ -1,9 +1,30 @@
 "use client";
-
 import { Card, CardAddproject } from "@/components/elements/Card";
-import { signOut } from "next-auth/react";
+import { Project } from "@/types/types";
+import { prismaFindManyProjects, prismaFindUniqueUser } from "@/utils/prisma";
+import { signOut, useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
 
 const page: React.FC = () => {
+  const { data: session } = useSession();
+  const [projects, setProjects] = useState<Project[]>([]);
+
+  const getProject = async () => {
+    if (!session) return;
+    const response = await prismaFindManyProjects({
+      where: { user: { email: session?.user?.email as string } },
+      select: { id: true, platform: true, livestreamTopic: true },
+      orderBy: { lastOpenAt: "desc" },
+    });
+    setProjects(response);
+  };
+
+  useEffect(() => {
+    if (projects.length === 0) {
+      getProject();
+    }
+  }, [projects, session]);
+
   return (
     <main className="min-h-screen relative text-xl flex flex-col overflow-y-scroll items-center bg-primary-tree/25">
       <button
@@ -20,11 +41,16 @@ const page: React.FC = () => {
       ></img>
       <section className="grid grid-cols-3 justify-items-center gap-10 w-fit absolute top-48 z-20 pb-10">
         <CardAddproject />
-        <Card title="Minato" platform="Youtube" />
-        <Card title="Minato" platform="Youtube" />
-        <Card title="Minato" platform="Youtube" />
-        <Card title="Minato" platform="Youtube" />
-        <Card title="Minato" platform="Youtube" />
+        {projects.map(({ id, platform, livestreamTopic }, index) => {
+          return (
+            <Card
+              id={id as number}
+              key={index}
+              title={livestreamTopic as string}
+              platform={platform as string}
+            />
+          );
+        })}
       </section>
     </main>
   );

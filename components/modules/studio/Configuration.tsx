@@ -1,15 +1,20 @@
 "use client";
 import { Dropdown, Input, Textarea } from "@/components/elements/Input";
 import { TestSound } from "@/components/test/TestSound";
-import { currProjectAction } from "@/store/actions/currIdProject.slice";
+import {
+  currProjectAction,
+  initState,
+} from "@/store/actions/currIdProject.slice";
 import { RootState } from "@/store/store";
 import { generateAiAnswer } from "@/utils/openai";
-import { prismaUpdateProject } from "@/utils/prisma";
+import { prismaFindManyProjects, prismaUpdateProject } from "@/utils/prisma";
 import { ytGetLiveChat } from "@/utils/services/ytGetLiveChat";
-import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 const Configuration = () => {
+  const dispatch = useDispatch();
+
   const {
     aiKnowlagge,
     aiRole,
@@ -21,6 +26,26 @@ const Configuration = () => {
     mood,
     platform,
   } = useSelector((state: RootState) => state.currProject);
+
+  useEffect(() => {
+    // Get data project
+    (async () => {
+      const project = await prismaFindManyProjects({
+        where: {
+          user: { email: "admin@prisma.io" },
+        },
+        orderBy: {
+          lastOpenAt: "desc",
+        },
+        take: 1,
+      });
+
+      // set state
+      if (project === null) throw new Error("Project not found!");
+      dispatch(initState({ ...project[0] }));
+    })();
+  }, []);
+
   const {
     setAiKnowlagge,
     setAiRole,
@@ -58,13 +83,13 @@ const Configuration = () => {
         <div className="flex gap-5">
           <Input
             placeholder="your-livestream-id"
-            setState={setLivestreamingId}
+            setState={(event) => dispatch(setLivestreamingId(event))}
             state={livestreamingId}
             className="grow"
             callback={() => {
               try {
                 prismaUpdateProject({
-                  where: { id: 0 },
+                  where: { id },
                   data: { livestreamingId },
                 }).catch((error) => {
                   if (error?.digest === "2750255691")
@@ -98,7 +123,7 @@ const Configuration = () => {
         </div>
         <Input
           placeholder="Your Cool Avatar Name"
-          setState={setAvatarName}
+          setState={(event) => dispatch(setAvatarName(event))}
           state={avatarName}
           callback={() =>
             prismaUpdateProject({
@@ -109,7 +134,7 @@ const Configuration = () => {
         />
         <Input
           placeholder="your-ai-role"
-          setState={setAiRole}
+          setState={(event) => dispatch(setAiRole(event))}
           state={aiRole}
           callback={() =>
             prismaUpdateProject({
@@ -120,7 +145,7 @@ const Configuration = () => {
         />
         <Input
           placeholder="your-livestream-topic"
-          setState={setLivestreamTopic}
+          setState={(event) => dispatch(setLivestreamTopic(event))}
           state={livestreamTopic}
           callback={() =>
             prismaUpdateProject({
@@ -131,12 +156,12 @@ const Configuration = () => {
         />
 
         <Dropdown
-          setState={setMood}
+          setState={(event) => dispatch(setMood(event))}
           state={mood}
           callback={() =>
             prismaUpdateProject({
               where: { id },
-              data: { mood: mood },
+              data: { mood },
             })
           }
         >
@@ -146,7 +171,7 @@ const Configuration = () => {
         </Dropdown>
 
         <Dropdown
-          setState={setPlatform}
+          setState={(event) => dispatch(setPlatform(event))}
           state={platform}
           callback={() =>
             prismaUpdateProject({
@@ -160,7 +185,7 @@ const Configuration = () => {
         </Dropdown>
 
         <Dropdown
-          setState={setLanguage}
+          setState={(event) => dispatch(setLanguage(event))}
           state={language}
           callback={() =>
             prismaUpdateProject({
@@ -176,7 +201,7 @@ const Configuration = () => {
         <Textarea
           placeholder="your-ai-knowlage"
           state={aiKnowlagge}
-          setState={setAiKnowlagge}
+          setState={(event) => dispatch(setAiKnowlagge(event))}
           callback={() =>
             prismaUpdateProject({
               where: { id },

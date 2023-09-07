@@ -17,8 +17,7 @@ export const validation = async (
 export const sendCode = async (email: string) => {
   const code = generateCode();
   await prismaCreateVerification({
-    code,
-    user: { connect: { email } },
+    data: { user: { connect: { email } }, code },
   });
   await sendEmail(email, code);
 };

@@ -35,7 +35,9 @@ const SignIn: React.FC = () => {
   const isValid = async (input: { email: string; password: string }) => {
     if (input.password.length === 0) return invalid("Invalid Password!");
     if (!isEmail(input.email)) return invalid("Invalid Email!");
-    const user: User = await prismaFindUniqueUser({ email: input.email });
+    const user: User = await prismaFindUniqueUser({
+      where: { email: input.email },
+    });
     if (!user) return invalid("User not found!");
     if (input.password !== user.password) return invalid("Invalid Password!");
     if (!user.status) return invalid("User not verified!");

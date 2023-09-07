@@ -22,7 +22,7 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials): Promise<any> {
         const user = await prismaFindUniqueUser({
-          email: credentials?.email,
+          where: { email: credentials?.email },
         });
         if (await validation(user, credentials as any)) {
           return user;

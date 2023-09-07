@@ -1,96 +1,141 @@
 "use server";
 import prisma from "@/lib/prisma";
-import { Prisma, Project, User, Verification } from "@prisma/client";
+import { Prisma } from "@prisma/client";
+import { DefaultArgs } from "@prisma/client/runtime/library";
 
 type WhereUser = Prisma.UserWhereUniqueInput;
 type IncludeUser = Prisma.UserInclude;
 type WhereProject = Prisma.ProjectWhereUniqueInput;
+
 type WhereVerification = Prisma.VerificationWhereUniqueInput;
 
-export const prismaFindManyUsers = async () => {
-  return prisma.user.findMany();
+export const prismaFindManyUsers = async (
+  args: Prisma.UserFindManyArgs<DefaultArgs>
+) => {
+  return prisma.user
+    .findMany(args)
+    .finally(async () => await prisma.$disconnect());
 };
 
-export const prismaFindManyProjects = async () => {
-  return prisma.project.findMany();
+export const prismaFindManyProjects = async (
+  args: Prisma.ProjectFindManyArgs<DefaultArgs>
+) => {
+  return await prisma.project
+    .findMany(args)
+    .finally(async () => await prisma.$disconnect());
 };
 
-export const prismaFindManyVerifications = async () => {
-  return prisma.verification.findMany();
+export const prismaFindManyVerifications = async (
+  args: Prisma.VerificationFindManyArgs<DefaultArgs>
+) => {
+  return prisma.verification
+    .findMany(args)
+    .finally(async () => await prisma.$disconnect());
 };
 
 export const prismaFindUniqueUser = async (
-  where: WhereUser,
-  include?: IncludeUser
+  args: Prisma.UserFindUniqueArgs<DefaultArgs>
 ): Promise<any> => {
-  return prisma.user.findUnique({
-    where,
-    include,
-  });
+  return prisma.user
+    .findUnique(args)
+    .finally(async () => await prisma.$disconnect());
 };
 
-export const prismaFindUniqueProject = async (where: WhereProject) => {
-  return prisma.project.findUnique({ where });
+export const prismaFindUniqueProject = async (
+  args: Prisma.ProjectFindUniqueArgs<DefaultArgs>
+) => {
+  return prisma.project
+    .findUnique(args)
+    .finally(async () => await prisma.$disconnect());
 };
 
 export const prismaFindUniqueVerification = async (
-  where: WhereVerification
+  args: Prisma.VerificationFindUniqueArgs<DefaultArgs>
 ) => {
-  return prisma.verification.findUnique({ where });
+  return prisma.verification
+    .findUnique(args)
+    .finally(async () => await prisma.$disconnect());
 };
 
-export const prismaCreateUser = async (data: Prisma.UserCreateInput) => {
-  return prisma.user.create({ data });
+export const prismaCreateUser = async (
+  args: Prisma.UserCreateArgs<DefaultArgs>
+) => {
+  return prisma.user
+    .create(args)
+    .finally(async () => await prisma.$disconnect());
 };
 
-export const prismaCreateProject = async (data: Prisma.ProjectCreateInput) => {
-  return prisma.project.create({ data });
+export const prismaCreateProject = async (
+  args: Prisma.ProjectCreateArgs<DefaultArgs>
+) => {
+  return prisma.project
+    .create(args)
+    .finally(async () => await prisma.$disconnect());
 };
 
 export const prismaCreateVerification = async (
-  data: Prisma.VerificationCreateInput
+  args: Prisma.VerificationCreateArgs<DefaultArgs>
 ) => {
-  return prisma.verification.create({ data });
+  return prisma.verification
+    .create(args)
+    .finally(async () => await prisma.$disconnect());
 };
 
 export const prismaUpdateUser = async (
-  where: WhereUser,
-  data: Prisma.UserUpdateInput
+  args: Prisma.UserUpdateArgs<DefaultArgs>
 ) => {
-  return prisma.user.update({ where, data });
+  return prisma.user
+    .update(args)
+    .finally(async () => await prisma.$disconnect());
 };
 
-export const prismaUpdateProject = async ({
-  where,
-  data,
-}: Prisma.ProjectUpdateWithWhereUniqueWithoutUserInput) => {
+export const prismaUpdateProject = async (
+  args: Prisma.ProjectUpdateArgs<DefaultArgs>
+) => {
   try {
-    return await prisma.project.update({ where, data });
+    return await prisma.project
+      .update(args)
+      .finally(async () => await prisma.$disconnect());
   } catch (error) {
+    await prisma.$disconnect();
     throw error;
   }
 };
 
-export const prismaUpdateVerification = async ({
-  where,
-  data,
-}: Prisma.VerificationUpdateWithWhereUniqueWithoutUserInput) => {
+export const prismaUpdateVerification = async (
+  args: Prisma.VerificationUpdateArgs<DefaultArgs>
+) => {
   try {
-    const response: any = await prisma.verification.update({ where, data });
+    const response: any = await prisma.verification
+      .update(args)
+      .finally(async () => await prisma.$disconnect());
     return response;
   } catch (error) {
+    await prisma.$disconnect();
     throw error;
   }
 };
 
-export const prismaDeleteUser = async (where: WhereUser) => {
-  return prisma.user.deleteMany({ where });
+export const prismaDeleteUser = async (
+  args: Prisma.UserDeleteManyArgs<DefaultArgs>
+) => {
+  return prisma.user
+    .deleteMany(args)
+    .finally(async () => await prisma.$disconnect());
 };
 
-export const prismaDeleteProject = async (where: WhereProject) => {
-  return prisma.project.deleteMany({ where });
+export const prismaDeleteProject = async (
+  args: Prisma.ProjectDeleteManyArgs<DefaultArgs>
+) => {
+  return prisma.project
+    .deleteMany(args)
+    .finally(async () => await prisma.$disconnect());
 };
 
-export const prismaDeleteVerification = async (where: WhereVerification) => {
-  return prisma.verification.deleteMany({ where });
+export const prismaDeleteVerification = async (
+  args: Prisma.VerificationDeleteManyArgs<DefaultArgs>
+) => {
+  return prisma.verification
+    .deleteMany(args)
+    .finally(async () => await prisma.$disconnect());
 };

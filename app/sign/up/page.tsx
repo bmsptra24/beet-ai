@@ -60,10 +60,12 @@ const page: React.FC = () => {
     // create user, send code, go to verification page
     try {
       await prismaCreateUser({
-        name: name.current,
-        username: username.current,
-        email: email.current,
-        password: password.current,
+        data: {
+          name: name.current,
+          username: username.current,
+          email: email.current,
+          password: password.current,
+        },
       });
       await sendCode(email.current);
       console.log("Code sended!");
