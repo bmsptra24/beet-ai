@@ -1,9 +1,9 @@
-import hero from "@/public/images/avatars/all.png";
+import hero from "@/public/images/avatars/all.svg";
 
 const Hero: React.FC = () => {
   return (
-    <div className="absolute -right-40 -bottom-14">
-      <img src={hero.src} alt="hero" className="w-[46rem]" />
+    <div className="absolute right-0">
+      <img src={hero.src} alt="hero" className="w-[40rem]" />
     </div>
   );
 };

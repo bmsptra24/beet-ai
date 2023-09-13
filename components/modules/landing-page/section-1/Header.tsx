@@ -1,14 +1,16 @@
 import { ButtonSignIn } from "@/components/elements/Button";
-import logo from "@/public/icons/logo.svg";
+import logo from "@/public/logo/logo.png";
 import Link from "next/link";
 
 const Header: React.FC = () => {
   return (
     <div className="flex justify-between items-center h-28 text-lg absolute left-0 right-0 top-0 z-10">
       <div>
-        <img src={logo.src} alt="logo" className="w-[8rem]" />
-      </div>
-      <div className="text-primary-white flex gap-10 font-black">
+        <img src={logo.src} alt="logo" className="w-[4rem] ml-1" />
+      </div> 
+      {/* <div className="text-primary-black flex gap-10">
+      </div> */}
+      <div className="flex justify-between gap-10">
         <Link className="hover:underline" href={"#"}>
           Service
         </Link>
@@ -24,8 +26,6 @@ const Header: React.FC = () => {
         <Link className="hover:underline" href={"#"}>
           Contact us
         </Link>
-      </div>
-      <div className="w-[8rem] flex justify-end">
         <ButtonSignIn />
       </div>
     </div>

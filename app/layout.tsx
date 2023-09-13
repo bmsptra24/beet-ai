@@ -1,4 +1,4 @@
-import { bricolageGrotesque } from "@/styles/fonts";
+import { jost } from "@/styles/fonts";
 import "./globals.css";
 import type { Metadata } from "next";
 
@@ -15,7 +15,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${bricolageGrotesque.className} text-primary-black overflow-x-hidden`}
+        className={`${jost.className} text-primary-black overflow-x-hidden`}
       >
         {children}
       </body>

@@ -1,21 +1,22 @@
-import { delaGothicOne } from "@/styles/fonts";
-import hero from "@/public/images/hero.svg";
+import hero from "@/public/images/avatars/use-mechine.svg";
 
 const Content: React.FC = () => {
   return (
-    <div className="h-[720px] flex flex-row-reverse items-center justify-center text-primary-black gap-10">
-      <div className="flex flex-col gap-10">
-        <p className={`${delaGothicOne.className} text-6xl`}>
-          IMAGINE A PLACE...
+    <div className="h-[720px] flex items-center justify-between gap-10 text-primary-black">
+      <div className="flex flex-col gap-4">
+        <p className={`font-bold text-5xl`}>
+          Connect to <br /> Vtuber Studio
         </p>
         <p className="w-[37rem] leading-relaxed text-xl">
-          ...where you can belong to a school club, a gaming group, or a
-          worldwide artcommunity. Where just you and a handful or friends can
-          spend time together. A place that makes it easy to talk every day and
-          hang out more often.
+          Beet AI can be connect to Vtuber Studio. So you <br /> can use your
+          favorite anime avatar.
         </p>
       </div>
-      <img src={hero.src} alt="hero" className="w-[45rem]" />
+      <img
+        src={hero.src}
+        alt="hero"
+        className="h-[35rem] absolute right-0 bottom-0"
+      />
     </div>
   );
 };

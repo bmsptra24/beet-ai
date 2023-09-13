@@ -15,11 +15,12 @@ const config: Config = {
       },
       colors: {
         primary: {
-          one: "#8F0EFE",
+          one: "#9747FF",
           two: "#FCCB28",
-          tree: "#E4C0FE",
-          four: "#FFE27E",
-          white: "#FBFBFB",
+          tree: "#C5A1FF",
+          four: "#2C153B",
+          five: "#FEF0AC",
+          white: "#FDF9F5",
           black: "#1D2019",
         },
       },

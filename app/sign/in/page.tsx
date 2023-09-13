@@ -1,5 +1,5 @@
 "use client";
-import { bricolageGrotesque, delaGothicOne } from "@/styles/fonts";
+import { bricolageGrotesque, delaGothicOne, jost } from "@/styles/fonts";
 import Link from "next/link";
 import React, { useRef, useEffect, useState } from "react";
 import googleIcon from "@/public/icons/google.svg";
@@ -62,12 +62,12 @@ const SignIn: React.FC = () => {
   };
   return (
     <main className="min-h-screen relative text-xl flex items-stretch bg-primary-one">
-      <section className="absolute inset-0 flex justify-center items-center ">
-        <div className="h-[35rem] w-[24rem] relative bg-primary-white press-md rounded-lg flex flex-col justify-between items-center p-8">
+      <section className="flex">
+        <div className="h-full w-[24rem] relative bg-primary-white flex flex-col justify-between items-center p-8">
           {/* welcome */}
           <p
-            style={delaGothicOne.style}
-            className="flex justify-center items-center min-h-[5rem] text-2xl"
+            style={jost.style}
+            className="flex justify-center items-center min-h-[5rem] text-2xl font-bold"
           >
             Welcome Back!
           </p>
