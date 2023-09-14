@@ -8,6 +8,7 @@ import isEmail from "validator/lib/isEmail";
 import { prismaFindUniqueUser } from "@/utils/prisma";
 import { User } from "@/types/types";
 import { useRouter } from "next/navigation";
+import meta from "@/public/images/avatars/meta.png";
 
 const SignIn: React.FC = () => {
   const [input, setInput] = useState({ email: "", password: "" });
@@ -61,10 +62,9 @@ const SignIn: React.FC = () => {
     });
   };
   return (
-    <main className="min-h-screen relative text-xl flex items-stretch bg-primary-one">
-      <section className="flex">
-        <div className="h-full w-[24rem] relative bg-primary-white flex flex-col justify-between items-center p-8">
-          {/* welcome */}
+    <main className="min-h-screen relative text-xl flex bg-primary-six">
+      <section className="flex items-center bg-primary-white z-10">
+        <div className="w-[24rem] h-[39rem] relative flex flex-col justify-between items-center p-8">
           <p
             style={jost.style}
             className="flex justify-center items-center min-h-[5rem] text-2xl font-bold"
@@ -75,7 +75,7 @@ const SignIn: React.FC = () => {
           <input
             type="text"
             value={input.email}
-            className="border border-primary-black py-6 px-3 text-base w-full h-10 rounded-lg press-sm"
+            className="border-2 border-primary-black bg-primary-white py-6 px-3 text-base w-full h-10 rounded-lg"
             placeholder="email"
             onChange={(e) => {
               setInput({ ...input, email: e.target.value.toLowerCase() });
@@ -85,7 +85,7 @@ const SignIn: React.FC = () => {
           <input
             type="password"
             defaultValue={input.password}
-            className="border border-primary-black py-6 px-3 text-base w-full h-10 rounded-lg press-sm"
+            className="border-2 border-primary-black bg-primary-white py-6 px-3 text-base w-full h-10 rounded-lg"
             placeholder="password"
             onChange={(e) => {
               setInput({ ...input, password: e.target.value });
@@ -110,7 +110,7 @@ const SignIn: React.FC = () => {
             </Link>
           </div>
           <button
-            className="bg-primary-four w-full py-3 rounded-lg press-sm press-sm-active font-bold"
+            className="bg-primary-two w-full py-3 rounded-lg press-sm press-sm-active font-bold"
             style={bricolageGrotesque.style}
             onClick={onSubmit}
           >
@@ -147,6 +147,20 @@ const SignIn: React.FC = () => {
             </Link>
           </p>
         </div>
+      </section>
+      <section className="flex flex-col items-center w-full text-base ">
+        <div className="flex flex-col items-center p-20 gap-5 z-10">
+          <p className="text-3xl text-center">Stream AI is here!</p>
+          <p className="text-center">
+            Create your own amazing streamer AI with costum emotional, avatar,
+            and knowladge you <br /> want. And create unbreakeble story to
+            everybody.
+          </p>
+          <p className="font-bold underline hover:no-underline cursor-pointer">
+            See what&#180;s new
+          </p>
+        </div>
+        <img src={meta.src} alt="hero" className="absolute bottom-0" />
       </section>
     </main>
   );

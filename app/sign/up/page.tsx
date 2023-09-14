@@ -1,5 +1,5 @@
 "use client";
-import { bricolageGrotesque, delaGothicOne } from "@/styles/fonts";
+import { bricolageGrotesque, delaGothicOne, jost } from "@/styles/fonts";
 import Link from "next/link";
 import React, { useRef, useState } from "react";
 import googleIcon from "@/public/icons/google.svg";
@@ -9,6 +9,7 @@ import isEmail from "validator/lib/isEmail";
 import isEmpty from "validator/lib/isEmpty";
 import equals from "validator/lib/equals";
 import { sendCode } from "@/utils/authorize";
+import meta from "@/public/images/avatars/meta.png";
 
 const page: React.FC = () => {
   const name = useRef("");
@@ -82,48 +83,48 @@ const page: React.FC = () => {
   };
 
   return (
-    <main className="min-h-screen relative text-xl flex items-stretch bg-primary-one">
-      <section className="absolute inset-0 flex justify-center items-center ">
-        <div className="h-[39rem] w-[24rem] gap-1 bg-primary-white press-md rounded-lg flex flex-col justify-between items-center p-8">
+    <main className="min-h-screen relative text-xl flex bg-primary-six">
+      <section className="flex items-center bg-primary-white z-10">
+        <div className="w-[24rem] h-[39rem] relative flex flex-col justify-between items-center p-8">
           <p
-            style={delaGothicOne.style}
-            className="flex justify-center items-center min-h-[4rem] text-2xl"
+            style={jost.style}
+            className="flex justify-center items-center min-h-[5rem] text-2xl font-bold"
           >
             Create your account!
           </p>
           <p className="text-xs text-red-500 absolute top-[140px]">{warning}</p>
           <input
             type="text"
-            className="border border-primary-black py-6 px-3 text-base w-full h-10 rounded-lg press-sm"
+            className="border-2 border-primary-black bg-primary-white py-6 px-3 text-base w-full h-10 rounded-lg"
             placeholder="your name"
             onChange={(e) => (name.current = e.target.value)}
           />
           <input
             type="text"
-            className="border border-primary-black py-6 px-3 text-base w-full h-10 rounded-lg press-sm"
+            className="border-2 bg-primary-white border-primary-black py-6 px-3 text-base w-full h-10 rounded-lg"
             placeholder="username"
             onChange={(e) => (username.current = e.target.value)}
           />
           <input
             type="text"
-            className="border border-primary-black py-6 px-3 text-base w-full h-10 rounded-lg press-sm"
+            className="border-2 bg-primary-white border-primary-black py-6 px-3 text-base w-full h-10 rounded-lg"
             placeholder="email"
             onChange={(e) => (email.current = e.target.value.toLowerCase())}
           />
           <input
             type="password"
-            className="border border-primary-black py-6 px-3 text-base w-full h-10 rounded-lg press-sm"
+            className="border-2 bg-primary-white border-primary-black py-6 px-3 text-base w-full h-10 rounded-lg"
             placeholder="password"
             onChange={(e) => (password.current = e.target.value)}
           />
           <input
             type="password"
-            className="border border-primary-black py-6 px-3 text-base w-full h-10 rounded-lg press-sm"
+            className="border-2 bg-primary-white border-primary-black py-6 px-3 text-base w-full h-10 rounded-lg"
             placeholder="confirm your password"
             onChange={(e) => (confirmPassword.current = e.target.value)}
           />
           <button
-            className="bg-primary-four w-full py-3 rounded-lg press-sm press-sm-active font-bold"
+            className="bg-primary-two w-full py-3 rounded-lg press-sm press-sm-active font-bold"
             style={bricolageGrotesque.style}
             onClick={onSubmit}
           >
@@ -155,6 +156,20 @@ const page: React.FC = () => {
             </Link>
           </p>
         </div>
+      </section>
+      <section className="flex flex-col items-center w-full text-base ">
+        <div className="flex flex-col items-center p-20 gap-5 z-10">
+          <p className="text-3xl text-center">Stream AI is here!</p>
+          <p className="text-center">
+            Create your own amazing streamer AI with costum emotional, avatar,
+            and knowladge you <br /> want. And create unbreakeble story to
+            everybody.
+          </p>
+          <p className="font-bold underline hover:no-underline cursor-pointer">
+            See what&#180;s new
+          </p>
+        </div>
+        <img src={meta.src} alt="hero" className="absolute bottom-0" />
       </section>
     </main>
   );
