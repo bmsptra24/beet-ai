@@ -9,6 +9,7 @@ import { prismaFindUniqueUser } from "@/utils/prisma";
 import { User } from "@/types/types";
 import { useRouter } from "next/navigation";
 import meta from "@/public/images/avatars/meta.png";
+import md5 from "md5";
 
 const SignIn: React.FC = () => {
   const [input, setInput] = useState({ email: "", password: "" });
@@ -40,7 +41,8 @@ const SignIn: React.FC = () => {
       where: { email: input.email },
     });
     if (!user) return invalid("User not found!");
-    if (input.password !== user.password) return invalid("Invalid Password!");
+    if (md5(input.password) !== user.password)
+      return invalid("Invalid Password!");
     if (!user.status) return invalid("User not verified!");
     return true;
   };
@@ -56,7 +58,7 @@ const SignIn: React.FC = () => {
 
     await signIn("credentials", {
       email: input.email,
-      password: input.password,
+      password: md5(input.password),
       redirect: true,
       callbackUrl: "/home",
     });

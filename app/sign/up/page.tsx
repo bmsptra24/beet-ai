@@ -10,6 +10,7 @@ import isEmpty from "validator/lib/isEmpty";
 import equals from "validator/lib/equals";
 import { sendCode } from "@/utils/authorize";
 import meta from "@/public/images/avatars/meta.png";
+import md5 from "md5";
 
 const page: React.FC = () => {
   const name = useRef("");
@@ -65,14 +66,14 @@ const page: React.FC = () => {
           name: name.current,
           username: username.current,
           email: email.current,
-          password: password.current,
+          password: md5(password.current),
         },
       });
       await sendCode(email.current);
       console.log("Code sended!");
       await signIn("credentials", {
         email: email.current,
-        password: password.current,
+        password: md5(password.current),
         redirect: true,
         callbackUrl: "/sign/verification",
       });

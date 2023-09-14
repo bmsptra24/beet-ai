@@ -21,6 +21,7 @@ const config: Config = {
           four: "#2C153B",
           five: "#FEF0AC",
           six: "#E3E0F3",
+          seven: "#C5A1FF",
           white: "#FDF9F5",
           black: "#1D2019",
         },
