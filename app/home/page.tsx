@@ -1,32 +1,33 @@
-"use client";
-import Dashboard from "@/components/modules/home/Dashboard";
-import { Project } from "@/types/types";
-import { prismaFindManyProjects } from "@/utils/prisma";
-import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
-import { FaStarOfLife } from "react-icons/fa";
-import { GrHomeRounded, GrConfigure } from "react-icons/gr";
+'use client'
+import Configuration from '@/components/modules/home/Configuration'
+import Dashboard from '@/components/modules/home/Dashboard'
+import { Project } from '@/types/types'
+import { prismaFindManyProjects } from '@/utils/prisma'
+import { useSession } from 'next-auth/react'
+import { useEffect, useState } from 'react'
+import { FaStarOfLife } from 'react-icons/fa'
+import { GrHomeRounded, GrConfigure } from 'react-icons/gr'
 const page: React.FC = () => {
-  const { data: session } = useSession();
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [navigation, setNavigation] = useState(1);
-  const dummyProjects = ["Minato Yamata", "AI Chef Yunita", "Tsubasa"];
+  const { data: session } = useSession()
+  const [projects, setProjects] = useState<Project[]>([])
+  const [navigation, setNavigation] = useState(1)
+  const dummyProjects = ['Minato Yamata', 'AI Chef Yunita', 'Tsubasa']
 
   const getProject = async () => {
-    if (!session) return;
+    if (!session) return
     const response = await prismaFindManyProjects({
       where: { user: { email: session?.user?.email as string } },
       select: { id: true, platform: true, livestreamTopic: true },
-      orderBy: { lastOpenAt: "desc" },
-    });
-    setProjects(response);
-  };
+      orderBy: { lastOpenAt: 'desc' },
+    })
+    setProjects(response)
+  }
 
   useEffect(() => {
     if (projects.length === 0) {
-      getProject();
+      getProject()
     }
-  }, [projects, session]);
+  }, [projects, session])
 
   return (
     <main className="min-h-screen relative text-base flex bg-primary-tree/25">
@@ -48,7 +49,7 @@ const page: React.FC = () => {
             onClick={() => setNavigation(1)}
             className={`${
               navigation === 1 &&
-              "bg-primary-white hover:bg-primary-white border-2 cursor-default"
+              'bg-primary-white hover:bg-primary-white border-2 cursor-default'
             } text-sm flex items-center gap-2 px-2 py-1.5 rounded-lg cursor-pointer hover:bg-primary-one/30 border-primary-black`}
           >
             <GrHomeRounded />
@@ -58,7 +59,7 @@ const page: React.FC = () => {
             onClick={() => setNavigation(2)}
             className={`${
               navigation === 2 &&
-              "bg-primary-white hover:bg-primary-white border-2 cursor-default"
+              'bg-primary-white hover:bg-primary-white border-2 cursor-default'
             } text-sm flex items-center gap-2 px-2 py-1.5 rounded-lg cursor-pointer hover:bg-primary-one/30 border-primary-black`}
           >
             <GrConfigure />
@@ -76,16 +77,17 @@ const page: React.FC = () => {
               >
                 <FaStarOfLife /> {project}
               </p>
-            );
+            )
           })}
         </div>
       </section>
       <section className="flex flex-col bg-primary-white py-10 px-5 gap-5 grow">
         {navigation === 1 && <Dashboard />}
+        {navigation === 2 && <Configuration />}
       </section>
       <section className="flex flex-col bg-primary-seven py-10 px-5 w-60"></section>
     </main>
-  );
-};
+  )
+}
 
-export default page;
+export default page
