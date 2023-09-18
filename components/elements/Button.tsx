@@ -13,9 +13,9 @@ const Button: React.FC<buttonProps> = ({ text, callback, className = "" }) => {
   return (
     <button
       onClick={() => callback()}
-      className={`${className} bg-primary-white px-5 py-2 rounded text-primary-black text-xl press-shadow border border-primary-black transition-all ease-in-out`}
+      className={`${className} bg-primary-one rounded press-shadow border border-primary-black transition-all ease-in-out`}
     >
-      {text}
+      <p className="text-primary-white text-base">{text}</p>
     </button>
   );
 };
@@ -23,13 +23,13 @@ export const ButtonSignIn = () => {
   const router = useRouter();
   return (
     <Button
-      text="Log In"
+      text="Login"
       callback={() => {
         // const session = await getServerSession(authOptions);
         //! buat logic jika user teraunticated maka dia langsung ke home, jika tidak dia akan login
         router.push("/sign/in");
       }}
-      className="bg-primary-white px-5 py-2 rounded text-primary-black text-xl press-shadow border border-primary-black transition-all ease-in-out"
+      className="bg-primary-one px-12 py-0.5 rounded text-xl press-shadow border border-primary-black transition-all ease-in-out"
     />
   );
 };
@@ -41,7 +41,7 @@ export const ButtonSignUp = () => {
       callback={() => {
         router.push("/sign/up");
       }}
-      className="bg-primary-white px-5 py-2 rounded text-primary-black text-xl press-shadow border border-primary-black transition-all ease-in-out"
+      className="bg-primary-one px-16 py-3 rounded text-xl press-shadow border border-primary-black transition-all ease-in-out"
     />
   );
 };

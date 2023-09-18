@@ -10,18 +10,19 @@ const Box = () => {
   // ! also go this page if user login and not verificated
 
   const { data: session, status } = useSession();
+
   const code = useRef(0);
   const email = session?.user?.email || "";
   const router = useRouter();
 
   const isCodeValid = async () => {
-    const data: User = await prismaFindUniqueUser(
-      { email },
-      { Verification: true }
-    );
+    const data: User = await prismaFindUniqueUser({
+      where: { email },
+      include: { Verification: true },
+    });
     if (!data?.Verification?.[0]?.code) return false;
     if (data?.Verification?.[0]?.code !== code.current) return false;
-    await prismaUpdateUser({ email: email }, { status: true });
+    await prismaUpdateUser({ where: { email: email }, data: { status: true } });
     alert("User verificated!");
     return true;
   };

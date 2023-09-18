@@ -5,6 +5,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 
 export const authOptions: NextAuthOptions = {
+  secret: process.env.NEXTAUTH_SECRET,
   session: {
     strategy: "jwt",
   },
@@ -21,7 +22,7 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials): Promise<any> {
         const user = await prismaFindUniqueUser({
-          email: credentials?.email,
+          where: { email: credentials?.email },
         });
         if (await validation(user, credentials as any)) {
           return user;
@@ -36,6 +37,6 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   pages: {
-    signIn: "/app/sign/in",
+    signIn: "/sign/in",
   },
 };

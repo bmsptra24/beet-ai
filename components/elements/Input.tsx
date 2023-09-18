@@ -1,5 +1,4 @@
-import { ClassName, OnChangeTextarea, SetState } from "@/types/types";
-import { prismaUpdateProject } from "@/utils/prisma";
+import { ClassName, SetState } from "@/types/types";
 import React, { ReactNode, useEffect } from "react";
 
 type InputProps = {

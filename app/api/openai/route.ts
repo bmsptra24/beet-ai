@@ -1,3 +1,4 @@
+"use server";
 import { NextResponse, NextRequest } from "next/server";
 import { Configuration, CreateChatCompletionRequest, OpenAIApi } from "openai";
 

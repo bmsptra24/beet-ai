@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz@10..48&family=Dela+Gothic+One&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Jost&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -6,6 +7,7 @@
 :root {
   --bricolage-grotesque: "Bricolage Grotesque", sans-serif;
   --dela-gothic-one: "Bricolage Grotesque", sans-serif;
+  --jost: "Jost", sans-serif;
 }
 
 .mouth-container {
@@ -25,10 +27,10 @@
 }
 
 .press-shadow {
-  box-shadow: 8px 8px;
+  box-shadow: 5px 5px;
 }
 .press-shadow:active {
-  box-shadow: 3px 3px;
+  box-shadow: 0px 0px;
   transform: translateY(0.2rem) translateX(0.2rem);
 }
 

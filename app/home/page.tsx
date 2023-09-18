@@ -1,93 +1,98 @@
-"use client";
-
-import { Card, CardAddproject } from "@/components/elements/Card";
-import { signOut } from "next-auth/react";
-
+'use client'
+import Configuration from '@/components/modules/home/Configuration'
+import Dashboard from '@/components/modules/home/Dashboard'
+import Studio from '@/components/modules/home/Studio'
+import { Project } from '@/types/types'
+import { prismaFindManyProjects } from '@/utils/prisma'
+import { useSession } from 'next-auth/react'
+import { useEffect, useState } from 'react'
+import { FaStarOfLife } from 'react-icons/fa'
+import { GrHomeRounded, GrConfigure } from 'react-icons/gr'
 const page: React.FC = () => {
+  const { data: session } = useSession()
+  const [projects, setProjects] = useState<Project[]>([])
+  const [navigation, setNavigation] = useState(1)
+  const dummyProjects = ['Minato Yamata', 'AI Chef Yunita', 'Tsubasa']
+
+  const getProject = async () => {
+    if (!session) return
+    const response = await prismaFindManyProjects({
+      where: { user: { email: session?.user?.email as string } },
+      select: { id: true, platform: true, livestreamTopic: true },
+      orderBy: { lastOpenAt: 'desc' },
+    })
+    setProjects(response)
+  }
+
+  useEffect(() => {
+    if (projects.length === 0) {
+      getProject()
+    }
+  }, [projects, session])
+
   return (
-    <main className="min-h-screen relative text-xl flex flex-col overflow-y-scroll items-center bg-primary-tree/25">
-      <button
-        className="absolute right-10 top-10 p-3 bg-primary-one z-50 rounded-xl text-primary-white press-md press-md-active"
-        onClick={() => {
-          signOut({ redirect: true, callbackUrl: "/sign/in" });
-        }}
-      >
-        Sign Out
-      </button>
-      <img
-        src="https://static.vecteezy.com/system/resources/previews/023/870/218/original/telephone-pole-on-dreamy-night-sky-lo-fi-chill-wallpaper-electrical-cables-on-evening-sky-2d-cartoon-landscape-illustration-vaporwave-background-80s-retro-album-art-synthwave-aesthetics-vector.jpg"
-        className="bg-primary-one h-[24rem] w-full object-cover absolute left-0 right-0 z-10"
-      ></img>
-      <section className="grid grid-cols-3 justify-items-center gap-10 w-fit absolute top-48 z-20 pb-10">
-        <CardAddproject />
-        <Card path="/studio" title="Minato" platform="Youtube" />
-        <Card path="/studio" title="Minato" platform="Youtube" />
-        <Card path="/studio" title="Minato" platform="Youtube" />
-        <Card path="/studio" title="Minato" platform="Youtube" />
-        <Card path="/studio" title="Minato" platform="Youtube" />
+    <main className="min-h-screen relative text-base flex bg-primary-tree/25 ">
+      <section className="flex flex-col bg-primary-seven py-10 w-60 px-5">
+        <div className="flex items-center gap-2">
+          <img
+            src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+            alt="profil"
+            className="w-10 h-10 rounded-full border-2 border-primary-black"
+          />
+          <div>
+            <p className="font-bold">Bima Saputra</p>
+            <p className="text-sm">Free account</p>
+          </div>
+        </div>
+        <div className="flex py-10 flex-col gap-2">
+          <p className="font-bold">Home</p>
+          <p
+            onClick={() => setNavigation(1)}
+            className={`${
+              navigation === 1 &&
+              'bg-primary-white hover:bg-primary-white border-2 cursor-default'
+            } text-sm flex items-center gap-2 px-2 py-1.5 rounded-lg cursor-pointer hover:bg-primary-one/30 border-primary-black`}
+          >
+            <GrHomeRounded />
+            Dashboard
+          </p>
+          <p
+            onClick={() => setNavigation(2)}
+            className={`${
+              navigation === 2 &&
+              'bg-primary-white hover:bg-primary-white border-2 cursor-default'
+            } text-sm flex items-center gap-2 px-2 py-1.5 rounded-lg cursor-pointer hover:bg-primary-one/30 border-primary-black`}
+          >
+            <GrConfigure />
+            Configuration
+          </p>
+        </div>
+        <div className="flex flex-col gap-2">
+          <p className="font-bold">Project</p>
+          {dummyProjects.map((project, index) => {
+            return (
+              <p
+                key={index}
+                onClick={() => setNavigation(index + 3)}
+                className={`${
+                  navigation === index + 3 &&
+                  'bg-primary-white hover:bg-primary-white border-2 cursor-default'
+                } text-sm flex items-center gap-2 px-2 py-1.5 rounded-lg cursor-pointer hover:bg-primary-one/30 border-primary-black`}
+              >
+                <FaStarOfLife /> {project}
+              </p>
+            )
+          })}
+        </div>
       </section>
+      <section className="flex flex-col bg-primary-white py-10 px-5 gap-5 grow">
+        {navigation === 1 && <Dashboard />}
+        {navigation === 2 && <Configuration />}
+        {navigation === 3 && <Studio />}
+      </section>
+      {/* <section className="flex flex-col bg-primary-seven py-10 px-5 w-60"></section> */}
     </main>
-  );
-};
+  )
+}
 
-export default page;
-
-// const page = () => {
-//   const [ytId, setYtId] = useState("sldoGfcRSe4");
-//   const [ytMessages, setYtMessages]: any[] = useState([
-//     {
-//       author: "Hi",
-//       message: "",
-//     },
-//   ]);
-
-//   const handlerInput = (
-//     event: React.ChangeEvent<HTMLInputElement>,
-//     setState: React.Dispatch<React.SetStateAction<string>>
-//   ) => {
-//     setState(event.target.value);
-//   };
-
-//   const getMessageHandler = async () => {
-//     setYtMessages(await ytGetLiveChat(ytId, 100));
-//   };
-
-//   return (
-//     <main className="min-h-screen text-xl flex justify-center items-center gap-10">
-//       {/* <iframe
-//         src={`https://www.youtube.com/embed/${ytId}`}
-//         frameBorder="0"
-//       ></iframe> */}
-//       <div className="flex flex-col justify-center items-center gap-5">
-//         <p>Masukan ID Youtube</p>
-//         <input
-//           onChange={(event) => handlerInput(event, setYtId)}
-//           value={ytId}
-//           type="text"
-//           className="border-2 border-slate-950"
-//         />
-//         <button
-//           onClick={() => getMessageHandler()}
-//           className="bg-sky-400 p-3 rounded-xl hover:bg-sky-500"
-//         >
-//           Start
-//         </button>
-//       </div>
-//       <div className="h-96 overflow-y-scroll">
-//         {ytMessages &&
-//           ytMessages?.map((message: any, index: any) => (
-//             <div
-//               key={index}
-//               className="flex cursor-pointer bg-slate-400 hover:bg-slate-300"
-//               onClick={async () => {
-//                 console.log(await generateAiAnswer(message));
-//               }}
-//             >
-//               <p>{`Author: ${message.author}`}</p>
-//               <p>{`Message: ${message.message}`}</p>
-//             </div>
-//           ))}
-//       </div>
-//     </main>
-//   );
-// };
+export default page

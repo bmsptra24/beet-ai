@@ -1,38 +1,61 @@
 "use client";
 import { Dropdown, Input, Textarea } from "@/components/elements/Input";
 import { TestSound } from "@/components/test/TestSound";
+import {
+  currProjectAction,
+  initState,
+} from "@/store/actions/currIdProject.slice";
+import { RootState } from "@/store/store";
 import { generateAiAnswer } from "@/utils/openai";
-import { prismaFindUniqueProject, prismaUpdateProject } from "@/utils/prisma";
+import { prismaFindManyProjects, prismaUpdateProject } from "@/utils/prisma";
 import { ytGetLiveChat } from "@/utils/services/ytGetLiveChat";
-import React, { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 const Configuration = () => {
-  const dummyId = 1;
+  const dispatch = useDispatch();
 
-  const [livestreamId, setLivestreamId] = useState(" ");
-  const [avatarName, setAvatarName] = useState(" ");
-  const [aiRole, setAiRole] = useState(" ");
-  const [livestreamTopic, setLivestreamTopic] = useState(" ");
-  const [mood, setMood] = useState(" ");
-  const [platform, setPlatform] = useState(" ");
-  const [language, setLanguage] = useState(" ");
-  const [aiKnowlagge, setAiKnowlagge] = useState(" ");
+  const {
+    aiKnowlagge,
+    aiRole,
+    avatarName,
+    id,
+    language,
+    livestreamTopic,
+    livestreamingId,
+    mood,
+    platform,
+  } = useSelector((state: RootState) => state.currProject);
 
   useEffect(() => {
-    const initState = async () => {
-      const project = await prismaFindUniqueProject({ id: dummyId });
+    // Get data project
+    (async () => {
+      const project = await prismaFindManyProjects({
+        where: {
+          user: { email: "admin@prisma.io" },
+        },
+        orderBy: {
+          lastOpenAt: "desc",
+        },
+        take: 1,
+      });
 
-      setLivestreamId(project?.livestreamingId || "");
-      setAvatarName(project?.avatarName || "");
-      setAiRole(project?.aiRole || "");
-      setLivestreamTopic(project?.livestreamTopic || "");
-      setMood(project?.mood || "");
-      setPlatform(project?.platform || "");
-      setLanguage(project?.language || "");
-      setAiKnowlagge(project?.aiKnowlagge || "");
-    };
-    initState();
+      // set state
+      if (project === null) throw new Error("Project not found!");
+      dispatch(initState({ ...project[0] }));
+    })();
   }, []);
+
+  const {
+    setAiKnowlagge,
+    setAiRole,
+    setAvatarName,
+    setLanguage,
+    setLivestreamTopic,
+    setLivestreamingId,
+    setMood,
+    setPlatform,
+  } = currProjectAction;
 
   const handlerGetChatLive = async (livestreamId: string) => {
     console.log(await ytGetLiveChat(livestreamId, 500));
@@ -41,7 +64,7 @@ const Configuration = () => {
   const handlerGenerateAnswer = async () => {
     console.log(
       await generateAiAnswer(
-        { author: "Bimbim", message: livestreamId },
+        { author: "Bimbim", message: livestreamingId },
         avatarName,
         aiRole,
         livestreamTopic,
@@ -60,18 +83,25 @@ const Configuration = () => {
         <div className="flex gap-5">
           <Input
             placeholder="your-livestream-id"
-            setState={setLivestreamId}
-            state={livestreamId}
+            setState={(event) => dispatch(setLivestreamingId(event))}
+            state={livestreamingId}
             className="grow"
-            callback={() =>
-              prismaUpdateProject({
-                where: { id: 1 },
-                data: { livestreamingId: livestreamId },
-              })
-            }
+            callback={() => {
+              try {
+                prismaUpdateProject({
+                  where: { id },
+                  data: { livestreamingId },
+                }).catch((error) => {
+                  if (error?.digest === "2750255691")
+                    alert("Project not found!");
+                });
+              } catch (error) {
+                throw error;
+              }
+            }}
           />
           <button
-            onClick={() => handlerGetChatLive(livestreamId)}
+            onClick={() => handlerGetChatLive(livestreamingId)}
             className="flex px-3 bg-primary-white items-center justify-between press-shadow-sm press-sm"
           >
             <p className="grow">Connect</p>
@@ -93,45 +123,45 @@ const Configuration = () => {
         </div>
         <Input
           placeholder="Your Cool Avatar Name"
-          setState={setAvatarName}
+          setState={(event) => dispatch(setAvatarName(event))}
           state={avatarName}
           callback={() =>
             prismaUpdateProject({
-              where: { id: 1 },
-              data: { avatarName: avatarName },
+              where: { id },
+              data: { avatarName },
             })
           }
         />
         <Input
           placeholder="your-ai-role"
-          setState={setAiRole}
+          setState={(event) => dispatch(setAiRole(event))}
           state={aiRole}
           callback={() =>
             prismaUpdateProject({
-              where: { id: 1 },
-              data: { aiRole: aiRole },
+              where: { id },
+              data: { aiRole },
             })
           }
         />
         <Input
           placeholder="your-livestream-topic"
-          setState={setLivestreamTopic}
+          setState={(event) => dispatch(setLivestreamTopic(event))}
           state={livestreamTopic}
           callback={() =>
             prismaUpdateProject({
-              where: { id: 1 },
-              data: { livestreamTopic: livestreamTopic },
+              where: { id },
+              data: { livestreamTopic },
             })
           }
         />
 
         <Dropdown
-          setState={setMood}
+          setState={(event) => dispatch(setMood(event))}
           state={mood}
           callback={() =>
             prismaUpdateProject({
-              where: { id: 1 },
-              data: { mood: mood },
+              where: { id },
+              data: { mood },
             })
           }
         >
@@ -141,12 +171,12 @@ const Configuration = () => {
         </Dropdown>
 
         <Dropdown
-          setState={setPlatform}
+          setState={(event) => dispatch(setPlatform(event))}
           state={platform}
           callback={() =>
             prismaUpdateProject({
-              where: { id: 1 },
-              data: { platform: platform },
+              where: { id },
+              data: { platform },
             })
           }
         >
@@ -155,12 +185,12 @@ const Configuration = () => {
         </Dropdown>
 
         <Dropdown
-          setState={setLanguage}
+          setState={(event) => dispatch(setLanguage(event))}
           state={language}
           callback={() =>
             prismaUpdateProject({
-              where: { id: 1 },
-              data: { language: language },
+              where: { id },
+              data: { language },
             })
           }
         >
@@ -171,11 +201,11 @@ const Configuration = () => {
         <Textarea
           placeholder="your-ai-knowlage"
           state={aiKnowlagge}
-          setState={setAiKnowlagge}
+          setState={(event) => dispatch(setAiKnowlagge(event))}
           callback={() =>
             prismaUpdateProject({
-              where: { id: 1 },
-              data: { aiKnowlagge: aiKnowlagge },
+              where: { id },
+              data: { aiKnowlagge },
             })
           }
         />

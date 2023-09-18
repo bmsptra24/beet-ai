@@ -1,15 +1,16 @@
 "use client";
-import { bricolageGrotesque, delaGothicOne } from "@/styles/fonts";
+import { bricolageGrotesque, delaGothicOne, jost } from "@/styles/fonts";
 import Link from "next/link";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import googleIcon from "@/public/icons/google.svg";
-import { prismaCreateUser, prismaCreateVerification } from "@/utils/prisma";
-import { sendEmail } from "@/utils/sendEmail";
+import { prismaCreateUser } from "@/utils/prisma";
 import { signIn } from "next-auth/react";
 import isEmail from "validator/lib/isEmail";
 import isEmpty from "validator/lib/isEmpty";
 import equals from "validator/lib/equals";
-import { generateCode } from "@/utils/generateNumber";
+import { sendCode } from "@/utils/authorize";
+import meta from "@/public/images/avatars/meta.png";
+import md5 from "md5";
 
 const page: React.FC = () => {
   const name = useRef("");
@@ -17,100 +18,126 @@ const page: React.FC = () => {
   const email = useRef("");
   const password = useRef("");
   const confirmPassword = useRef("");
+  const [warning, setWarning] = useState("");
+
+  const invalid = (message: string) => {
+    setWarning(message);
+    throw new Error(message);
+  };
+
+  const isValid = (
+    name: string,
+    username: string,
+    email: string,
+    password: string,
+    confirmPassword: string
+  ) => {
+    if (isEmpty(name, { ignore_whitespace: true }))
+      return invalid("Name can't be empty!");
+    if (isEmpty(username, { ignore_whitespace: true }))
+      return invalid("Username can't be empty!");
+    if (isEmpty(email, { ignore_whitespace: true }))
+      return invalid("Email can't be empty!");
+    if (isEmpty(password, { ignore_whitespace: true }))
+      return invalid("Password can't be empty!");
+    if (password.length < 7) return invalid("Password must be 8 words long!");
+    if (!equals(password, confirmPassword)) return invalid("Invalid Password!");
+    if (!isEmail(email)) return invalid("Invalid Email!");
+    return true;
+  };
 
   const onSubmit = async () => {
-    if (isEmpty(password.current, { ignore_whitespace: true }))
-      throw "Password can't be empty!";
-    if (password.current.length < 7) throw "Password must be 8 words long!";
-    if (!equals(password.current, confirmPassword.current))
-      throw "Invalid Password!";
-    if (!isEmail(email.current)) throw "Invalid Email!";
+    // validation
+    if (
+      !isValid(
+        name.current,
+        username.current,
+        email.current,
+        password.current,
+        confirmPassword.current
+      )
+    )
+      return;
 
+    // create user, send code, go to verification page
     try {
       await prismaCreateUser({
-        name: name.current,
-        username: username.current,
-        email: email.current,
-        password: password.current,
+        data: {
+          name: name.current,
+          username: username.current,
+          email: email.current,
+          password: md5(password.current),
+        },
       });
+      await sendCode(email.current);
+      console.log("Code sended!");
+      await signIn("credentials", {
+        email: email.current,
+        password: md5(password.current),
+        redirect: true,
+        callbackUrl: "/sign/verification",
+      });
+      console.log("User signed!");
     } catch (error) {
-      console.log({ error });
-
       throw error;
     }
   };
 
   return (
-    <main className="min-h-screen relative text-xl flex items-stretch bg-primary-one">
-      <section className="absolute inset-0 flex justify-center items-center ">
-        <div className="h-[39rem] w-[24rem] gap-1 bg-primary-white press-md rounded-lg flex flex-col justify-between items-center p-8">
-          {/* welcome */}
+    <main className="min-h-screen relative text-xl flex bg-primary-six">
+      <section className="flex items-center bg-primary-white z-10">
+        <div className="w-[24rem] h-[39rem] relative flex flex-col justify-between items-center p-8">
           <p
-            style={delaGothicOne.style}
-            className="flex justify-center items-center min-h-[4rem] text-2xl"
+            style={jost.style}
+            className="flex justify-center items-center min-h-[5rem] text-2xl font-bold"
           >
             Create your account!
           </p>
+          <p className="text-xs text-red-500 absolute top-[140px]">{warning}</p>
           <input
             type="text"
-            className="border border-primary-black py-6 px-3 text-base w-full h-10 rounded-lg press-sm"
+            className="border-2 border-primary-black bg-primary-white py-6 px-3 text-base w-full h-10 rounded-lg"
             placeholder="your name"
             onChange={(e) => (name.current = e.target.value)}
           />
           <input
             type="text"
-            className="border border-primary-black py-6 px-3 text-base w-full h-10 rounded-lg press-sm"
+            className="border-2 bg-primary-white border-primary-black py-6 px-3 text-base w-full h-10 rounded-lg"
             placeholder="username"
             onChange={(e) => (username.current = e.target.value)}
           />
           <input
             type="text"
-            className="border border-primary-black py-6 px-3 text-base w-full h-10 rounded-lg press-sm"
+            className="border-2 bg-primary-white border-primary-black py-6 px-3 text-base w-full h-10 rounded-lg"
             placeholder="email"
             onChange={(e) => (email.current = e.target.value.toLowerCase())}
           />
           <input
             type="password"
-            className="border border-primary-black py-6 px-3 text-base w-full h-10 rounded-lg press-sm"
+            className="border-2 bg-primary-white border-primary-black py-6 px-3 text-base w-full h-10 rounded-lg"
             placeholder="password"
             onChange={(e) => (password.current = e.target.value)}
           />
           <input
             type="password"
-            className="border border-primary-black py-6 px-3 text-base w-full h-10 rounded-lg press-sm"
+            className="border-2 bg-primary-white border-primary-black py-6 px-3 text-base w-full h-10 rounded-lg"
             placeholder="confirm your password"
             onChange={(e) => (confirmPassword.current = e.target.value)}
           />
           <button
-            className="bg-primary-four w-full py-3 rounded-lg press-sm press-sm-active font-bold"
+            className="bg-primary-two w-full py-3 rounded-lg press-sm press-sm-active font-bold"
             style={bricolageGrotesque.style}
-            onClick={async () => {
-              try {
-                await onSubmit();
-                const code = generateCode();
-                await prismaCreateVerification({
-                  code,
-                  user: { connect: { email: email.current } },
-                });
-                await sendEmail(email.current, code);
-                await signIn("credentials", {
-                  email: email.current,
-                  password: password.current,
-                  redirect: true,
-                  callbackUrl: "/sign/verification",
-                });
-              } catch (error) {
-                throw error;
-              }
-            }}
+            onClick={onSubmit}
           >
             Continue
           </button>
           <div className="flex text-sm gap-1">
             <p>Dont have an account?</p>
-            <Link href={"/sign/in"}>Sign In</Link>
+            <Link href={"/sign/in"} className="underline hover:no-underline">
+              Sign In
+            </Link>
           </div>
-          <div className="flex justify-between items-center gap-2 w-full">
+          {/* <div className="flex justify-between items-center gap-2 w-full">
             <hr className="border-slate-400 w-full" />
             <p className="text-base text-slate-400">or</p>
             <hr className="border-slate-400 w-full" />
@@ -122,14 +149,28 @@ const page: React.FC = () => {
               className="absolute left-3 w-7"
             />
             <p>Continue with Google</p>
-          </button>
+          </button> */}
           <p className="text-xs text-center">
             by Continuing, you accept our{" "}
-            <Link href={"#"} className="underline">
+            <Link href={"#"} className="underline hover:no-underline">
               Terms and Conditions, Privacy Policy
             </Link>
           </p>
         </div>
+      </section>
+      <section className="flex flex-col items-center w-full text-base ">
+        <div className="flex flex-col items-center p-20 gap-5 z-10">
+          <p className="text-3xl text-center">Stream AI is here!</p>
+          <p className="text-center">
+            Create your own amazing streamer AI with costum emotional, avatar,
+            and knowladge you <br /> want. And create unbreakeble story to
+            everybody.
+          </p>
+          <p className="font-bold underline hover:no-underline cursor-pointer">
+            See what&#180;s new
+          </p>
+        </div>
+        <img src={meta.src} alt="hero" className="absolute bottom-0" />
       </section>
     </main>
   );

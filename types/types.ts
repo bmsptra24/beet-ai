@@ -81,3 +81,15 @@ export type Project = {
   userId?: number;
   createdAt?: Date | null;
 };
+
+export type CurrProjectProps = {
+  id: number;
+  livestreamingId: string;
+  avatarName: string;
+  aiRole: string;
+  livestreamTopic: string;
+  mood: string;
+  platform: string;
+  language: string;
+  aiKnowlagge: string;
+};
