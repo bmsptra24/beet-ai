@@ -1,5 +1,6 @@
-import { AiOutlinePlus } from "react-icons/ai";
-
+import { signOut } from 'next-auth/react'
+import { AiOutlinePlus } from 'react-icons/ai'
+import { HiLogout } from 'react-icons/hi'
 const Dashboard = () => {
   return (
     <>
@@ -9,6 +10,15 @@ const Dashboard = () => {
         </div>
         <div className="bg-primary-five px-5 py-4 rounded border-2 border-primary-black grow">
           <p className="font-bold">5 project</p>
+        </div>
+        <div
+          title="log out"
+          onClick={() => {
+            signOut({ redirect: true, callbackUrl: '/sign/in' })
+          }}
+          className="bg-primary-danger px-3 py-4 text-2xl rounded border-2 border-primary-black cursor-pointer hover:brightness-95"
+        >
+          <HiLogout />
         </div>
       </div>
       <div className="bg-primary-five px-5 py-3 flex flex-col gap-1 rounded border-2 border-primary-black">
@@ -82,7 +92,7 @@ const Dashboard = () => {
         </table>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default Dashboard;
+export default Dashboard

@@ -1,6 +1,7 @@
 'use client'
 import Configuration from '@/components/modules/home/Configuration'
 import Dashboard from '@/components/modules/home/Dashboard'
+import Studio from '@/components/modules/home/Studio'
 import { Project } from '@/types/types'
 import { prismaFindManyProjects } from '@/utils/prisma'
 import { useSession } from 'next-auth/react'
@@ -30,7 +31,7 @@ const page: React.FC = () => {
   }, [projects, session])
 
   return (
-    <main className="min-h-screen relative text-base flex bg-primary-tree/25">
+    <main className="min-h-screen relative text-base flex bg-primary-tree/25 ">
       <section className="flex flex-col bg-primary-seven py-10 w-60 px-5">
         <div className="flex items-center gap-2">
           <img
@@ -73,7 +74,10 @@ const page: React.FC = () => {
               <p
                 key={index}
                 onClick={() => setNavigation(index + 3)}
-                className="text-sm flex items-center gap-2 px-2 py-1.5 bg-transparent hover:bg-primary-one/30 transition-all ease-in-out cursor-pointer rounded-lg border-0 border-primary-black"
+                className={`${
+                  navigation === index + 3 &&
+                  'bg-primary-white hover:bg-primary-white border-2 cursor-default'
+                } text-sm flex items-center gap-2 px-2 py-1.5 rounded-lg cursor-pointer hover:bg-primary-one/30 border-primary-black`}
               >
                 <FaStarOfLife /> {project}
               </p>
@@ -84,8 +88,9 @@ const page: React.FC = () => {
       <section className="flex flex-col bg-primary-white py-10 px-5 gap-5 grow">
         {navigation === 1 && <Dashboard />}
         {navigation === 2 && <Configuration />}
+        {navigation === 3 && <Studio />}
       </section>
-      <section className="flex flex-col bg-primary-seven py-10 px-5 w-60"></section>
+      {/* <section className="flex flex-col bg-primary-seven py-10 px-5 w-60"></section> */}
     </main>
   )
 }
