@@ -2,13 +2,22 @@ import { signOut } from 'next-auth/react'
 import { AiOutlinePlus } from 'react-icons/ai'
 import { HiLogout } from 'react-icons/hi'
 const Dashboard = () => {
+  const Project = () => {
+    return (
+      <tr className="grid bg-primary-eight hover:bg-primary-eight/70 transition-all ease-in-out cursor-pointer grid-cols-3 border-2 border-primary-black rounded">
+        <td className="p-2 rounded">Chef Minato AI</td>
+        <td className="p-2">Youtube</td>
+        <td className="p-2 rounded">08 September 2023</td>
+      </tr>
+    )
+  }
   return (
     <>
       <div className="flex gap-5">
-        <div className="bg-primary-five px-5 py-4 rounded border-2 border-primary-black grow">
+        <div className="bg-primary-six px-5 py-4 rounded border-2 border-primary-black grow">
           <p className="font-bold">300 dialog</p>
         </div>
-        <div className="bg-primary-five px-5 py-4 rounded border-2 border-primary-black grow">
+        <div className="bg-primary-six px-5 py-4 rounded border-2 border-primary-black grow">
           <p className="font-bold">5 project</p>
         </div>
         <div
@@ -43,51 +52,19 @@ const Dashboard = () => {
               <th className="font-normal text-left ml-2">Platform</th>
               <th className="font-normal text-left ml-2">Last Open</th>
             </tr>
-            <tr className="grid bg-primary-five hover:bg-primary-two/70 transition-all ease-in-out cursor-pointer grid-cols-3 border-2 border-primary-black rounded">
-              <td className="p-2 rounded">Chef Minato AI</td>
-              <td className="p-2">Youtube</td>
-              <td className="p-2 rounded">08 September 2023</td>
-            </tr>
-            <tr className="grid bg-primary-five hover:bg-primary-two/70 transition-all ease-in-out cursor-pointer grid-cols-3 border-2 border-primary-black rounded">
-              <td className="p-2 rounded">Chef Minato AI</td>
-              <td className="p-2">Youtube</td>
-              <td className="p-2 rounded">08 September 2023</td>
-            </tr>
-            <tr className="grid bg-primary-five hover:bg-primary-two/70 transition-all ease-in-out cursor-pointer grid-cols-3 border-2 border-primary-black rounded">
-              <td className="p-2 rounded">Chef Minato AI</td>
-              <td className="p-2">Youtube</td>
-              <td className="p-2 rounded">08 September 2023</td>
-            </tr>
-            <tr className="grid bg-primary-five hover:bg-primary-two/70 transition-all ease-in-out cursor-pointer grid-cols-3 border-2 border-primary-black rounded">
-              <td className="p-2 rounded">Chef Minato AI</td>
-              <td className="p-2">Youtube</td>
-              <td className="p-2 rounded">08 September 2023</td>
-            </tr>
-            <tr className="grid bg-primary-five hover:bg-primary-two/70 transition-all ease-in-out cursor-pointer grid-cols-3 border-2 border-primary-black rounded">
-              <td className="p-2 rounded">Chef Minato AI</td>
-              <td className="p-2">Youtube</td>
-              <td className="p-2 rounded">08 September 2023</td>
-            </tr>
-            <tr className="grid bg-primary-five hover:bg-primary-two/70 transition-all ease-in-out cursor-pointer grid-cols-3 border-2 border-primary-black rounded">
-              <td className="p-2 rounded">Chef Minato AI</td>
-              <td className="p-2">Youtube</td>
-              <td className="p-2 rounded">08 September 2023</td>
-            </tr>
-            <tr className="grid bg-primary-five hover:bg-primary-two/70 transition-all ease-in-out cursor-pointer grid-cols-3 border-2 border-primary-black rounded">
-              <td className="p-2 rounded">Chef Minato AI</td>
-              <td className="p-2">Youtube</td>
-              <td className="p-2 rounded">08 September 2023</td>
-            </tr>
-            <tr className="grid bg-primary-five hover:bg-primary-two/70 transition-all ease-in-out cursor-pointer grid-cols-3 border-2 border-primary-black rounded">
-              <td className="p-2 rounded">Chef Minato AI</td>
-              <td className="p-2">Youtube</td>
-              <td className="p-2 rounded">08 September 2023</td>
-            </tr>
-            <tr className="grid bg-primary-five hover:bg-primary-two/70 transition-all ease-in-out cursor-pointer grid-cols-3 border-2 border-primary-black rounded">
-              <td className="p-2 rounded">Chef Minato AI</td>
-              <td className="p-2">Youtube</td>
-              <td className="p-2 rounded">08 September 2023</td>
-            </tr>
+            <Project />
+            <Project />
+            <Project />
+            <Project />
+            <Project />
+            <Project />
+            <Project />
+            <Project />
+            <Project />
+            <Project />
+            <Project />
+            <Project />
+            <Project />
           </tbody>
         </table>
       </div>
