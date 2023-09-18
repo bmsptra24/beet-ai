@@ -2,23 +2,26 @@
 import Configuration from '@/components/modules/home/Configuration'
 import Dashboard from '@/components/modules/home/Dashboard'
 import Studio from '@/components/modules/home/Studio'
+import { initState } from '@/store/actions/currIdProject.slice'
 import { Project } from '@/types/types'
-import { prismaFindManyProjects } from '@/utils/prisma'
+import { prismaFindManyProjects, prismaUpdateProject } from '@/utils/prisma'
 import { useSession } from 'next-auth/react'
 import { useEffect, useState } from 'react'
 import { FaStarOfLife } from 'react-icons/fa'
 import { GrHomeRounded, GrConfigure } from 'react-icons/gr'
+import { useDispatch } from 'react-redux'
 const page: React.FC = () => {
   const { data: session } = useSession()
   const [projects, setProjects] = useState<Project[]>([])
   const [navigation, setNavigation] = useState(1)
   const dummyProjects = ['Minato Yamata', 'AI Chef Yunita', 'Tsubasa']
+  const dispatch = useDispatch()
 
   const getProject = async () => {
     if (!session) return
     const response = await prismaFindManyProjects({
       where: { user: { email: session?.user?.email as string } },
-      select: { id: true, platform: true, livestreamTopic: true },
+      select: { id: true, platform: true, avatarName: true },
       orderBy: { lastOpenAt: 'desc' },
     })
     setProjects(response)
@@ -69,24 +72,39 @@ const page: React.FC = () => {
         </div>
         <div className="flex flex-col gap-2">
           <p className="font-bold">Project</p>
-          {dummyProjects.map((project, index) => {
+          {projects.map((project, index) => {
             return (
               <p
                 key={index}
-                onClick={() => setNavigation(index + 3)}
+                onClick={async () => {
+                  // Update last open project
+                  const response = await prismaUpdateProject({
+                    where: {
+                      user: { email: session?.user?.email as string },
+                      id: project.id,
+                    },
+                    data: {
+                      lastOpenAt: new Date().toJSON(),
+                    },
+                  })
+
+                  if (response === null) throw new Error('Project not found!')
+                  dispatch(initState({ ...response }))
+                  setNavigation(3)
+                }}
                 className={`${
                   navigation === index + 3 &&
                   'bg-primary-white hover:bg-primary-white border-2 cursor-default'
                 } text-sm flex items-center gap-2 px-2 py-1.5 rounded-lg cursor-pointer hover:bg-primary-one/30 border-primary-black`}
               >
-                <FaStarOfLife /> {project}
+                <FaStarOfLife /> {project?.avatarName as string}
               </p>
             )
           })}
         </div>
       </section>
       <section className="flex flex-col bg-primary-white py-10 px-5 gap-5 grow">
-        {navigation === 1 && <Dashboard />}
+        {navigation === 1 && <Dashboard setNavigation={setNavigation} />}
         {navigation === 2 && <Configuration />}
         {navigation === 3 && <Studio />}
       </section>

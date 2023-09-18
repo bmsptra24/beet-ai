@@ -1,44 +1,38 @@
-import React, { ReactNode } from 'react'
+import { Dropdown, Input, Textarea } from '@/components/elements/Input'
+import { currProjectAction } from '@/store/actions/currIdProject.slice'
+import { RootState } from '@/store/store'
+import { ClassName, SetState } from '@/types/types'
+import { prismaUpdateProject } from '@/utils/prisma'
+import React, { ReactNode, useEffect } from 'react'
 import { RxTriangleDown } from 'react-icons/rx'
-
-type InputProp = {
-  placeholder: string
-}
-
-type DropdownProp = {
-  children: ReactNode
-  placeholder: string
-}
-
-type TextareaProp = {
-  placeholder: string
-}
+import { useDispatch, useSelector } from 'react-redux'
 
 const Configuration = () => {
-  const Input: React.FC<InputProp> = ({ placeholder }) => {
-    return (
-      <input
-        type="text"
-        placeholder={placeholder}
-        className="border-2 border-primary-black rounded w-full p-2 bg-transparent"
-      />
-    )
-  }
-  const Dropdown: React.FC<DropdownProp> = ({ children, placeholder }) => {
-    return (
-      <select className="border-2 border-primary-black rounded w-full p-2 bg-transparent">
-        {children}
-      </select>
-    )
-  }
-  const Textarea: React.FC<TextareaProp> = ({ placeholder }) => {
-    return (
-      <textarea
-        className={`border-2 border-primary-black rounded w-full p-2 bg-transparent h-56 grow`}
-        placeholder={placeholder}
-      />
-    )
-  }
+  const dispatch = useDispatch()
+
+  const {
+    aiKnowlagge,
+    aiRole,
+    avatarName,
+    id,
+    language,
+    livestreamTopic,
+    livestreamingId,
+    mood,
+    platform,
+  } = useSelector((state: RootState) => state.currProject)
+
+  const {
+    setAiKnowlagge,
+    setAiRole,
+    setAvatarName,
+    setLanguage,
+    setLivestreamTopic,
+    setLivestreamingId,
+    setMood,
+    setPlatform,
+  } = currProjectAction
+
   return (
     <>
       <div className="flex items-center justify-between">
@@ -49,32 +43,94 @@ const Configuration = () => {
         </div>
       </div>
       <div className="mt-8 flex flex-col gap-2 grow">
-        <Input placeholder="avatar name" />
-        <Input placeholder="livestream id" />
-        <Input placeholder="topic" />
+        <Input
+          placeholder="Your Cool Avatar Name"
+          setState={(event) => dispatch(setAvatarName(event))}
+          state={avatarName}
+          callback={() =>
+            prismaUpdateProject({
+              where: { id },
+              data: { avatarName },
+            })
+          }
+        />
+        <Input
+          placeholder="your-ai-role"
+          setState={(event) => dispatch(setAiRole(event))}
+          state={aiRole}
+          callback={() =>
+            prismaUpdateProject({
+              where: { id },
+              data: { aiRole },
+            })
+          }
+        />
+        <Input
+          placeholder="your-livestream-topic"
+          setState={(event) => dispatch(setLivestreamTopic(event))}
+          state={livestreamTopic}
+          callback={() =>
+            prismaUpdateProject({
+              where: { id },
+              data: { livestreamTopic },
+            })
+          }
+        />
         <div className="flex gap-2">
-          <Dropdown placeholder="">
+          <Dropdown
+            setState={(event) => dispatch(setMood(event))}
+            state={mood}
+            callback={() =>
+              prismaUpdateProject({
+                where: { id },
+                data: { mood },
+              })
+            }
+          >
             <option value="happy">Happy</option>
             <option value="sad">Sad</option>
             <option value="angry">Angry</option>
           </Dropdown>
-          <Dropdown placeholder="">
-            <option value="happy">Happy</option>
-            <option value="sad">Sad</option>
-            <option value="angry">Angry</option>
+
+          <Dropdown
+            setState={(event) => dispatch(setPlatform(event))}
+            state={platform}
+            callback={() =>
+              prismaUpdateProject({
+                where: { id },
+                data: { platform },
+              })
+            }
+          >
+            <option value="youtube">Youtube</option>
+            <option value="tiktok">Tiktok</option>
           </Dropdown>
-          <Dropdown placeholder="">
-            <option value="happy">Happy</option>
-            <option value="sad">Sad</option>
-            <option value="angry">Angry</option>
-          </Dropdown>
-          <Dropdown placeholder="">
-            <option value="happy">Happy</option>
-            <option value="sad">Sad</option>
-            <option value="angry">Angry</option>
+
+          <Dropdown
+            setState={(event) => dispatch(setLanguage(event))}
+            state={language}
+            callback={() =>
+              prismaUpdateProject({
+                where: { id },
+                data: { language },
+              })
+            }
+          >
+            <option value="indonesia">Indonesia</option>
+            <option value="english">English</option>
           </Dropdown>
         </div>
-        <Textarea placeholder="ai knowladge" />
+        <Textarea
+          placeholder="your-ai-knowlage"
+          state={aiKnowlagge}
+          setState={(event) => dispatch(setAiKnowlagge(event))}
+          callback={() =>
+            prismaUpdateProject({
+              where: { id },
+              data: { aiKnowlagge },
+            })
+          }
+        />
         <div className="flex justify-between gap-2">
           <button className="bg-primary-tree grow flex items-center py-1.5 px-6 rounded press-sm press-sm-active cursor-pointer">
             Test AI
