@@ -1,20 +1,28 @@
-# Gunakan image Node.js sebagai base image
-FROM node:18
+# Dockerfile
 
-# Membuat direktori kerja dalam container
+# Use node alpine as it's a small node image
+FROM node:alpine
+
+# Create the directory on the node image 
+# where our Next.js app will live
+RUN mkdir -p /app
+
+# Set /app as the working directory
 WORKDIR /app
 
-# Menyalin package.json dan package-lock.json untuk menginstal dependensi
-COPY package*.json ./
+# Copy package.json and package-lock.json
+# to the /app working directory
+COPY prisma ./prisma/
+COPY package*.json .
 
-# Menginstal dependensi proyek
+# Install dependencies in /app
 RUN npm install
 
-# Menyalin sumber kode proyek ke dalam container
+# Copy the rest of our Next.js folder into /app
 COPY . .
 
-# Menghasilkan build proyek Next.js
-# RUN npm run build
+# Ensure port 3000 is accessible to our system
+EXPOSE 3000
 
-# Menjalankan proyek Next.js saat container dijalankan
+# Run npm dev, as we would via the command line 
 CMD ["npm", "run", "dev"]
