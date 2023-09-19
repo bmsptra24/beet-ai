@@ -39,7 +39,7 @@ export const Input: React.FC<InputProp> = ({
 
   return (
     <input
-      className={`${className} border-2 border-primary-black rounded w-full p-2 bg-transparent`}
+      className={`${className} border-2 border-slate-400 rounded w-full p-2 bg-transparent`}
       type="text"
       placeholder={placeholder}
       value={state}
@@ -64,7 +64,7 @@ export const Dropdown: React.FC<DropdownProp> = ({
 
   return (
     <select
-      className={`${className} border-2 border-primary-black rounded w-full p-2 bg-transparent`}
+      className={`border-2 border-slate-400 rounded w-full p-2 ${className}`}
       value={state}
       onChange={(event) => {
         setState(event.target.value)
@@ -91,7 +91,7 @@ export const Textarea: React.FC<TextareaProp> = ({
 
   return (
     <textarea
-      className={`${className} border-2 border-primary-black rounded w-full p-2 bg-transparent h-56 grow`}
+      className={`${className} border-2 border-slate-400 rounded w-full p-2 bg-transparent h-56 grow`}
       placeholder={placeholder}
       value={state}
       onChange={(event) => {

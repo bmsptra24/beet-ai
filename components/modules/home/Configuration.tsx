@@ -1,13 +1,20 @@
 import { Dropdown, Input, Textarea } from '@/components/elements/Input'
-import { currProjectAction } from '@/store/actions/currIdProject.slice'
+import {
+  currProjectAction,
+  initState,
+} from '@/store/actions/currIdProject.slice'
 import { RootState } from '@/store/store'
-import { ClassName, SetState } from '@/types/types'
-import { prismaUpdateProject } from '@/utils/prisma'
-import React, { ReactNode, useEffect } from 'react'
+import { ClassName, Project, SetState } from '@/types/types'
+import { prismaFindManyProjects, prismaUpdateProject } from '@/utils/prisma'
+import { useSession } from 'next-auth/react'
+import React, { ReactNode, useEffect, useState } from 'react'
 import { RxTriangleDown } from 'react-icons/rx'
 import { useDispatch, useSelector } from 'react-redux'
 
 const Configuration = () => {
+  const [projects, setProjects] = useState<Project[]>([])
+  const [currProject, setCurrProject] = useState(0)
+  const { data: session } = useSession()
   const dispatch = useDispatch()
 
   const {
@@ -21,6 +28,53 @@ const Configuration = () => {
     mood,
     platform,
   } = useSelector((state: RootState) => state.currProject)
+
+  useEffect(() => {
+    // Get data project
+    ;(async () => {
+      const project = await prismaFindManyProjects({
+        where: {
+          user: { email: 'admin@prisma.io' },
+        },
+        orderBy: {
+          lastOpenAt: 'desc',
+        },
+        take: 1,
+      })
+
+      // set state
+      if (project === null) throw new Error('Project not found!')
+      dispatch(initState({ ...project[0] }))
+    })()
+  }, [])
+
+  const getProject = async () => {
+    if (!session) return
+    const response = await prismaFindManyProjects({
+      where: { user: { email: session?.user?.email as string } },
+      select: { id: true, platform: true, avatarName: true },
+      orderBy: { lastOpenAt: 'desc' },
+    })
+    setProjects(response)
+  }
+
+  useEffect(() => {
+    if (projects.length === 0) {
+      getProject()
+    }
+  }, [projects, session])
+
+  console.log({
+    aiKnowlagge,
+    aiRole,
+    avatarName,
+    id,
+    language,
+    livestreamTopic,
+    livestreamingId,
+    mood,
+    platform,
+  })
 
   const {
     setAiKnowlagge,
@@ -36,10 +90,36 @@ const Configuration = () => {
   return (
     <>
       <div className="flex items-center justify-between">
-        <p className="text-3xl font-bold">Configuration</p>
-        <div className="bg-primary-tree flex items-center py-1 px-2 rounded press-sm press-sm-active cursor-pointer">
-          <p>Minato Yamata</p>
-          <RxTriangleDown />
+        <p className="text-3xl font-bold grow">Configuration</p>
+        <div>
+          <Dropdown
+            setState={(event) => setCurrProject(Number(event))}
+            className={`bg-primary-tree flex items-center py-1 px-2 rounded press-sm cursor-pointer`}
+            state={currProject.toString()}
+            callback={async (id) => {
+              if (projects.length === 0) return
+              const response = await prismaUpdateProject({
+                where: {
+                  user: { email: session?.user?.email as string },
+                  id: Number(id),
+                },
+                data: {
+                  lastOpenAt: new Date().toJSON(),
+                },
+              })
+
+              if (response === null) throw new Error('Project not found!')
+              dispatch(initState({ ...response }))
+            }}
+          >
+            {projects?.map((project, index) => {
+              return (
+                <option value={project.id} key={index}>
+                  {project.avatarName as string}
+                </option>
+              )
+            })}
+          </Dropdown>
         </div>
       </div>
       <div className="mt-8 flex flex-col gap-2 grow">
