@@ -1,15 +1,19 @@
 import Message from '@/components/elements/home/Message'
 import Queue from '@/components/elements/home/Queue'
 import { RootState } from '@/store/store'
-import { Prompt } from '@/types/types'
 import { ytMessageDummy } from '@/utils/dummyData'
-import { generateAiAnswer } from '@/utils/openai'
+import { ytGetLiveChat } from '@/utils/services/ytGetLiveChat'
 import { AudioPlayer, textToSpeech } from '@/utils/sound'
-import React, { useState } from 'react'
-import { IoMdClose } from 'react-icons/io'
+import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-function Studio() {
-  const [messages, setMessages] = useState(ytMessageDummy)
+
+const Studio = () => {
+  const [messages, setMessages] = useState<
+    {
+      author: string
+      message: string
+    }[]
+  >([])
   const [editAnswer, setEditAnswer] = useState({
     author: '',
     message: '',
@@ -44,13 +48,24 @@ function Studio() {
     platform,
   })
 
+  useEffect(() => {
+    setInterval(() => {
+      ;(async () => {
+        // setMessages([...messages, ...(await ytGetLiveChat('C2aZPjVdqyA', 50))])
+        const response = await ytGetLiveChat('J3FpJ3k6fRw', 10)
+        if (response === null) return
+        setMessages(response)
+      })()
+    }, 10000)
+  }, [])
+
   return (
     <>
       <main className="flex justify-between gap-5 grow">
         <section className="grow flex flex-col">
           <p className="text-3xl font-bold">Message</p>
           <div className="mt-3 flex flex-col gap-2 overflow-hidden hover:overflow-y-auto max-h-[81vh]">
-            {messages.map((message, index) => {
+            {messages?.map((message, index) => {
               return (
                 <Message
                   setEditAnswer={setEditAnswer}
@@ -94,7 +109,7 @@ function Studio() {
           <article className="w-96 flex flex-col grow">
             <p className="text-3xl font-bold">Queue</p>
             <div className="overflow-y-auto max-h-[33vh]">
-              {queues.map((message, index) => {
+              {queues?.map((message, index) => {
                 return (
                   <Queue
                     index={index}

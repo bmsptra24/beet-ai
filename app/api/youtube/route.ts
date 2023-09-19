@@ -1,16 +1,10 @@
 'use server'
-
-// import { setNextPageToken, setPageInfo } from '@/store/actions/youtube.slice'
+import { NextResponse, NextRequest } from 'next/server'
 
 interface LiveChatMessage {
   author: string
   message: string
 }
-
-let nextPageToken = ''
-
-// pageInfo: { totalResults: 62, resultsPerPage: 50 }
-let pageInfo: { totalResults: number; resultsPerPage: number }
 
 const fetchData = async (url: string) => {
   try {
@@ -28,8 +22,6 @@ const fetchData = async (url: string) => {
 const getYoutubeVideoDetails = async (apiKey: string, livestreamId: string) => {
   const url = `https://www.googleapis.com/youtube/v3/videos?part=liveStreamingDetails&id=${livestreamId}&key=${apiKey}`
   const data = await fetchData(url)
-  console.log(data.items[0]?.liveStreamingDetails)
-
   return data.items[0]?.liveStreamingDetails || null
 }
 
@@ -38,27 +30,21 @@ const getYoutubeLiveChat = async (
   apiKey: string,
   maxResult: number,
 ): Promise<LiveChatMessage[]> => {
-  console.log({ nextPageToken })
-
-  const url = `https://www.googleapis.com/youtube/v3/liveChat/messages?liveChatId=${liveChatId}&pageToken=${nextPageToken}&order=time&part=snippet&key=${apiKey}&maxResults=${maxResult}`
+  const url = `https://www.googleapis.com/youtube/v3/liveChat/messages?liveChatId=${liveChatId}&part=snippet&key=${apiKey}&maxResults=${maxResult}`
   const data = await fetchData(url)
-  nextPageToken = data?.nextPageToken
-  pageInfo = data?.pageInfo
-  console.log({ data })
-
   return data.items.map((item: any) => ({
     author: item.snippet.authorDisplayName,
     message: item.snippet.displayMessage,
   }))
 }
 
-export const ytGetLiveChat = async (
-  livestreamId: string,
-  maxResult: number,
-) => {
-  if (pageInfo?.totalResults <= pageInfo?.resultsPerPage) return null
+export async function GET(req: NextRequest) {
+  const { searchParams } = new URL(req.url)
+  const livestreamId: string = searchParams.get('livestreamId') || ''
+  const maxResult: string = searchParams.get('maxResult') || ''
 
   const apiKey: string = process.env.YT_API_KEY || ''
+  console.log(apiKey)
 
   try {
     const detailStream = await getYoutubeVideoDetails(apiKey, livestreamId)
@@ -67,7 +53,7 @@ export const ytGetLiveChat = async (
       const chatStream = await getYoutubeLiveChat(
         detailStream.activeLiveChatId,
         apiKey,
-        maxResult,
+        Number(maxResult),
       )
 
       if (chatStream.length > 0) {

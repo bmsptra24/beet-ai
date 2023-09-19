@@ -99,3 +99,8 @@ export type QueueProps = {
   author: string
   message: string
 }[]
+
+export type ChatsProps = {
+  author: string
+  message: string
+}[]
