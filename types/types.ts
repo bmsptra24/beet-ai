@@ -94,3 +94,8 @@ export type CurrProjectProps = {
   language: string
   aiKnowlagge: string
 }
+
+export type QueueProps = {
+  author: string
+  message: string
+}[]

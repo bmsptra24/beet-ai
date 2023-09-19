@@ -13,7 +13,7 @@ import { useDispatch } from 'react-redux'
 const page: React.FC = () => {
   const { data: session } = useSession()
   const [projects, setProjects] = useState<Project[]>([])
-  const [navigation, setNavigation] = useState(1)
+  const [navigation, setNavigation] = useState(3)
   const dummyProjects = ['Minato Yamata', 'AI Chef Yunita', 'Tsubasa']
   const dispatch = useDispatch()
 
