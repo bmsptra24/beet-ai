@@ -51,8 +51,7 @@ const Studio = () => {
   useEffect(() => {
     setInterval(() => {
       ;(async () => {
-        // setMessages([...messages, ...(await ytGetLiveChat('C2aZPjVdqyA', 50))])
-        const response = await ytGetLiveChat('J3FpJ3k6fRw', 10)
+        const response = await ytGetLiveChat('re_OZUSowWw', 10)
         if (response === null) return
         setMessages(response)
       })()
