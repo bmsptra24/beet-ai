@@ -1,31 +1,31 @@
-"use client";
-import { Textarea } from "@/components/elements/Input";
-import { ytMessageDummy } from "@/utils/dummyData";
-import { generateAiAnswer } from "@/utils/openai";
-import { prismaFindUniqueProject } from "@/utils/prisma";
-import { ytGetLiveChat } from "@/utils/services/ytGetLiveChat";
-import { textToSpeech } from "@/utils/sound";
-import React, { useEffect, useState } from "react";
-import { MdOutlineCancel } from "react-icons/md";
+'use client'
+import { Textarea } from '@/components/elements/Input'
+import { ytMessageDummy } from '@/utils/dummyData'
+import { generateAiAnswer } from '@/utils/openai'
+import { prismaFindUniqueProject } from '@/utils/prisma'
+import { ytGetLiveChat } from '@/utils/services/ytGetLiveChat'
+import { textToSpeech } from '@/utils/sound'
+import React, { useEffect, useState } from 'react'
+import { MdOutlineCancel } from 'react-icons/md'
 const Control = () => {
   const response = {
-    content: "Halo guys",
-  };
-  const [editAnswer, setEditAnswer] = useState(response.content);
-  const [queue, setQueue] = useState(["hihihi", "apa iya", "benarkah itu"]);
+    content: 'Halo guys',
+  }
+  const [editAnswer, setEditAnswer] = useState(response.content)
+  const [queue, setQueue] = useState(['hihihi', 'apa iya', 'benarkah itu'])
   // const [editAnswer, setEditAnswer] = useState(" ");
-  const [messages, setMessages] = useState(ytMessageDummy);
+  const [messages, setMessages] = useState(ytMessageDummy)
   // const [messages, setMessages] = useState([{ author: "", message: "" }]);
-  const dummyId = 1;
+  const dummyId = 1
 
-  const [livestreamId, setLivestreamId] = useState(" ");
-  const [avatarName, setAvatarName] = useState(" ");
-  const [aiRole, setAiRole] = useState(" ");
-  const [livestreamTopic, setLivestreamTopic] = useState(" ");
-  const [mood, setMood] = useState(" ");
-  const [platform, setPlatform] = useState(" ");
-  const [language, setLanguage] = useState(" ");
-  const [aiKnowlagge, setAiKnowlagge] = useState(" ");
+  const [livestreamId, setLivestreamId] = useState(' ')
+  const [avatarName, setAvatarName] = useState(' ')
+  const [aiRole, setAiRole] = useState(' ')
+  const [livestreamTopic, setLivestreamTopic] = useState(' ')
+  const [mood, setMood] = useState(' ')
+  const [platform, setPlatform] = useState(' ')
+  const [language, setLanguage] = useState(' ')
+  const [aiKnowlagge, setAiKnowlagge] = useState(' ')
 
   useEffect(() => {
     // (async () => {
@@ -45,7 +45,7 @@ const Control = () => {
     //   };
     //   initState();
     // })();
-  }, []);
+  }, [])
 
   return (
     <main className="flex w-full justify-betwee">
@@ -64,16 +64,16 @@ const Control = () => {
                   livestreamTopic,
                   mood,
                   language,
-                  aiKnowlagge
-                );
-                console.log(response);
-                textToSpeech(response.content);
+                  aiKnowlagge,
+                )
+                console.log(response)
+                textToSpeech(response.content)
               }}
             >
               <strong>{`${message.author}:`}</strong>
               {` ${message.message}`}
             </p>
-          );
+          )
         })}
       </section>
       <section className="flex flex-col w-full py-1 px-3">
@@ -86,9 +86,9 @@ const Control = () => {
         <button
           disabled={queue.length >= 5}
           onClick={() => {
-            if (editAnswer === "") return;
-            setEditAnswer("");
-            setQueue([...queue, editAnswer]);
+            if (editAnswer === '') return
+            setEditAnswer('')
+            setQueue([...queue, editAnswer])
           }}
           className="press-shadow-sm p-1 mt-1 mb-5 press-sm cursor-pointer bg-green-300"
         >
@@ -103,17 +103,17 @@ const Control = () => {
               {message}
               <MdOutlineCancel
                 onClick={() => {
-                  const newQueue = queue.filter((_, idx) => index !== idx);
-                  setQueue(newQueue);
+                  const newQueue = queue.filter((_, idx) => index !== idx)
+                  setQueue(newQueue)
                 }}
                 className="min-w-[25px] min-h-[25px] mt-[2px] cursor-pointer transition-all ease-in-out text-red-400 hover:text-red-500"
               />
             </p>
-          );
+          )
         })}
       </section>
     </main>
-  );
-};
+  )
+}
 
-export default Control;
+export default Control

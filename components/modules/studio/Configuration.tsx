@@ -1,19 +1,19 @@
-"use client";
-import { Dropdown, Input, Textarea } from "@/components/elements/Input";
-import { TestSound } from "@/components/test/TestSound";
+'use client'
+import { Dropdown, Input, Textarea } from '@/components/elements/Input'
+import { TestSound } from '@/components/test/TestSound'
 import {
   currProjectAction,
   initState,
-} from "@/store/actions/currIdProject.slice";
-import { RootState } from "@/store/store";
-import { generateAiAnswer } from "@/utils/openai";
-import { prismaFindManyProjects, prismaUpdateProject } from "@/utils/prisma";
-import { ytGetLiveChat } from "@/utils/services/ytGetLiveChat";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+} from '@/store/actions/currIdProject.slice'
+import { RootState } from '@/store/store'
+import { generateAiAnswer } from '@/utils/openai'
+import { prismaFindManyProjects, prismaUpdateProject } from '@/utils/prisma'
+import { ytGetLiveChat } from '@/utils/services/ytGetLiveChat'
+import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
 const Configuration = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
 
   const {
     aiKnowlagge,
@@ -25,26 +25,37 @@ const Configuration = () => {
     livestreamingId,
     mood,
     platform,
-  } = useSelector((state: RootState) => state.currProject);
+  } = useSelector((state: RootState) => state.currProject)
 
   useEffect(() => {
     // Get data project
-    (async () => {
+    ;(async () => {
       const project = await prismaFindManyProjects({
         where: {
-          user: { email: "admin@prisma.io" },
+          user: { email: 'admin@prisma.io' },
         },
         orderBy: {
-          lastOpenAt: "desc",
+          lastOpenAt: 'desc',
         },
         take: 1,
-      });
+      })
 
       // set state
-      if (project === null) throw new Error("Project not found!");
-      dispatch(initState({ ...project[0] }));
-    })();
-  }, []);
+      if (project === null) throw new Error('Project not found!')
+      dispatch(initState({ ...project[0] }))
+    })()
+  }, [])
+  console.log({
+    aiKnowlagge,
+    aiRole,
+    avatarName,
+    id,
+    language,
+    livestreamTopic,
+    livestreamingId,
+    mood,
+    platform,
+  })
 
   const {
     setAiKnowlagge,
@@ -55,25 +66,25 @@ const Configuration = () => {
     setLivestreamingId,
     setMood,
     setPlatform,
-  } = currProjectAction;
+  } = currProjectAction
 
   const handlerGetChatLive = async (livestreamId: string) => {
-    console.log(await ytGetLiveChat(livestreamId, 500));
-  };
+    console.log(await ytGetLiveChat(livestreamId, 500))
+  }
 
   const handlerGenerateAnswer = async () => {
     console.log(
       await generateAiAnswer(
-        { author: "Bimbim", message: livestreamingId },
+        { author: 'Bimbim', message: livestreamingId },
         avatarName,
         aiRole,
         livestreamTopic,
         mood,
         language,
-        aiKnowlagge
-      )
-    );
-  };
+        aiKnowlagge,
+      ),
+    )
+  }
 
   return (
     <>
@@ -92,11 +103,11 @@ const Configuration = () => {
                   where: { id },
                   data: { livestreamingId },
                 }).catch((error) => {
-                  if (error?.digest === "2750255691")
-                    alert("Project not found!");
-                });
+                  if (error?.digest === '2750255691')
+                    alert('Project not found!')
+                })
               } catch (error) {
-                throw error;
+                throw error
               }
             }}
           />
@@ -108,13 +119,13 @@ const Configuration = () => {
           </button>
           <button
             onClick={() => {
-              const text = "Hai nama kamu siapa ya";
+              const text = 'Hai nama kamu siapa ya'
 
-              const synth = window.speechSynthesis;
+              const synth = window.speechSynthesis
 
-              const utterance = new SpeechSynthesisUtterance(text);
+              const utterance = new SpeechSynthesisUtterance(text)
 
-              synth.speak(utterance);
+              synth.speak(utterance)
             }}
             className="flex px-3 bg-primary-white items-center justify-between press-shadow-sm press-sm"
           >
@@ -220,7 +231,7 @@ const Configuration = () => {
         </button>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default Configuration;
+export default Configuration

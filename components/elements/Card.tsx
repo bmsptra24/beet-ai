@@ -1,24 +1,24 @@
-import React from "react";
-import { AiOutlinePlus } from "react-icons/ai";
-import { useRouter } from "next/navigation";
+import React from 'react'
+import { AiOutlinePlus } from 'react-icons/ai'
+import { useRouter } from 'next/navigation'
 import {
   prismaCreateProject,
   prismaFindManyProjects,
   prismaFindUniqueProject,
   prismaUpdateProject,
-} from "@/utils/prisma";
-import { useDispatch } from "react-redux";
-import { initState } from "@/store/actions/currIdProject.slice";
+} from '@/utils/prisma'
+import { useDispatch } from 'react-redux'
+import { initState } from '@/store/actions/currIdProject.slice'
 
 type Props = {
-  id: number;
-  title: string;
-  platform: string;
-};
+  id: number
+  title: string
+  platform: string
+}
 
 export const Card: React.FC<Props> = ({ id, title, platform }) => {
-  const router = useRouter();
-  const dispatch = useDispatch();
+  const router = useRouter()
+  const dispatch = useDispatch()
 
   return (
     <button
@@ -26,15 +26,15 @@ export const Card: React.FC<Props> = ({ id, title, platform }) => {
         // Update last open project
         await prismaUpdateProject({
           where: {
-            user: { email: "admin@prisma.io" },
+            user: { email: 'admin@prisma.io' },
             id: id,
           },
           data: {
             lastOpenAt: new Date().toJSON(),
           },
-        });
+        })
 
-        router.push("/studio");
+        router.push('/studio')
       }}
       className="rounded-xl h-52 w-72 bg-primary-white border-primary-black border-2 press-shadow flex flex-col justify-between text-base p-5"
     >
@@ -42,14 +42,14 @@ export const Card: React.FC<Props> = ({ id, title, platform }) => {
         <p className="text-2xl">{title}</p>
         <p>{platform}</p>
       </div>
-      <div>{"</>"}</div>
+      <div>{'</>'}</div>
     </button>
-  );
-};
+  )
+}
 
 export const CardAddproject = () => {
-  const router = useRouter();
-  const dispatch = useDispatch();
+  const router = useRouter()
+  const dispatch = useDispatch()
   return (
     <button
       onClick={async () => {
@@ -66,9 +66,9 @@ export const CardAddproject = () => {
           platform,
         } = await prismaCreateProject({
           data: {
-            user: { connect: { email: "admin@prisma.io" } },
+            user: { connect: { email: 'admin@prisma.io' } },
           },
-        });
+        })
 
         console.log({
           id,
@@ -80,7 +80,7 @@ export const CardAddproject = () => {
           livestreamingId,
           mood,
           platform,
-        });
+        })
 
         // set state
         dispatch(
@@ -94,10 +94,10 @@ export const CardAddproject = () => {
             livestreamTopic,
             mood,
             platform,
-          })
-        );
+          }),
+        )
 
-        router.push("/studio");
+        router.push('/studio')
       }}
       className="rounded-xl h-52 w-72 bg-primary-white border-primary-one border-2 press-shadow flex flex-col justify-between text-base text-primary-one"
     >
@@ -109,5 +109,5 @@ export const CardAddproject = () => {
         Try the demo project
       </div>
     </button>
-  );
-};
+  )
+}
