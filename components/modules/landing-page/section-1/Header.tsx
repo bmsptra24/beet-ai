@@ -8,12 +8,11 @@ const Header: React.FC = () => {
       <div>
         <img src={logo.src} alt="logo" className="w-[4rem] ml-1" />
       </div>
-      {/* <div className="text-primary-black flex gap-10">
-      </div> */}
+
       <div className="justify-between gap-10 hidden md:flex">
-        <Link className="hover:underline" href={'#'}>
+        {/* <Link className="hover:underline" href={'#'}>
           Service
-        </Link>
+        </Link> 
         <Link className="hover:underline" href={'#'}>
           About us
         </Link>
@@ -22,14 +21,15 @@ const Header: React.FC = () => {
         </Link>
         <Link className="hover:underline" href={'#'}>
           Team
-        </Link>
+        </Link> 
         <Link className="hover:underline" href={'#'}>
           Contact us
-        </Link>
+        </Link> */}
         <ButtonSignIn />
       </div>
       <div className="block md:hidden">
-        <GiHamburgerMenu />
+        <ButtonSignIn />
+        {/* <GiHamburgerMenu /> */}
       </div>
     </div>
   )

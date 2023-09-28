@@ -7,11 +7,20 @@ import { RootState } from '@/store/store'
 import { ClassName, Project, SetState } from '@/types/types'
 import { prismaFindManyProjects, prismaUpdateProject } from '@/utils/prisma'
 import { useSession } from 'next-auth/react'
-import React, { ReactNode, useEffect, useState } from 'react'
+import React, {
+  Dispatch,
+  ReactNode,
+  SetStateAction,
+  useEffect,
+  useState,
+} from 'react'
 import { RxTriangleDown } from 'react-icons/rx'
 import { useDispatch, useSelector } from 'react-redux'
-
-const Configuration = () => {
+import Header from './Header'
+type Props = {
+  setIsMenuOpen: Dispatch<SetStateAction<boolean>>
+}
+const Configuration: React.FC<Props> = ({ setIsMenuOpen }) => {
   const [projects, setProjects] = useState<Project[]>([])
   const [currProject, setCurrProject] = useState(0)
   const { data: session } = useSession()
@@ -89,6 +98,7 @@ const Configuration = () => {
 
   return (
     <>
+      <Header setIsMenuOpen={setIsMenuOpen} />
       <div className="flex items-center justify-between">
         <p className="text-3xl font-bold grow">Configuration</p>
         <div>

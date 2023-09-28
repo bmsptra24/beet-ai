@@ -12,10 +12,13 @@ import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { AiOutlinePlus } from 'react-icons/ai'
 import { HiLogout } from 'react-icons/hi'
 import { useDispatch, useSelector } from 'react-redux'
+import Header, { HeaderClose } from './Header'
 const Dashboard = ({
   setNavigation,
+  setIsMenuOpen,
 }: {
   setNavigation: Dispatch<SetStateAction<number>>
+  setIsMenuOpen: Dispatch<SetStateAction<boolean>>
 }) => {
   const { data: session } = useSession()
   const [projects, setProjects] = useState<Project[]>([])
@@ -76,6 +79,7 @@ const Dashboard = ({
   }
   return (
     <>
+      <Header setIsMenuOpen={setIsMenuOpen} />
       <div className="flex gap-5">
         <div className="bg-primary-six px-5 py-4 rounded border-2 border-primary-black grow">
           <p className="font-bold">300 dialog</p>
@@ -88,7 +92,7 @@ const Dashboard = ({
           onClick={() => {
             signOut({ redirect: true, callbackUrl: '/sign/in' })
           }}
-          className="bg-primary-danger px-3 py-4 text-2xl rounded border-2 border-primary-black cursor-pointer hover:brightness-95"
+          className="hidden lg:block bg-primary-danger px-3 py-4 text-2xl rounded border-2 border-primary-black cursor-pointer hover:brightness-95"
         >
           <HiLogout />
         </div>
