@@ -60,11 +60,20 @@ const Studio = () => {
 
   return (
     <>
-      <main className="flex justify-between gap-5 grow">
+      <main className="flex flex-col lg:flex-row justify-between gap-5 grow">
         <section className="grow flex flex-col">
           <p className="text-3xl font-bold">Message</p>
-          <div className="mt-3 flex flex-col gap-2 overflow-hidden hover:overflow-y-auto max-h-[81vh]">
-            {messages?.map((message, index) => {
+          <div className="mt-3 flex flex-col gap-2 overflow-y-scroll lg:overflow-hidden lg:hover:overflow-y-auto max-h-[30vh] lg:max-h-[81vh]">
+            {ytMessageDummy?.map((message, index) => {
+              return (
+                <Message
+                  setEditAnswer={setEditAnswer}
+                  message={message}
+                  key={index}
+                />
+              )
+            })}
+            {ytMessageDummy?.map((message, index) => {
               return (
                 <Message
                   setEditAnswer={setEditAnswer}
@@ -105,7 +114,7 @@ const Studio = () => {
               save change
             </button>
           </article>
-          <article className="w-96 flex flex-col grow">
+          <article className="w-full lg:w-96 flex flex-col grow">
             <p className="text-3xl font-bold">Queue</p>
             <div className="overflow-y-auto max-h-[33vh]">
               {queues?.map((message, index) => {
