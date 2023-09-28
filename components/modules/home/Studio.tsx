@@ -4,10 +4,13 @@ import { RootState } from '@/store/store'
 import { ytMessageDummy } from '@/utils/dummyData'
 import { ytGetLiveChat } from '@/utils/services/ytGetLiveChat'
 import { AudioPlayer, textToSpeech } from '@/utils/sound'
-import React, { useEffect, useState } from 'react'
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-
-const Studio = () => {
+import Header from './Header'
+type Props = {
+  setIsMenuOpen: Dispatch<SetStateAction<boolean>>
+}
+const Studio: React.FC<Props> = ({ setIsMenuOpen }) => {
   const [messages, setMessages] = useState<
     {
       author: string
@@ -60,6 +63,7 @@ const Studio = () => {
 
   return (
     <>
+      <Header setIsMenuOpen={setIsMenuOpen} />
       <main className="flex flex-col lg:flex-row justify-between gap-5 grow">
         <section className="grow flex flex-col">
           <p className="text-3xl font-bold">Message</p>

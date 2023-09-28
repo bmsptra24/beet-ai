@@ -131,7 +131,7 @@ const page: React.FC = () => {
           />
         )}
         {navigation === 2 && <Configuration setIsMenuOpen={setIsMenuOpen} />}
-        {navigation === 3 && <Studio />}
+        {navigation === 3 && <Studio setIsMenuOpen={setIsMenuOpen} />}
       </section>
       {/* <section className="flex flex-col bg-primary-seven py-10 px-5 w-60"></section> */}
     </main>
