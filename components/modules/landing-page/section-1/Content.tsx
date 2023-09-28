@@ -9,9 +9,9 @@ const Content = () => {
   // console.log({ session });
 
   return (
-    <div className="min-h-full flex flex-col lg:flex-row justify-center lg:justify-between items-start lg:items-center static gap-5">
+    <div className="min-h-full flex flex-col lg:flex-row justify-center lg:justify-between items-start lg:items-center static gap-5 py-20 lg:py-0 ">
       <section className="flex flex-col justify-center text-primary-black gap-7 lg:w-[25rem]">
-        <p className={`${jost.className} font-bold text-6xl`}>
+        <p className={`${jost.className} font-bold text-5xl lg:text-6xl`}>
           <span className="bg-primary-two text-primary-white px-2 leading-relaxed border-2 border-primary-black press-sm">
             Beet AI
           </span>
