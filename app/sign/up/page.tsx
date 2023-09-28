@@ -1,50 +1,50 @@
-"use client";
-import { bricolageGrotesque, delaGothicOne, jost } from "@/styles/fonts";
-import Link from "next/link";
-import React, { useRef, useState } from "react";
-import googleIcon from "@/public/icons/google.svg";
-import { prismaCreateUser } from "@/utils/prisma";
-import { signIn } from "next-auth/react";
-import isEmail from "validator/lib/isEmail";
-import isEmpty from "validator/lib/isEmpty";
-import equals from "validator/lib/equals";
-import { sendCode } from "@/utils/authorize";
-import meta from "@/public/images/avatars/meta.png";
-import md5 from "md5";
+'use client'
+import { bricolageGrotesque, delaGothicOne, jost } from '@/styles/fonts'
+import Link from 'next/link'
+import React, { useRef, useState } from 'react'
+import googleIcon from '@/public/icons/google.svg'
+import { prismaCreateUser } from '@/utils/prisma'
+import { signIn } from 'next-auth/react'
+import isEmail from 'validator/lib/isEmail'
+import isEmpty from 'validator/lib/isEmpty'
+import equals from 'validator/lib/equals'
+import { sendCode } from '@/utils/authorize'
+import meta from '@/public/images/avatars/meta.png'
+import md5 from 'md5'
 
 const page: React.FC = () => {
-  const name = useRef("");
-  const username = useRef("");
-  const email = useRef("");
-  const password = useRef("");
-  const confirmPassword = useRef("");
-  const [warning, setWarning] = useState("");
+  const name = useRef('')
+  const username = useRef('')
+  const email = useRef('')
+  const password = useRef('')
+  const confirmPassword = useRef('')
+  const [warning, setWarning] = useState('')
 
   const invalid = (message: string) => {
-    setWarning(message);
-    throw new Error(message);
-  };
+    setWarning(message)
+    throw new Error(message)
+  }
 
   const isValid = (
     name: string,
     username: string,
     email: string,
     password: string,
-    confirmPassword: string
+    confirmPassword: string,
   ) => {
     if (isEmpty(name, { ignore_whitespace: true }))
-      return invalid("Name can't be empty!");
+      return invalid("Name can't be empty!")
     if (isEmpty(username, { ignore_whitespace: true }))
-      return invalid("Username can't be empty!");
+      return invalid("Username can't be empty!")
     if (isEmpty(email, { ignore_whitespace: true }))
-      return invalid("Email can't be empty!");
+      return invalid("Email can't be empty!")
     if (isEmpty(password, { ignore_whitespace: true }))
-      return invalid("Password can't be empty!");
-    if (password.length < 7) return invalid("Password must be 8 words long!");
-    if (!equals(password, confirmPassword)) return invalid("Invalid Password!");
-    if (!isEmail(email)) return invalid("Invalid Email!");
-    return true;
-  };
+      return invalid("Password can't be empty!")
+    if (password.length < 7) return invalid('Password must be 8 words long!')
+    if (!equals(password, confirmPassword)) return invalid('Invalid Password!')
+    if (!isEmail(email)) return invalid('Invalid Email!')
+    return true
+  }
 
   const onSubmit = async () => {
     // validation
@@ -54,10 +54,10 @@ const page: React.FC = () => {
         username.current,
         email.current,
         password.current,
-        confirmPassword.current
+        confirmPassword.current,
       )
     )
-      return;
+      return
 
     // create user, send code, go to verification page
     try {
@@ -68,23 +68,23 @@ const page: React.FC = () => {
           email: email.current,
           password: md5(password.current),
         },
-      });
-      await sendCode(email.current);
-      console.log("Code sended!");
-      await signIn("credentials", {
+      })
+      await sendCode(email.current)
+      console.log('Code sended!')
+      await signIn('credentials', {
         email: email.current,
         password: md5(password.current),
         redirect: true,
-        callbackUrl: "/sign/verification",
-      });
-      console.log("User signed!");
+        callbackUrl: '/sign/verification',
+      })
+      console.log('User signed!')
     } catch (error) {
-      throw error;
+      throw error
     }
-  };
+  }
 
   return (
-    <main className="min-h-screen relative text-xl flex bg-primary-six">
+    <main className="min-h-screen justify-center lg:justify-start relative text-xl flex bg-primary-white lg:bg-primary-six">
       <section className="flex items-center bg-primary-white z-10">
         <div className="w-[24rem] h-[39rem] relative flex flex-col justify-between items-center p-8">
           <p
@@ -133,7 +133,7 @@ const page: React.FC = () => {
           </button>
           <div className="flex text-sm gap-1">
             <p>Dont have an account?</p>
-            <Link href={"/sign/in"} className="underline hover:no-underline">
+            <Link href={'/sign/in'} className="underline hover:no-underline">
               Sign In
             </Link>
           </div>
@@ -151,14 +151,14 @@ const page: React.FC = () => {
             <p>Continue with Google</p>
           </button> */}
           <p className="text-xs text-center">
-            by Continuing, you accept our{" "}
-            <Link href={"#"} className="underline hover:no-underline">
+            by Continuing, you accept our{' '}
+            <Link href={'#'} className="underline hover:no-underline">
               Terms and Conditions, Privacy Policy
             </Link>
           </p>
         </div>
       </section>
-      <section className="flex flex-col items-center w-full text-base ">
+      <section className="hidden lg:flex flex-col items-center w-full text-base ">
         <div className="flex flex-col items-center p-20 gap-5 z-10">
           <p className="text-3xl text-center">Stream AI is here!</p>
           <p className="text-center">
@@ -173,7 +173,7 @@ const page: React.FC = () => {
         <img src={meta.src} alt="hero" className="absolute bottom-0" />
       </section>
     </main>
-  );
-};
+  )
+}
 
-export default page;
+export default page

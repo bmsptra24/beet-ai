@@ -1,28 +1,28 @@
-"use client";
-import { bricolageGrotesque, delaGothicOne, jost } from "@/styles/fonts";
-import Link from "next/link";
-import React, { useRef, useEffect, useState } from "react";
-import googleIcon from "@/public/icons/google.svg";
-import { signIn, useSession } from "next-auth/react";
-import isEmail from "validator/lib/isEmail";
-import { prismaFindUniqueUser } from "@/utils/prisma";
-import { User } from "@/types/types";
-import { useRouter } from "next/navigation";
-import meta from "@/public/images/avatars/meta.png";
-import md5 from "md5";
+'use client'
+import { bricolageGrotesque, delaGothicOne, jost } from '@/styles/fonts'
+import Link from 'next/link'
+import React, { useRef, useEffect, useState } from 'react'
+import googleIcon from '@/public/icons/google.svg'
+import { signIn, useSession } from 'next-auth/react'
+import isEmail from 'validator/lib/isEmail'
+import { prismaFindUniqueUser } from '@/utils/prisma'
+import { User } from '@/types/types'
+import { useRouter } from 'next/navigation'
+import meta from '@/public/images/avatars/meta.png'
+import md5 from 'md5'
 
 const SignIn: React.FC = () => {
-  const [input, setInput] = useState({ email: "", password: "" });
-  const [warning, setWarning] = useState("");
-  const rememberMe = useRef(false);
-  const router = useRouter();
-  const { data: session, status } = useSession();
+  const [input, setInput] = useState({ email: '', password: '' })
+  const [warning, setWarning] = useState('')
+  const rememberMe = useRef(false)
+  const router = useRouter()
+  const { data: session, status } = useSession()
 
   useEffect(() => {
-    const email = localStorage.getItem("email") || "";
-    const password = localStorage.getItem("password") || "";
-    setInput({ email, password });
-  }, []);
+    const email = localStorage.getItem('email') || ''
+    const password = localStorage.getItem('password') || ''
+    setInput({ email, password })
+  }, [])
 
   // useEffect(() => {
   //   if (status === "authenticated") console.log("user authenticated");
@@ -30,41 +30,41 @@ const SignIn: React.FC = () => {
   // }, [session]);
 
   const invalid = (message: string) => {
-    setWarning(message);
-    throw new Error(message);
-  };
+    setWarning(message)
+    throw new Error(message)
+  }
 
   const isValid = async (input: { email: string; password: string }) => {
-    if (input.password.length === 0) return invalid("Invalid Password!");
-    if (!isEmail(input.email)) return invalid("Invalid Email!");
+    if (input.password.length === 0) return invalid('Invalid Password!')
+    if (!isEmail(input.email)) return invalid('Invalid Email!')
     const user: User = await prismaFindUniqueUser({
       where: { email: input.email },
-    });
-    if (!user) return invalid("User not found!");
+    })
+    if (!user) return invalid('User not found!')
     if (md5(input.password) !== user.password)
-      return invalid("Invalid Password!");
-    if (!user.status) return invalid("User not verified!");
-    return true;
-  };
+      return invalid('Invalid Password!')
+    if (!user.status) return invalid('User not verified!')
+    return true
+  }
 
   const onSubmit = async () => {
-    if ((await isValid(input)) !== true) throw "Invalid Input!";
+    if ((await isValid(input)) !== true) throw 'Invalid Input!'
 
     if (rememberMe.current) {
       // save to local
-      localStorage.setItem("email", input.email);
-      localStorage.setItem("password", input.password);
+      localStorage.setItem('email', input.email)
+      localStorage.setItem('password', input.password)
     }
 
-    await signIn("credentials", {
+    await signIn('credentials', {
       email: input.email,
       password: md5(input.password),
       redirect: true,
-      callbackUrl: "/home",
-    });
-  };
+      callbackUrl: '/home',
+    })
+  }
   return (
-    <main className="min-h-screen relative text-xl flex bg-primary-six">
+    <main className="min-h-screen justify-center lg:justify-start relative text-xl flex bg-primary-white lg:bg-primary-six">
       <section className="flex items-center bg-primary-white z-10">
         <div className="w-[24rem] h-[39rem] relative flex flex-col justify-between items-center p-8">
           <p
@@ -80,8 +80,8 @@ const SignIn: React.FC = () => {
             className="border-2 border-primary-black bg-primary-white py-6 px-3 text-base w-full h-10 rounded-lg"
             placeholder="email"
             onChange={(e) => {
-              setInput({ ...input, email: e.target.value.toLowerCase() });
-              setWarning("");
+              setInput({ ...input, email: e.target.value.toLowerCase() })
+              setWarning('')
             }}
           />
           <input
@@ -90,8 +90,8 @@ const SignIn: React.FC = () => {
             className="border-2 border-primary-black bg-primary-white py-6 px-3 text-base w-full h-10 rounded-lg"
             placeholder="password"
             onChange={(e) => {
-              setInput({ ...input, password: e.target.value });
-              setWarning("");
+              setInput({ ...input, password: e.target.value })
+              setWarning('')
             }}
           />
           <div className="flex justify-between w-full px-2 text-sm">
@@ -120,7 +120,7 @@ const SignIn: React.FC = () => {
           </button>
           <div className="flex text-sm gap-1">
             <p>Dont have an account?</p>
-            <Link href={"/sign/up"} className="underline hover:no-underline">
+            <Link href={'/sign/up'} className="underline hover:no-underline">
               Sign Up
             </Link>
           </div>
@@ -131,7 +131,7 @@ const SignIn: React.FC = () => {
           </div>
           <button
             onClick={async () => {
-              signIn("google", { redirect: true, callbackUrl: "/home" });
+              signIn('google', { redirect: true, callbackUrl: '/home' })
             }}
             className="flex press-sm press-sm-active rounded-lg w-full p-3 justify-center items-center relative text-base"
           >
@@ -143,14 +143,14 @@ const SignIn: React.FC = () => {
             <p>Continue with Google</p>
           </button>
           <p className="text-xs text-center">
-            by Continuing, you accept our{" "}
-            <Link href={"#"} className="underline hover:no-underline">
+            by Continuing, you accept our{' '}
+            <Link href={'#'} className="underline hover:no-underline">
               Terms and Conditions, Privacy Policy
             </Link>
           </p>
         </div>
       </section>
-      <section className="flex flex-col items-center w-full text-base ">
+      <section className="hidden lg:flex flex-col items-center w-full text-base">
         <div className="flex flex-col items-center p-20 gap-5 z-10">
           <p className="text-3xl text-center">Stream AI is here!</p>
           <p className="text-center">
@@ -165,7 +165,7 @@ const SignIn: React.FC = () => {
         <img src={meta.src} alt="hero" className="absolute bottom-0" />
       </section>
     </main>
-  );
-};
+  )
+}
 
-export default SignIn;
+export default SignIn

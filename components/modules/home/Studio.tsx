@@ -64,16 +64,7 @@ const Studio = () => {
         <section className="grow flex flex-col">
           <p className="text-3xl font-bold">Message</p>
           <div className="mt-3 flex flex-col gap-2 overflow-y-scroll lg:overflow-hidden lg:hover:overflow-y-auto max-h-[30vh] lg:max-h-[81vh]">
-            {ytMessageDummy?.map((message, index) => {
-              return (
-                <Message
-                  setEditAnswer={setEditAnswer}
-                  message={message}
-                  key={index}
-                />
-              )
-            })}
-            {ytMessageDummy?.map((message, index) => {
+            {messages?.map((message, index) => {
               return (
                 <Message
                   setEditAnswer={setEditAnswer}
