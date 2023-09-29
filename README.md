@@ -36,13 +36,13 @@ Streamer with custom personality.
 - [Authors](#authors)
 - [Acknowledgments](#acknowledgement)
 
-<!-- ## 🧐 About <a name = "about"></a>
+## 🧐 About <a name = "about"></a>
 
 Create your amazing smart Artificial Inteligent Streamer with custom personality -->
 
 <!-- ## 🎥 Demo / Working <a name = "demo"></a>
 
-![Working](https://media.giphy.com/media/20NLMBm0BkUOwNljwv/giphy.gif) -->
+![Working](https://media.giphy.com/media/20NLMBm0BkUOwNljwv/giphy.gif)
 
 ## 💭 How it works <a name = "working"></a>
 
