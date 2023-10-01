@@ -133,6 +133,17 @@ const Configuration: React.FC<Props> = ({ setIsMenuOpen }) => {
         </div>
       </div>
       <div className="mt-8 flex flex-col gap-2 grow">
+      <Input
+          placeholder="Your Livestream ID"
+          setState={(event) => dispatch(setLivestreamingId(event))}
+          state={livestreamingId}
+          callback={() =>
+            prismaUpdateProject({
+              where: { id },
+              data: { livestreamingId },
+            })
+          }
+        />
         <Input
           placeholder="Your Cool Avatar Name"
           setState={(event) => dispatch(setAvatarName(event))}

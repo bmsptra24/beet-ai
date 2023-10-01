@@ -1,7 +1,7 @@
-"use server";
-import { Prompt } from "@/types/types";
-import axios from "axios";
-console.log("tes");
+'use server'
+import { Prompt } from '@/types/types'
+import axios from 'axios'
+console.log('tes')
 
 export const generateAiAnswer = async (
   prompt: Prompt,
@@ -10,12 +10,12 @@ export const generateAiAnswer = async (
   livestreamTopic: string,
   mood: string,
   language: string,
-  aiKnowladge: string
+  aiKnowladge: string,
 ) => {
-  const formattedString = `[${prompt.author}: ${prompt.message}]`;
+  const formattedString = `[${prompt.author}: ${prompt.message}]`
   const input = [
     {
-      role: "system",
+      role: 'system',
       content: `
         [Avatar: ${avatarName}]
         [Tugas AI: ${aiRole}]
@@ -37,18 +37,18 @@ export const generateAiAnswer = async (
         }
         `,
     },
-    { role: "user", content: formattedString },
-  ];
+    { role: 'user', content: formattedString },
+  ]
 
-  console.log("generate anwer");
+  console.log('generate anwer')
 
   const params = new URLSearchParams({
     data: JSON.stringify(input),
-  }).toString();
-  const link = `${process.env.URL}/api/openai?${params}`;
+  }).toString()
+  const link = `${process.env.URL}/api/openai?userName=${prompt.author}&userMessage=${prompt.message}&avatarName=${avatarName}&aiRole=${aiRole}&livestreamTopic=${livestreamTopic}&mood=${mood}&language=${language}&aiKnowledge=${aiKnowladge}`
   const data = await axios
     .get(link)
     .then((data) => data.data)
-    .catch((error) => error.response.data.body);
-  return data;
-};
+    .catch((error) => error.response.data.body)
+  return data
+}

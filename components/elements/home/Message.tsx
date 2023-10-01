@@ -46,6 +46,7 @@ const Message = ({
           author: message.author,
           message:
             (response?.content as string) ||
+            (response?.data as string) ||
             (response?.body?.content as string),
         })
         // textToSpeech(response.content)
