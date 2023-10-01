@@ -3,3 +3,7 @@ GET http://localhost:3000/api/elevenlabs?inputText=Hello%20world HTTP/1.1
 ###
 
 GET https://api.elevenlabs.io/v1/voices HTTP/1.1
+
+###
+
+GET http://localhost:3000/api/openai?input=everiting oke? HTTP/1.1

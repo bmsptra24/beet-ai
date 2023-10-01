@@ -3,10 +3,11 @@ import Queue from '@/components/elements/home/Queue'
 import { RootState } from '@/store/store'
 import { ytMessageDummy } from '@/utils/dummyData'
 import { ytGetLiveChat } from '@/utils/services/ytGetLiveChat'
-import { AudioPlayer, textToSpeech } from '@/utils/sound'
+import { AudioPlayer } from '@/utils/sound'
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import Header from './Header'
+import { textToSpeech } from '@/utils/tts'
 type Props = {
   setIsMenuOpen: Dispatch<SetStateAction<boolean>>
 }
@@ -39,27 +40,32 @@ const Studio: React.FC<Props> = ({ setIsMenuOpen }) => {
     mood,
     platform,
   } = useSelector((state: RootState) => state.currProject)
-  console.log({
-    aiKnowlagge,
-    aiRole,
-    avatarName,
-    id,
-    language,
-    livestreamTopic,
-    livestreamingId,
-    mood,
-    platform,
-  })
+  // console.log({
+  //   aiKnowlagge,
+  //   aiRole,
+  //   avatarName,
+  //   id,
+  //   language,
+  //   livestreamTopic,
+  //   livestreamingId,
+  //   mood,
+  //   platform,
+  // })
 
   useEffect(() => {
-    setInterval(() => {
-      ;(async () => {
-        const response = await ytGetLiveChat('re_OZUSowWw', 10)
-        if (response === null) return
-        setMessages(response)
-      })()
-    }, 10000)
-  }, [])
+    const fetchData = async () => {
+      console.log('get chat live')
+      const response = await ytGetLiveChat(livestreamingId, 10)
+      if (response === null) return
+      setMessages(response)
+    }
+
+    const interval = setInterval(fetchData, 10000)
+
+    return () => {
+      clearInterval(interval)
+    }
+  }, [livestreamingId])
 
   return (
     <>
