@@ -4,8 +4,14 @@ import {
   templateResetPassword,
 } from '@/components/modules/email-verification/template'
 import { generateCode } from './generateNumber'
-import { prismaCreateVerification } from './prisma'
+import {
+  prismaCreateVerification,
+  prismaFindUniqueToken,
+  prismaUpdateUser,
+  prismaUpsertToken,
+} from './prisma'
 import nodemailer from 'nodemailer'
+import { randomBytes } from 'crypto'
 
 export const validation = async (
   user: any,
@@ -50,6 +56,20 @@ export const sendEmail = async (email: string, code: number) => {
 
 export const sendResetLink = async (email: string) => {
   try {
+    const tokenLenght = 30
+    const token = randomBytes(tokenLenght).toString('hex')
+
+    // add token to db if token not already in db
+    const response = await prismaFindUniqueToken({
+      where: { resetPassword: token },
+    })
+    if (response) throw new Error('Fail to create token! Try again!')
+    await prismaUpdateUser({
+      where: { email },
+      data: { Token: { create: { resetPassword: token } } },
+    })
+
+    // sent email
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
@@ -62,7 +82,7 @@ export const sendResetLink = async (email: string) => {
       from: process.env.NODEMAILER_EMAIL,
       to: email,
       subject: 'Hi',
-      html: templateResetPassword(),
+      html: templateResetPassword(token),
     })
 
     console.log('Message sent: %s', info.messageId)

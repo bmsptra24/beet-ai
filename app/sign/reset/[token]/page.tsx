@@ -1,26 +1,64 @@
 'use client'
+import Loading from '@/app/loading'
 import Background from '@/components/modules/sign/Background'
 import { bricolageGrotesque, jost } from '@/styles/fonts'
 import { sendResetLink } from '@/utils/authorize'
-import { prismaFindUniqueUser, prismaUpdateUser } from '@/utils/prisma'
-import React, { useRef, useState } from 'react'
+import {
+  prismaFindUniqueToken,
+  prismaFindUniqueUser,
+  prismaUpdateUser,
+} from '@/utils/prisma'
+import md5 from 'md5'
+import Error from 'next/error'
+import { useRouter } from 'next/navigation'
+import React, { useEffect, useRef, useState } from 'react'
 import isEmpty from 'validator/lib/isEmpty'
 
 const page = ({ params }: { params: { token: string } }) => {
-  const getData = async () => {
-    // const user = await prismaFindUniqueUser({where:{tokenResetPassword: params.token}})
-  }
-
+  const [isTokenValid, setIsTokenValid]: [
+    'loading' | 'invalid' | 'valid',
+    React.Dispatch<React.SetStateAction<'loading' | 'invalid' | 'valid'>>,
+  ] = useState<'loading' | 'invalid' | 'valid'>('loading')
   const [warning, setWarning] = useState('')
+  const user: React.MutableRefObject<
+    | {
+        id: number
+        resetPassword: string | null
+        userId: number
+      }
+    | null
+    | undefined
+  > = useRef()
+
+  const getData = async () => {
+    user.current = await prismaFindUniqueToken({
+      where: { resetPassword: params.token },
+    })
+    if (user.current === null) {
+      setIsTokenValid('invalid')
+      throw 'Invalid token!'
+    }
+    setIsTokenValid('valid')
+  }
+  useEffect(() => {
+    getData()
+  }, [])
 
   const newPassword = useRef('')
   const confirmPassword = useRef('')
 
   const invalid = (message: string) => {
     setWarning(message)
-    throw new Error(message)
+    throw message
   }
-  return (
+
+  const router = useRouter()
+
+  return isTokenValid === 'loading' ? (
+    <Loading />
+  ) : isTokenValid === 'invalid' ? (
+    <Error statusCode={404} title="Page not found!" />
+  ) : (
     <main className="min-h-screen justify-center lg:justify-start relative text-xl flex bg-primary-white lg:bg-primary-six">
       <section className="flex items-center bg-primary-white z-10">
         <div className="w-[24rem] h-[20rem] relative flex flex-col justify-between items-center p-8">
@@ -28,7 +66,7 @@ const page = ({ params }: { params: { token: string } }) => {
             style={jost.style}
             className="flex justify-center items-center min-h-[5rem] text-2xl font-bold"
           >
-            Forgot password
+            Create new password
           </p>
           <p className="text-xs text-red-500 absolute top-[90px]">{warning}</p>
 
@@ -66,8 +104,18 @@ const page = ({ params }: { params: { token: string } }) => {
                   isEmpty(confirmPassword.current)
                 )
                   return invalid('Invalid password!')
-                // await prismaUpdateUser({where})
+                if (newPassword.current !== confirmPassword.current)
+                  return invalid('Password and confirm password different!')
+                await prismaUpdateUser({
+                  where: { id: user.current?.userId },
+                  data: {
+                    password: md5(newPassword.current),
+                    Token: { delete: { resetPassword: params.token } },
+                  },
+                })
+
                 alert('Password success changed!')
+                router.push('/sign/in')
               }}
             >
               Reset password
