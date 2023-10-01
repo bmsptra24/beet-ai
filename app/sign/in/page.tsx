@@ -108,7 +108,7 @@ const SignIn: React.FC = () => {
                 Remember me
               </label>
             </div>
-            <Link href="#" className="underline hover:no-underline">
+            <Link href="/sign/reset" className="underline hover:no-underline">
               Forgot password?
             </Link>
           </div>

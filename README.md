@@ -92,7 +92,7 @@ These instructions will get you a copy of the project up and running on your loc
 What things you need to install the software and how to install them.
 
 ```
-1. Docker
+1. Docker v24+
 2. Node.js v18+
 ```
 
