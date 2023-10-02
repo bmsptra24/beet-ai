@@ -186,6 +186,14 @@ export const prismaDeleteToken = async (
     .finally(async () => await prisma.$disconnect())
 }
 
+export const prismaUniqueDeleteProject = async (
+  args: Prisma.ProjectDeleteArgs<DefaultArgs>,
+) => {
+  return prisma.project
+    .delete(args)
+    .finally(async () => await prisma.$disconnect())
+}
+
 export const prismaUpsertToken = async (
   args: Prisma.TokenUpsertArgs<DefaultArgs>,
 ) => {
