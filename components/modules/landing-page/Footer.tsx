@@ -6,7 +6,7 @@ import { useEffect } from 'react'
 import { BsInstagram, BsYoutube, BsTiktok } from 'react-icons/bs'
 
 const Footer = () => {
-  const refs = multipleRef<any>(2)
+  const refs = multipleRef<HTMLDivElement>(2)
   const [isInViewPorts, setIsInViewPorts] = multipleState(2)
 
   useEffect(() => {
