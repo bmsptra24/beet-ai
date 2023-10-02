@@ -3,14 +3,16 @@ import { RootState } from '@/store/store'
 import { Project } from '@/types/types'
 import {
   prismaCreateProject,
+  prismaDeleteProject,
   prismaFindManyProjects,
+  prismaUniqueDeleteProject,
   prismaUpdateProject,
 } from '@/utils/prisma'
 import { signOut, useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { AiOutlinePlus } from 'react-icons/ai'
-import { HiLogout } from 'react-icons/hi'
+import { HiLogout, HiOutlineTrash } from 'react-icons/hi'
 import { useDispatch, useSelector } from 'react-redux'
 import Header, { HeaderClose } from './Header'
 const Dashboard = ({
@@ -69,11 +71,25 @@ const Dashboard = ({
           dispatch(initState({ ...response }))
           setNavigation(3)
         }}
-        className="grid bg-primary-eight hover:brightness-95 transition-all ease-in-out cursor-pointer grid-cols-3 border-2 border-primary-black rounded"
+        className="grid pr-3 relative bg-primary-eight hover:brightness-95 transition-all ease-in-out cursor-pointer grid-cols-3 border-2 border-primary-black rounded"
       >
         <td className="p-2 rounded">{name}</td>
         <td className="p-2">{platform}</td>
         <td className="p-2 rounded">{lastOpen}</td>
+        {/* ! eror : Error: Cannot read properties of undefined (reading 'workers') */}
+        <td className="absolute right-2 top-0 bottom-0 flex items-center">
+          <HiOutlineTrash
+            className="hover:text-red-600 text-xl transition-all ease-in-out z-20"
+            onClick={async () => {
+              console.log({ projectId })
+
+              await prismaUniqueDeleteProject({ where: { id: projectId } })
+              return setProjects((prev) =>
+                prev.filter((project) => project.id === projectId),
+              )
+            }}
+          />
+        </td>
       </tr>
     )
   }
@@ -150,7 +166,7 @@ const Dashboard = ({
       <div className="grow h-0 overflow-hidden hover:overflow-y-scroll">
         <table className="w-full">
           <tbody className="flex flex-col gap-2">
-            <tr className="border-b-2 border-primary-black grid grid-cols-3">
+            <tr className="border-b-2 border-primary-black grid grid-cols-3 pr-3">
               <th className="font-normal text-left ml-2">Project</th>
               <th className="font-normal text-left ml-2">Platform</th>
               <th className="font-normal text-left ml-2">Last Open</th>
