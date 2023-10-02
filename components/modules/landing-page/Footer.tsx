@@ -2,11 +2,11 @@
 import { multipleRef, multipleState } from '@/app/hooks/multipleHook'
 import logo from '@/public/logo/logo-white.png'
 import observer from '@/utils/observer'
-import { useEffect } from 'react'
+import { LegacyRef, useEffect } from 'react'
 import { BsInstagram, BsYoutube, BsTiktok } from 'react-icons/bs'
 
 const Footer = () => {
-  const refs = multipleRef<HTMLDivElement>(2)
+  const refs = multipleRef(2)
   const [isInViewPorts, setIsInViewPorts] = multipleState(2)
 
   useEffect(() => {
@@ -16,7 +16,7 @@ const Footer = () => {
   return (
     <div className="bg-primary-four p-6 px-8 text-primary-white flex items-center justify-between">
       <div
-        ref={refs[0]}
+        ref={refs[0] as LegacyRef<HTMLDivElement> | undefined}
         className={`${
           isInViewPorts[0] ? 'animate__animated animate__fadeInUp ' : ''
         }flex items-center gap-6 text-xl`}
@@ -31,7 +31,7 @@ const Footer = () => {
         <BsTiktok className="cursor-pointer hover:text-slate-300 transition-all ease-in-out" />
       </div>
       <p
-        ref={refs[1]}
+        ref={refs[1] as LegacyRef<HTMLDivElement> | undefined}
         className={`${
           isInViewPorts[1] ? 'animate__animated animate__fadeInUp ' : ''
         }cursor-pointer hover:text-slate-300 transition-all ease-in-out`}
