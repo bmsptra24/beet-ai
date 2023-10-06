@@ -1,4 +1,5 @@
 'use client'
+import { ProjectNavLoading } from '@/components/loading/ProjectLoading'
 import Configuration from '@/components/modules/home/Configuration'
 import Dashboard from '@/components/modules/home/Dashboard'
 import { HeaderClose } from '@/components/modules/home/Header'
@@ -13,6 +14,7 @@ import { GrHomeRounded, GrConfigure } from 'react-icons/gr'
 import { useDispatch } from 'react-redux'
 const page: React.FC = () => {
   const { data: session } = useSession()
+  const [isLoading, setIsLoading] = useState(true)
   const [projects, setProjects] = useState<Project[]>([])
   const [navigation, setNavigation] = useState(1)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -27,6 +29,7 @@ const page: React.FC = () => {
       orderBy: { lastOpenAt: 'desc' },
     })
     setProjects(response)
+    setIsLoading(false)
   }
 
   useEffect(() => {
@@ -85,36 +88,47 @@ const page: React.FC = () => {
             </div>
             <div className="flex flex-col gap-2">
               <p className="font-bold">Project</p>
-              {projects.map((project, index) => {
-                return (
-                  <p
-                    key={index}
-                    onClick={async () => {
-                      // Update last open project
-                      const response = await prismaUpdateProject({
-                        where: {
-                          user: { email: session?.user?.email as string },
-                          id: project.id,
-                        },
-                        data: {
-                          lastOpenAt: new Date().toJSON(),
-                        },
-                      })
-                      if (window.screen.width < 1020) setIsMenuOpen(false)
-                      if (response === null)
-                        throw new Error('Project not found!')
-                      dispatch(initState({ ...response }))
-                      setNavigation(3)
-                    }}
-                    className={`${
-                      navigation === index + 3 &&
-                      'bg-primary-white hover:bg-primary-white border-2 cursor-default'
-                    } text-sm flex items-center gap-2 px-2 py-1.5 rounded-lg cursor-pointer hover:bg-primary-one/30 border-primary-black`}
-                  >
-                    <FaStarOfLife /> {project?.avatarName as string}
-                  </p>
-                )
-              })}
+
+              {isLoading === true ? (
+                <>
+                  <ProjectNavLoading />
+                  <ProjectNavLoading />
+                  <ProjectNavLoading />
+                  <ProjectNavLoading />
+                  <ProjectNavLoading />
+                </>
+              ) : (
+                projects.map((project, index) => {
+                  return (
+                    <p
+                      key={index}
+                      onClick={async () => {
+                        // Update last open project
+                        const response = await prismaUpdateProject({
+                          where: {
+                            user: { email: session?.user?.email as string },
+                            id: project.id,
+                          },
+                          data: {
+                            lastOpenAt: new Date().toJSON(),
+                          },
+                        })
+                        if (window.screen.width < 1020) setIsMenuOpen(false)
+                        if (response === null)
+                          throw new Error('Project not found!')
+                        dispatch(initState({ ...response }))
+                        setNavigation(3)
+                      }}
+                      className={`${
+                        navigation === index + 3 &&
+                        'bg-primary-white hover:bg-primary-white border-2 cursor-default'
+                      } text-sm flex items-center gap-2 px-2 py-1.5 rounded-lg cursor-pointer hover:bg-primary-one/30 border-primary-black`}
+                    >
+                      <FaStarOfLife /> {project?.avatarName as string}
+                    </p>
+                  )
+                })
+              )}
             </div>
           </section>
           <section

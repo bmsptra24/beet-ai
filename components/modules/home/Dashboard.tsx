@@ -15,6 +15,7 @@ import { AiOutlinePlus } from 'react-icons/ai'
 import { HiLogout, HiOutlineTrash } from 'react-icons/hi'
 import { useDispatch, useSelector } from 'react-redux'
 import Header, { HeaderClose } from './Header'
+import { ProjectLoading } from '@/components/loading/ProjectLoading'
 const Dashboard = ({
   setNavigation,
   setIsMenuOpen,
@@ -23,6 +24,7 @@ const Dashboard = ({
   setIsMenuOpen: Dispatch<SetStateAction<boolean>>
 }) => {
   const { data: session } = useSession()
+  const [isLoading, setIsLoading] = useState(true)
   const [projects, setProjects] = useState<Project[]>([])
   const dispatch = useDispatch()
 
@@ -39,6 +41,7 @@ const Dashboard = ({
       orderBy: { lastOpenAt: 'desc' },
     })
     setProjects(response)
+    setIsLoading(false)
   }
 
   useEffect(() => {
@@ -93,6 +96,7 @@ const Dashboard = ({
       </tr>
     )
   }
+
   return (
     <>
       <Header setIsMenuOpen={setIsMenuOpen} />
@@ -171,17 +175,30 @@ const Dashboard = ({
               <th className="font-normal text-left ml-2">Platform</th>
               <th className="font-normal text-left ml-2">Last Open</th>
             </tr>
-            {projects.map((project, index) => {
-              return (
-                <Project
-                  key={index}
-                  projectId={project.id as number}
-                  name={project.avatarName as string}
-                  platform={project.platform as string}
-                  lastOpen={project.lastOpenAt?.toDateString() as string}
-                />
-              )
+            {Array(3).map((_, index) => {
+              console.log('hi')
+
+              return <ProjectLoading key={index} />
             })}
+            {isLoading === true ? (
+              <>
+                <ProjectLoading />
+                <ProjectLoading />
+                <ProjectLoading />
+              </>
+            ) : (
+              projects.map((project, index) => {
+                return (
+                  <Project
+                    key={index}
+                    projectId={project.id as number}
+                    name={project.avatarName as string}
+                    platform={project.platform as string}
+                    lastOpen={project.lastOpenAt?.toDateString() as string}
+                  />
+                )
+              })
+            )}
           </tbody>
         </table>
       </div>
