@@ -14,27 +14,24 @@ import { useState, useEffect } from 'react'
 // };
 
 export const textToSpeech = async (inputText: string) => {
-  const API_KEY = '263b70c0b7933fe0cf2b3a201f26fb7e'
-  const VOICE_ID = 'TxGEqnHWrfWFTfGW9XjX'
-
-  const options = {
-    method: 'POST',
-    url: `https://api.elevenlabs.io/v1/text-to-speech/${VOICE_ID}`,
-    headers: {
-      accept: 'audio/mpeg',
-      'content-type': 'application/json',
-      'xi-api-key': `${API_KEY}`,
-    },
-    data: {
-      text: inputText,
-      model: 'eleven_monolingual_v2',
-    },
-    responseType: 'arraybuffer',
-  }
-
-  const speechDetails = await axios.request(options as AxiosRequestConfig)
-
-  return speechDetails.data
+  // const API_KEY = '263b70c0b7933fe0cf2b3a201f26fb7e'
+  // const VOICE_ID = 'TxGEqnHWrfWFTfGW9XjX'
+  // const options = {
+  //   method: 'POST',
+  //   url: `https://api.elevenlabs.io/v1/text-to-speech/${VOICE_ID}`,
+  //   headers: {
+  //     accept: 'audio/mpeg',
+  //     'content-type': 'application/json',
+  //     'xi-api-key': `${API_KEY}`,
+  //   },
+  //   data: {
+  //     text: inputText,
+  //     model: 'eleven_monolingual_v2',
+  //   },
+  //   responseType: 'arraybuffer',
+  // }
+  // const speechDetails = await axios.request(options as AxiosRequestConfig)
+  // return speechDetails.data
 }
 
 export const AudioPlayer = ({
@@ -52,10 +49,14 @@ export const AudioPlayer = ({
       console.log('get tts')
 
       const text = queues[0].message
-      const data = await textToSpeech(text)
-      const blob = new Blob([data], { type: 'audio/mpeg' })
-      const url = URL.createObjectURL(blob)
-      setAudioURL(url)
+      // const data = await textToSpeech(text)
+      // const blob = new Blob([data], { type: 'audio/mpeg' })
+      // const url = URL.createObjectURL(blob)
+      const url: any = await axios.get(
+        'http://localhost:3000/api/edenai?inputText=' + text,
+      )
+      // console.log({ url })
+      setAudioURL(url?.data as string)
     }
   }
 
@@ -63,7 +64,7 @@ export const AudioPlayer = ({
     if (audioURL === '') handleAudioFetch()
   }, [queues, setQueue, audioElement, audioURL])
 
-  console.log({ audioURL })
+  // console.log({ audioURL })
 
   return (
     <div>

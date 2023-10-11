@@ -20,7 +20,7 @@ export async function GET(req: NextRequest) {
     },
     data: {
       text: inputText,
-      model: 'eleven_monolingual_v2',
+      model: 'eleven_multilingual_v2',
     },
     responseType: 'arraybuffer',
   }
