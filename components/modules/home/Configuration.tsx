@@ -21,11 +21,7 @@ type Props = {
   setIsMenuOpen: Dispatch<SetStateAction<boolean>>
 }
 const Configuration: React.FC<Props> = ({ setIsMenuOpen }) => {
-  const [projects, setProjects] = useState<Project[]>([])
-  const [currProject, setCurrProject] = useState(0)
-  const { data: session } = useSession()
-  const dispatch = useDispatch()
-
+  // const [projects, setProjects] = useState<Project[]>([])
   const {
     aiKnowlagge,
     aiRole,
@@ -36,26 +32,31 @@ const Configuration: React.FC<Props> = ({ setIsMenuOpen }) => {
     livestreamingId,
     mood,
     platform,
+    projects,
   } = useSelector((state: RootState) => state.currProject)
 
-  useEffect(() => {
-    // Get data project
-    ;(async () => {
-      const project = await prismaFindManyProjects({
-        where: {
-          user: { email: 'admin@prisma.io' },
-        },
-        orderBy: {
-          lastOpenAt: 'desc',
-        },
-        take: 1,
-      })
+  const [currProject, setCurrProject] = useState(projects[0].id)
+  const { data: session } = useSession()
+  const dispatch = useDispatch()
 
-      // set state
-      if (project === null) throw new Error('Project not found!')
-      dispatch(initState({ ...project[0] }))
-    })()
-  }, [])
+  // useEffect(() => {
+  //   // Get data project
+  //   ;(async () => {
+  //     const project = await prismaFindManyProjects({
+  //       where: {
+  //         user: { email: 'admin@prisma.io' },
+  //       },
+  //       orderBy: {
+  //         lastOpenAt: 'desc',
+  //       },
+  //       take: 1,
+  //     })
+
+  //     // set state
+  //     if (project === null) throw new Error('Project not found!')
+  //     dispatch(setProjects(project))
+  //   })()
+  // }, [])
 
   const getProject = async () => {
     if (!session) return
@@ -64,7 +65,7 @@ const Configuration: React.FC<Props> = ({ setIsMenuOpen }) => {
       select: { id: true, platform: true, avatarName: true },
       orderBy: { lastOpenAt: 'desc' },
     })
-    setProjects(response)
+    dispatch(setProjects(response))
   }
 
   useEffect(() => {
@@ -94,6 +95,7 @@ const Configuration: React.FC<Props> = ({ setIsMenuOpen }) => {
     setLivestreamingId,
     setMood,
     setPlatform,
+    setProjects,
   } = currProjectAction
 
   return (
@@ -107,19 +109,23 @@ const Configuration: React.FC<Props> = ({ setIsMenuOpen }) => {
             className={`bg-primary-tree flex items-center py-1 px-2 rounded press-sm cursor-pointer`}
             state={currProject.toString()}
             callback={async (id) => {
-              if (projects.length === 0) return
-              const response = await prismaUpdateProject({
-                where: {
-                  user: { email: session?.user?.email as string },
-                  id: Number(id),
-                },
-                data: {
-                  lastOpenAt: new Date().toJSON(),
-                },
-              })
+              // if (projects.length === 0) return
+              // const response = await prismaUpdateProject({
+              //   where: {
+              //     user: { email: session?.user?.email as string },
+              //     id: Number(id),
+              //   },
+              //   data: {
+              //     lastOpenAt: new Date().toJSON(),
+              //   },
+              // })
 
-              if (response === null) throw new Error('Project not found!')
-              dispatch(initState({ ...response }))
+              // if (response === null) throw new Error('Project not found!')
+
+              const project = projects.find((e) => e.id === Number(id))
+              // console.log({ project })
+
+              dispatch(initState({ ...project, projects }))
             }}
           >
             {projects?.map((project, index) => {
@@ -133,61 +139,28 @@ const Configuration: React.FC<Props> = ({ setIsMenuOpen }) => {
         </div>
       </div>
       <div className="mt-8 flex flex-col gap-2 grow">
-      <Input
+        <Input
           placeholder="Your Livestream ID"
           setState={(event) => dispatch(setLivestreamingId(event))}
           state={livestreamingId}
-          callback={() =>
-            prismaUpdateProject({
-              where: { id },
-              data: { livestreamingId },
-            })
-          }
         />
         <Input
           placeholder="Your Cool Avatar Name"
           setState={(event) => dispatch(setAvatarName(event))}
           state={avatarName}
-          callback={() =>
-            prismaUpdateProject({
-              where: { id },
-              data: { avatarName },
-            })
-          }
         />
         <Input
           placeholder="your-ai-role"
           setState={(event) => dispatch(setAiRole(event))}
           state={aiRole}
-          callback={() =>
-            prismaUpdateProject({
-              where: { id },
-              data: { aiRole },
-            })
-          }
         />
         <Input
           placeholder="your-livestream-topic"
           setState={(event) => dispatch(setLivestreamTopic(event))}
           state={livestreamTopic}
-          callback={() =>
-            prismaUpdateProject({
-              where: { id },
-              data: { livestreamTopic },
-            })
-          }
         />
         <div className="flex gap-2">
-          <Dropdown
-            setState={(event) => dispatch(setMood(event))}
-            state={mood}
-            callback={() =>
-              prismaUpdateProject({
-                where: { id },
-                data: { mood },
-              })
-            }
-          >
+          <Dropdown setState={(event) => dispatch(setMood(event))} state={mood}>
             <option value="happy">Happy</option>
             <option value="sad">Sad</option>
             <option value="angry">Angry</option>
@@ -196,12 +169,6 @@ const Configuration: React.FC<Props> = ({ setIsMenuOpen }) => {
           <Dropdown
             setState={(event) => dispatch(setPlatform(event))}
             state={platform}
-            callback={() =>
-              prismaUpdateProject({
-                where: { id },
-                data: { platform },
-              })
-            }
           >
             <option value="youtube">Youtube</option>
             <option value="tiktok">Tiktok</option>
@@ -210,12 +177,6 @@ const Configuration: React.FC<Props> = ({ setIsMenuOpen }) => {
           <Dropdown
             setState={(event) => dispatch(setLanguage(event))}
             state={language}
-            callback={() =>
-              prismaUpdateProject({
-                where: { id },
-                data: { language },
-              })
-            }
           >
             <option value="indonesia">Indonesia</option>
             <option value="english">English</option>
@@ -225,18 +186,30 @@ const Configuration: React.FC<Props> = ({ setIsMenuOpen }) => {
           placeholder="your-ai-knowlage"
           state={aiKnowlagge}
           setState={(event) => dispatch(setAiKnowlagge(event))}
-          callback={() =>
-            prismaUpdateProject({
-              where: { id },
-              data: { aiKnowlagge },
-            })
-          }
         />
         <div className="flex justify-between gap-2">
           <button className="bg-primary-tree grow flex items-center py-1.5 px-6 rounded press-sm press-sm-active cursor-pointer">
             Test AI
           </button>
-          <button className="bg-primary-two flex items-center py-1.5 px-6 rounded press-sm press-sm-active cursor-pointer">
+          <button
+            onClick={async () =>
+              await prismaUpdateProject({
+                where: { id },
+                data: {
+                  aiKnowlagge,
+                  aiRole,
+                  avatarName,
+                  id,
+                  language,
+                  livestreamTopic,
+                  livestreamingId,
+                  mood,
+                  platform,
+                },
+              })
+            }
+            className="bg-primary-two flex items-center py-1.5 px-6 rounded press-sm press-sm-active cursor-pointer"
+          >
             Save
           </button>
         </div>

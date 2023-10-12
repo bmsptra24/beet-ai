@@ -5,41 +5,33 @@ import Dashboard from '@/components/modules/home/Dashboard'
 import { HeaderClose } from '@/components/modules/home/Header'
 import Studio from '@/components/modules/home/Studio'
 import { initState } from '@/store/actions/currIdProject.slice'
+import { RootState } from '@/store/store'
 import { Project } from '@/types/types'
 import { prismaFindManyProjects, prismaUpdateProject } from '@/utils/prisma'
 import { useSession } from 'next-auth/react'
 import { useEffect, useState } from 'react'
 import { FaStarOfLife } from 'react-icons/fa'
 import { GrHomeRounded, GrConfigure } from 'react-icons/gr'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 const page: React.FC = () => {
   const { data: session } = useSession()
   const [isLoading, setIsLoading] = useState(true)
-  const [projects, setProjects] = useState<Project[]>([])
+  const { projects } = useSelector((state: RootState) => state.currProject)
   const [navigation, setNavigation] = useState(1)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const dummyProjects = ['Minato Yamata', 'AI Chef Yunita', 'Tsubasa']
   const dispatch = useDispatch()
 
-  const getProject = async () => {
-    if (!session) return
-    const response = await prismaFindManyProjects({
-      where: { user: { email: session?.user?.email as string } },
-      select: { id: true, platform: true, avatarName: true },
-      orderBy: { lastOpenAt: 'desc' },
-    })
-    setProjects(response)
-    setIsLoading(false)
-  }
+  useEffect(() => {
+    if (projects?.length > 0) setIsLoading(false)
+  }, [projects])
+  console.log({ projects, isLoading })
 
   useEffect(() => {
-    if (projects.length === 0) {
-      getProject()
-    }
-  }, [projects, session])
-  useEffect(() => {
     if (window.screen.width > 1020) setIsMenuOpen(true)
+    if (projects?.length > 0) setIsLoading(false)
   }, [])
+
   return (
     <main className="min-h-screen relative text-base flex bg-primary-tree/25 ">
       {isMenuOpen && (
@@ -88,17 +80,8 @@ const page: React.FC = () => {
             </div>
             <div className="flex flex-col gap-2">
               <p className="font-bold">Project</p>
-
-              {isLoading === true ? (
-                <>
-                  <ProjectNavLoading />
-                  <ProjectNavLoading />
-                  <ProjectNavLoading />
-                  <ProjectNavLoading />
-                  <ProjectNavLoading />
-                </>
-              ) : (
-                projects.map((project, index) => {
+              {isLoading === false &&
+                projects?.map((project, index) => {
                   return (
                     <p
                       key={index}
@@ -116,7 +99,7 @@ const page: React.FC = () => {
                         if (window.screen.width < 1020) setIsMenuOpen(false)
                         if (response === null)
                           throw new Error('Project not found!')
-                        dispatch(initState({ ...response }))
+                        dispatch(initState({ ...response, projects }))
                         setNavigation(3)
                       }}
                       className={`${
@@ -127,7 +110,15 @@ const page: React.FC = () => {
                       <FaStarOfLife /> {project?.avatarName as string}
                     </p>
                   )
-                })
+                })}
+              {isLoading === true && (
+                <>
+                  <ProjectNavLoading />
+                  <ProjectNavLoading />
+                  <ProjectNavLoading />
+                  <ProjectNavLoading />
+                  <ProjectNavLoading />
+                </>
               )}
             </div>
           </section>

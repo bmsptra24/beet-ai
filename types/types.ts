@@ -83,7 +83,7 @@ export type Project = {
   lastOpenAt?: Date | null
 }
 
-export type CurrProjectProps = {
+export type projectProps = {
   id: number
   livestreamingId: string
   avatarName: string
@@ -93,6 +93,11 @@ export type CurrProjectProps = {
   platform: string
   language: string
   aiKnowlagge: string
+  lastOpenAt: Date | null
+}
+
+export type CurrProjectProps = projectProps & {
+  projects: projectProps[]
 }
 
 export type QueueProps = {

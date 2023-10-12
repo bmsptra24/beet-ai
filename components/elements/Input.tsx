@@ -6,7 +6,6 @@ type InputProp = {
   state: string
   setState: SetState<string>
   className?: ClassName
-  callback: (event: string) => void
 }
 
 type DropdownProp = {
@@ -14,7 +13,7 @@ type DropdownProp = {
   state: string
   setState: SetState<string>
   className?: ClassName
-  callback: (event: string) => void
+  callback?: (event: string) => void
 }
 
 type TextareaProp = {
@@ -22,7 +21,6 @@ type TextareaProp = {
   state: string
   setState: SetState<string>
   className?: ClassName
-  callback?: (event: string) => void
 }
 
 export const Input: React.FC<InputProp> = ({
@@ -30,13 +28,7 @@ export const Input: React.FC<InputProp> = ({
   state,
   setState,
   className = '',
-  callback,
 }) => {
-  useEffect(() => {
-    if (state === ' ') return
-    callback(state)
-  }, [state])
-
   return (
     <input
       className={`${className} border-2 border-slate-400 rounded w-full p-2 bg-transparent`}
@@ -59,7 +51,7 @@ export const Dropdown: React.FC<DropdownProp> = ({
 }) => {
   useEffect(() => {
     if (state === ' ') return
-    callback(state)
+    callback && callback(state)
   }, [state])
 
   return (
@@ -68,7 +60,7 @@ export const Dropdown: React.FC<DropdownProp> = ({
       value={state}
       onChange={(event) => {
         setState(event.target.value)
-        callback(event.target.value)
+        callback && callback(event.target.value)
       }}
     >
       {children}
@@ -81,14 +73,7 @@ export const Textarea: React.FC<TextareaProp> = ({
   state,
   setState,
   className = '',
-  callback,
 }) => {
-  useEffect(() => {
-    if (state === ' ') return
-    if (callback === undefined) return
-    callback(state)
-  }, [state])
-
   return (
     <textarea
       className={`${className} border-2 border-slate-400 rounded w-full p-2 bg-transparent h-56 grow`}
@@ -96,8 +81,6 @@ export const Textarea: React.FC<TextareaProp> = ({
       value={state}
       onChange={(event) => {
         setState(event.target.value)
-        if (callback === undefined) return
-        callback(event.target.value)
       }}
     />
   )
