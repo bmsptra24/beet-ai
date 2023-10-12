@@ -1,4 +1,4 @@
-import { initState } from '@/store/actions/currIdProject.slice'
+import { initState, setProjects } from '@/store/actions/currIdProject.slice'
 import { RootState } from '@/store/store'
 import { Project } from '@/types/types'
 import {
@@ -25,22 +25,16 @@ const Dashboard = ({
 }) => {
   const { data: session } = useSession()
   const [isLoading, setIsLoading] = useState(true)
-  const [projects, setProjects] = useState<Project[]>([])
+  const { projects } = useSelector((state: RootState) => state.currProject)
   const dispatch = useDispatch()
 
   const getProject = async () => {
     if (!session) return
     const response = await prismaFindManyProjects({
       where: { user: { email: session?.user?.email as string } },
-      select: {
-        id: true,
-        platform: true,
-        avatarName: true,
-        lastOpenAt: true,
-      },
       orderBy: { lastOpenAt: 'desc' },
     })
-    setProjects(response)
+    dispatch(setProjects(response))
     setIsLoading(false)
   }
 
@@ -71,7 +65,7 @@ const Dashboard = ({
           })
 
           if (response === null) throw new Error('Project not found!')
-          dispatch(initState({ ...response }))
+          dispatch(initState({ ...response, projects }))
           setNavigation(3)
         }}
         className="grid pr-3 relative bg-primary-eight hover:brightness-95 transition-all ease-in-out cursor-pointer grid-cols-3 border-2 border-primary-black rounded"
@@ -80,15 +74,19 @@ const Dashboard = ({
         <td className="p-2">{platform}</td>
         <td className="p-2 rounded">{lastOpen}</td>
         {/* ! eror : Error: Cannot read properties of undefined (reading 'workers') */}
-        <td className="absolute right-2 top-0 bottom-0 flex items-center">
+        <td className="absolute right-2 top-0 bottom-0 flex items-center z-50">
           <HiOutlineTrash
             className="hover:text-red-600 text-xl transition-all ease-in-out z-20"
-            onClick={async () => {
-              console.log({ projectId })
+            onClick={async (event: Event) => {
+              // Mencegah event klik dari merambat ke elemen induk (tr)
+              event.stopPropagation()
 
+              if (!confirm('Are you sure want delete this project?')) return
+
+              console.log({ projectId })
               await prismaUniqueDeleteProject({ where: { id: projectId } })
-              return setProjects((prev) =>
-                prev.filter((project) => project.id === projectId),
+              return setProjects(() =>
+                projects.filter((project) => project.id !== projectId),
               )
             }}
           />
