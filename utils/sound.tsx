@@ -53,7 +53,7 @@ export const AudioPlayer = ({
       // const blob = new Blob([data], { type: 'audio/mpeg' })
       // const url = URL.createObjectURL(blob)
       const url: any = await axios.get(
-        (process.env.NODE_ENV
+        (process.env.NODE_ENV === 'development'
           ? 'http://localhost:3000'
           : 'https://beet-ai.vercel.app') +
           '/api/edenai?inputText=' +
