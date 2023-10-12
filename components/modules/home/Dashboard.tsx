@@ -81,15 +81,17 @@ const Dashboard = ({
         <td className="p-2">{platform}</td>
         <td className="p-2 rounded">{lastOpen}</td>
         {/* ! eror : Error: Cannot read properties of undefined (reading 'workers') */}
-        <td className="absolute right-2 top-0 bottom-0 flex items-center">
+        <td className="absolute right-2 top-0 bottom-0 flex items-center z-50">
           <HiOutlineTrash
             className="hover:text-red-600 text-xl transition-all ease-in-out z-20"
-            onClick={async () => {
+            onClick={async (event: Event) => {
               console.log({ projectId })
 
+              // Mencegah event klik dari merambat ke elemen induk (tr)
+              event.stopPropagation()
               await prismaUniqueDeleteProject({ where: { id: projectId } })
               return setProjects((prev) =>
-                prev.filter((project) => project.id === projectId),
+                prev.filter((project) => project.id !== projectId),
               )
             }}
           />
