@@ -48,6 +48,7 @@ const Dashboard = ({
     if (projects?.length === 0) {
       getProject()
     }
+    console.log(process.env.NODE_ENV)
   }, [projects, session])
 
   const Project: React.FC<{
