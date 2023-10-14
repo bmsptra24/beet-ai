@@ -97,19 +97,6 @@ const Configuration = () => {
             setState={(event) => dispatch(setLivestreamingId(event))}
             state={livestreamingId}
             className="grow"
-            callback={() => {
-              try {
-                prismaUpdateProject({
-                  where: { id },
-                  data: { livestreamingId },
-                }).catch((error) => {
-                  if (error?.digest === '2750255691')
-                    alert('Project not found!')
-                })
-              } catch (error) {
-                throw error
-              }
-            }}
           />
           <button
             onClick={() => handlerGetChatLive(livestreamingId)}
@@ -136,34 +123,16 @@ const Configuration = () => {
           placeholder="Your Cool Avatar Name"
           setState={(event) => dispatch(setAvatarName(event))}
           state={avatarName}
-          callback={() =>
-            prismaUpdateProject({
-              where: { id },
-              data: { avatarName },
-            })
-          }
         />
         <Input
           placeholder="your-ai-role"
           setState={(event) => dispatch(setAiRole(event))}
           state={aiRole}
-          callback={() =>
-            prismaUpdateProject({
-              where: { id },
-              data: { aiRole },
-            })
-          }
         />
         <Input
           placeholder="your-livestream-topic"
           setState={(event) => dispatch(setLivestreamTopic(event))}
           state={livestreamTopic}
-          callback={() =>
-            prismaUpdateProject({
-              where: { id },
-              data: { livestreamTopic },
-            })
-          }
         />
 
         <Dropdown
@@ -213,12 +182,6 @@ const Configuration = () => {
           placeholder="your-ai-knowlage"
           state={aiKnowlagge}
           setState={(event) => dispatch(setAiKnowlagge(event))}
-          callback={() =>
-            prismaUpdateProject({
-              where: { id },
-              data: { aiKnowlagge },
-            })
-          }
         />
       </div>
       <div>

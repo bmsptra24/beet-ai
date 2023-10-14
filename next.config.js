@@ -10,6 +10,12 @@ const nextConfig = {
         aggregateTimeout: 300,
       }
     }
+
+    config.module.rules.push({
+      test: /\.proto$/,
+      use: 'protobufjs-loader',
+    })
+
     return config
   },
 }
