@@ -1,7 +1,7 @@
-// // import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 // // import { WebcastPushConnection } from 'tiktok-live-connector'
 
-// // export async function GET(req: NextRequest) {
+export async function GET(req: NextRequest) {}
 // //   const livestreamId: string = 'adisetiawansepuluh'
 // //   // Username of someone who is currently live
 // //   let tiktokUsername = livestreamId
