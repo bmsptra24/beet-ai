@@ -2,12 +2,22 @@ import Message from '@/components/elements/home/Message'
 import Queue from '@/components/elements/home/Queue'
 import { RootState } from '@/store/store'
 import { ytMessageDummy } from '@/utils/dummyData'
-import { ytGetLiveChat } from '@/utils/services/ytGetLiveChat'
+import { ytGetLiveChat } from '@/utils/services/youtube'
 import { AudioPlayer } from '@/utils/sound'
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import Header from './Header'
 import { textToSpeech } from '@/utils/tts'
+// import { tiktokLiveChat } from '@/utils/services/tiktok'
+import { LiveChatMessage } from '@/types/types'
+import axios from 'axios'
+import { baseurl } from '@/lib/url'
+// import { tiktokLiveChat } from '@/utils/services/tiktok'
+import {
+  TikTokComponent,
+  closeConnection,
+  createConnection,
+} from '../tiktok/TikTokComponent'
 type Props = {
   setIsMenuOpen: Dispatch<SetStateAction<boolean>>
 }
@@ -53,19 +63,55 @@ const Studio: React.FC<Props> = ({ setIsMenuOpen }) => {
   // })
 
   useEffect(() => {
-    const fetchData = async () => {
+    if (platform === 'tiktok') createConnection('luxedlabel')
+
+    // return () => {
+    //   closeConnection()
+    // }
+  }, [])
+
+  useEffect(() => {
+    if (platform === 'youtube') {
       console.log('get chat live')
-      const response = await ytGetLiveChat(livestreamingId, 10)
-      if (response === null) return
-      setMessages(response)
+      const fetchData = async () => {
+        const response: LiveChatMessage[] | null = await ytGetLiveChat(
+          livestreamingId,
+          10,
+        )
+
+        if (response === null) return
+
+        setMessages(response)
+      }
+
+      const interval = setInterval(fetchData, 10000)
+
+      return () => {
+        clearInterval(interval)
+      }
     }
 
-    const interval = setInterval(fetchData, 10000)
+    if (platform === 'tiktok') {
+      // const fetchData = async () => {
+      // console.log(await tiktokLiveChat(livestreamingId))
 
-    return () => {
-      clearInterval(interval)
+      // const data: any = await axios.get(
+      //   baseurl + '/api/tiktok',
+      //   { headers: { Connection: 'keep-alive' } },
+      //   // ! error
+      // )
+      // setMessages((prev) => {
+      //   if (prev.length > 10) prev.shift()
+      //   return [...prev, { author: data.uniqueId, message: data.comment }]
+      // })
+
+      // }
+      // fetchData()
+      TikTokComponent(setMessages)
     }
   }, [livestreamingId])
+
+  console.log({ messages })
 
   return (
     <>

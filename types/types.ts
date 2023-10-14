@@ -109,3 +109,7 @@ export type ChatsProps = {
   author: string
   message: string
 }[]
+export interface LiveChatMessage {
+  author: string
+  message: string
+}

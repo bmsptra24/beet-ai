@@ -1,11 +1,8 @@
 'use server'
 
-// import { setNextPageToken, setPageInfo } from '@/store/actions/youtube.slice'
+import { LiveChatMessage } from '@/types/types'
 
-interface LiveChatMessage {
-  author: string
-  message: string
-}
+// import { setNextPageToken, setPageInfo } from '@/store/actions/youtube.slice'
 
 let nextPageToken = ''
 
