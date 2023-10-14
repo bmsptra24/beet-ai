@@ -18,7 +18,6 @@ class TikTokIOConnection {
     })
 
     this.socket.on('disconnect', () => {
-      this.socket.emit('disconnect')
       console.warn('Socket disconnected!')
     })
 
@@ -49,6 +48,11 @@ class TikTokIOConnection {
         reject('Connection Timeout')
       }, 15000)
     })
+  }
+
+  closeConnection() {
+    this.socket.emit('disconnect')
+    console.log('Connection closed')
   }
 
   setUniqueId() {
