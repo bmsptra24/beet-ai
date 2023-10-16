@@ -73,7 +73,7 @@ export const AudioPlayer = ({
     if (queues.length === 0 && audioURL === '') {
       const delayAudioURL = setTimeout(() => {
         setAudioURL(boring_speech)
-      }, 5000)
+      }, 8000)
 
       return () => {
         clearTimeout(delayAudioURL)
