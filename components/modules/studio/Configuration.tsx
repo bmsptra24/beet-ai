@@ -8,7 +8,7 @@ import {
 import { RootState } from '@/store/store'
 import { generateAiAnswer } from '@/utils/openai'
 import { prismaFindManyProjects, prismaUpdateProject } from '@/utils/prisma'
-import { ytGetLiveChat } from '@/utils/services/ytGetLiveChat'
+import { ytGetLiveChat } from '@/utils/services/youtube'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 

@@ -4,10 +4,7 @@ import { generateAiAnswer } from '@/utils/openai'
 import React from 'react'
 import { useSelector } from 'react-redux'
 
-const Message = ({
-  message,
-  setEditAnswer,
-}: {
+type Props = {
   message: Prompt
   setEditAnswer: React.Dispatch<
     React.SetStateAction<{
@@ -15,7 +12,10 @@ const Message = ({
       message: string
     }>
   >
-}) => {
+  mode: 'auto' | 'semiauto'
+}
+
+const Message: React.FC<Props> = ({ message, setEditAnswer, mode }) => {
   const {
     aiKnowlagge,
     aiRole,
@@ -31,6 +31,7 @@ const Message = ({
   return (
     <p
       onClick={async () => {
+        if (mode === 'auto') return
         // const response = await "Hi";
         const response = await generateAiAnswer(
           message,
@@ -51,7 +52,9 @@ const Message = ({
         })
         // textToSpeech(response.content)
       }}
-      className="px-2 py-0.5 rounded border-2 border-primary-black bg-primary-eight hover:brightness-95 transition-all ease-in-out cursor-pointer"
+      className={`${
+        mode === 'auto' ? '' : 'cursor-pointer hover:brightness-95'
+      } px-2 py-0.5 rounded border-2 border-primary-black bg-primary-eight transition-all ease-in-out`}
     >
       <strong>{message.author}:</strong> {message.message}
     </p>

@@ -18,10 +18,12 @@ import {
   closeConnection,
   createConnection,
 } from '../tiktok/TikTokComponent'
+import { ButtonThin } from '@/components/elements/Button'
 type Props = {
   setIsMenuOpen: Dispatch<SetStateAction<boolean>>
 }
 const Studio: React.FC<Props> = ({ setIsMenuOpen }) => {
+  const [mode, setMode] = useState<'auto' | 'semiauto'>('auto')
   const [messages, setMessages] = useState<
     {
       author: string
@@ -50,6 +52,7 @@ const Studio: React.FC<Props> = ({ setIsMenuOpen }) => {
     mood,
     platform,
   } = useSelector((state: RootState) => state.currProject)
+  const props = useSelector((state: RootState) => state.currProject)
   // console.log({
   //   aiKnowlagge,
   //   aiRole,
@@ -63,7 +66,8 @@ const Studio: React.FC<Props> = ({ setIsMenuOpen }) => {
   // })
 
   useEffect(() => {
-    if (platform === 'tiktok') createConnection('ratatui_le')
+
+    if (platform === 'tiktok') createConnection(livestreamingId)
 
     // return () => {
     //   closeConnection()
@@ -107,7 +111,7 @@ const Studio: React.FC<Props> = ({ setIsMenuOpen }) => {
 
       // }
       // fetchData()
-      TikTokComponent(setMessages)
+      TikTokComponent(setMessages, setEditAnswer, props)
     }
   }, [livestreamingId])
 
@@ -120,10 +124,11 @@ const Studio: React.FC<Props> = ({ setIsMenuOpen }) => {
         <section className="grow flex flex-col">
           <p className="text-3xl font-bold">Message</p>
           <div className="mt-3 flex flex-col gap-2 overflow-y-scroll lg:overflow-hidden lg:hover:overflow-y-auto max-h-[30vh] lg:max-h-[81vh]">
-            {messages?.map((message, index) => {
+            {ytMessageDummy?.map((message, index) => {
               return (
                 <Message
                   setEditAnswer={setEditAnswer}
+                  mode={mode}
                   message={message}
                   key={index}
                 />
@@ -180,17 +185,22 @@ const Studio: React.FC<Props> = ({ setIsMenuOpen }) => {
         </section>
         <section className="flex flex-col">
           <p className="text-3xl font-bold"></p>
-          <button
+          <ButtonThin
+            text="Start Livestreaming"
+            className="bg-primary-danger"
             onClick={() => {
               textToSpeech('Halo semuanya apa kabar')
             }}
-            className="mt-3 px-3 py-0.5 bg-primary-danger hover:brightness-95 rounded border-2 border-primary-black"
-          >
-            Start Livestreaming
-          </button>
-          <button className="mt-2 px-3 py-0.5 bg-primary-two hover:brightness-95 rounded border-2 border-primary-black">
-            Pause Livestreaming
-          </button>
+          />
+          <ButtonThin text="Pause Livestreaming" className="bg-primary-two" />
+          <ButtonThin
+            onClick={() => {
+              if (mode === 'auto') setMode('semiauto')
+              if (mode === 'semiauto') setMode('auto')
+            }}
+            text={mode === 'auto' ? 'Mode Auto' : 'Mode Semi Auto'}
+            className="bg-primary-tree"
+          />
           <AudioPlayer setQueue={setQueues} queues={queues} />
         </section>
       </main>
