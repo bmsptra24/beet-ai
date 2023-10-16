@@ -66,7 +66,7 @@ const page: React.FC = () => {
         data: {
           name: name.current,
           username: username.current,
-          email: email.current,
+          email: email.current.toUpperCase(),
           password: md5(password.current),
         },
       })
