@@ -66,6 +66,7 @@ const Studio: React.FC<Props> = ({ setIsMenuOpen }) => {
   // })
 
   useEffect(() => {
+
     if (platform === 'tiktok') createConnection(livestreamingId)
 
     // return () => {
