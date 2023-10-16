@@ -19,6 +19,7 @@ import {
   createConnection,
 } from '../tiktok/TikTokComponent'
 import { ButtonThin } from '@/components/elements/Button'
+import { generateAiAnswer } from '@/utils/openai'
 type Props = {
   setIsMenuOpen: Dispatch<SetStateAction<boolean>>
 }
@@ -66,7 +67,6 @@ const Studio: React.FC<Props> = ({ setIsMenuOpen }) => {
   // })
 
   useEffect(() => {
-
     if (platform === 'tiktok') createConnection(livestreamingId)
 
     // return () => {
@@ -86,6 +86,23 @@ const Studio: React.FC<Props> = ({ setIsMenuOpen }) => {
         if (response === null) return
 
         setMessages(response)
+
+        response.map(async (msg, index) => {
+          const chat = { author: msg.author, message: msg.message }
+          console.log('get ai answer')
+
+          const answerGPT = await generateAiAnswer(
+            chat,
+            avatarName,
+            aiRole,
+            livestreamTopic,
+            mood,
+            language,
+            aiKnowlagge,
+          )
+          setQueues([...queues, { author: msg.author, message: answerGPT }])
+          console.log('add queue auto')
+        })
       }
 
       const interval = setInterval(fetchData, 10000)
@@ -111,9 +128,13 @@ const Studio: React.FC<Props> = ({ setIsMenuOpen }) => {
 
       // }
       // fetchData()
-      TikTokComponent(setMessages, setEditAnswer, props)
+      TikTokComponent(setMessages, setQueues, props)
     }
   }, [livestreamingId])
+
+  // useEffect(() => {
+  //   if (mode === 'auto') setQueues([...queues, editAnswer])
+  // }, [editAnswer])
 
   console.log({ messages })
 
@@ -140,7 +161,9 @@ const Studio: React.FC<Props> = ({ setIsMenuOpen }) => {
           <article className="flex flex-col">
             <p className="text-3xl font-bold">Review</p>
             <textarea
-              className="mt-3 border-2 border-primary-black rounded px-2 py-1 bg-transparent"
+              className={`${
+                mode === 'auto' ? 'cursor-not-allowed' : 'cursor-text'
+              } mt-3 border-2 border-primary-black rounded px-2 py-1 bg-transparent`}
               placeholder="edit answer"
               onChange={(event) =>
                 setEditAnswer((prev) => ({
@@ -153,15 +176,18 @@ const Studio: React.FC<Props> = ({ setIsMenuOpen }) => {
               id="review"
               cols={30}
               rows={10}
+              disabled={mode === 'auto'}
             ></textarea>
             <button
-              disabled={queues.length >= 5}
+              disabled={queues.length >= 5 || mode === 'auto'}
               onClick={() => {
                 if (editAnswer.message === '') return
                 setEditAnswer({ author: '', message: '' })
                 setQueues([...queues, editAnswer])
               }}
-              className="mt-2 px-3 py-0.5 bg-primary-success hover:brightness-95 rounded border-2 border-primary-black"
+              className={`${
+                mode === 'auto' ? 'cursor-not-allowed' : 'cursor-pointer'
+              } mt-2 px-3 py-0.5 bg-primary-success hover:brightness-95 rounded border-2 border-primary-black`}
             >
               save change
             </button>

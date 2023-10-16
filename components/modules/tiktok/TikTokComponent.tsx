@@ -68,11 +68,13 @@ export const TikTokComponent = (
       }[]
     >
   >,
-  setEditAnswer: React.Dispatch<
-    React.SetStateAction<{
-      author: string
-      message: string
-    }>
+  setQueues: React.Dispatch<
+    React.SetStateAction<
+      {
+        author: string
+        message: string
+      }[]
+    >
   >,
   {
     avatarName,
@@ -90,6 +92,7 @@ export const TikTokComponent = (
       if (prev.length > 20) prev.shift()
       return [...prev, chat]
     })
+    console.log('get ai answer')
     const response: string = await generateAiAnswer(
       chat,
       avatarName,
@@ -99,6 +102,7 @@ export const TikTokComponent = (
       language,
       aiKnowlagge,
     )
-    setEditAnswer({ author: msg.uniqueId, message: response })
+    console.log('add queue auto')
+    setQueues((prev) => [...prev, { author: msg.uniqueId, message: response }])
   })
 }

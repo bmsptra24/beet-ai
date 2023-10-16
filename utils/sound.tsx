@@ -43,7 +43,8 @@ export const AudioPlayer = ({
 }) => {
   const [audioURL, setAudioURL] = useState('')
   const [audioElement, setAudioElement] = useState(null)
-
+  const boring_speech =
+    'https://github.com/bmsptra24/beet-ai/raw/master/public/audio/boring_speech.mp3'
   const handleAudioFetch = async () => {
     if (queues.length > 0) {
       console.log('get tts')
@@ -68,6 +69,18 @@ export const AudioPlayer = ({
     if (audioURL === '') handleAudioFetch()
   }, [queues, setQueue, audioElement, audioURL])
 
+  useEffect(() => {
+    if (queues.length === 0 && audioURL === '') {
+      const delayAudioURL = setTimeout(() => {
+        setAudioURL(boring_speech)
+      }, 5000)
+
+      return () => {
+        clearTimeout(delayAudioURL)
+      }
+    }
+  }, [queues, audioURL])
+
   // console.log({ audioURL })
 
   return (
@@ -75,8 +88,9 @@ export const AudioPlayer = ({
       {audioURL !== '' && (
         <audio
           onEnded={() => {
-            setQueue((prevQueue: QueueProps) => prevQueue.slice(1))
             setAudioURL('')
+            if (audioURL === boring_speech) return
+            setQueue((prevQueue: QueueProps) => prevQueue.slice(1))
           }}
           autoPlay
           controls
