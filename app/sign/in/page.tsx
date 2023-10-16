@@ -39,7 +39,7 @@ const SignIn: React.FC = () => {
     if (input.password.length === 0) return invalid('Invalid Password!')
     if (!isEmail(input.email)) return invalid('Invalid Email!')
     const user: User = await prismaFindUniqueUser({
-      where: { email: input.email },
+      where: { email: input.email.toLowerCase() },
     })
     if (!user) return invalid('User not found!')
     if (md5(input.password) !== user.password)
@@ -58,7 +58,7 @@ const SignIn: React.FC = () => {
     }
 
     await signIn('credentials', {
-      email: input.email.toUpperCase(),
+      email: input.email.toLowerCase(),
       password: md5(input.password),
       redirect: true,
       callbackUrl: '/home',
