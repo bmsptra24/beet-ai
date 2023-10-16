@@ -58,7 +58,7 @@ const SignIn: React.FC = () => {
     }
 
     await signIn('credentials', {
-      email: input.email,
+      email: input.email.toUpperCase(),
       password: md5(input.password),
       redirect: true,
       callbackUrl: '/home',
