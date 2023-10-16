@@ -33,6 +33,7 @@ const Message: React.FC<Props> = ({ message, setEditAnswer, mode }) => {
       onClick={async () => {
         if (mode === 'auto') return
         // const response = await "Hi";
+        console.log('get ai answer')
         const response = await generateAiAnswer(
           message,
           avatarName,
