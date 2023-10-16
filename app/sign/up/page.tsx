@@ -66,14 +66,14 @@ const page: React.FC = () => {
         data: {
           name: name.current,
           username: username.current,
-          email: email.current.toUpperCase(),
+          email: email.current.toLowerCase(),
           password: md5(password.current),
         },
       })
       await sendCode(email.current)
       console.log('Code sended!')
       await signIn('credentials', {
-        email: email.current,
+        email: email.current.toLowerCase(),
         password: md5(password.current),
         redirect: true,
         callbackUrl: '/sign/verification',

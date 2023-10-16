@@ -20,7 +20,7 @@ const Box = () => {
   const { data: session, status } = useSession()
 
   const code = useRef(0)
-  const email = session?.user?.email?.toUpperCase() || ''
+  const email = session?.user?.email?.toLowerCase() || ''
   const router = useRouter()
 
   const isCodeValid = async () => {
