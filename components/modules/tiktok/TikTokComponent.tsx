@@ -1,4 +1,6 @@
+import { generateAiAnswer } from '@/utils/openai'
 import { TikTokIOConnection } from './TikTokIOConnection'
+import { CurrProjectProps } from '@/types/types'
 
 let backendUrl = 'https://tiktok-chat-reader.zerody.one/' // or http://localhost:8081/
 let connection = new TikTokIOConnection(backendUrl)
@@ -66,12 +68,37 @@ export const TikTokComponent = (
       }[]
     >
   >,
+  setEditAnswer: React.Dispatch<
+    React.SetStateAction<{
+      author: string
+      message: string
+    }>
+  >,
+  {
+    avatarName,
+    aiRole,
+    livestreamTopic,
+    mood,
+    language,
+    aiKnowlagge,
+  }: CurrProjectProps,
 ) => {
   // New chat comment received
-  connection.on('chat', (msg: any) => {
+  connection.on('chat', async (msg: any) => {
+    const chat = { author: msg.uniqueId, message: msg.comment }
     setMessages((prev) => {
       if (prev.length > 20) prev.shift()
-      return [...prev, { author: msg.uniqueId, message: msg.comment }]
+      return [...prev, chat]
     })
+    const response: string = await generateAiAnswer(
+      chat,
+      avatarName,
+      aiRole,
+      livestreamTopic,
+      mood,
+      language,
+      aiKnowlagge,
+    )
+    setEditAnswer({ author: msg.uniqueId, message: response })
   })
 }
