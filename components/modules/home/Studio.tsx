@@ -30,7 +30,7 @@ type Props = {
   setIsMenuOpen: Dispatch<SetStateAction<boolean>>;
 };
 const Studio: React.FC<Props> = ({ setIsMenuOpen }) => {
-  const isGenerateAnswer = useRef(false);
+  const isTiktokConected = useRef(false);
   const [mode, setMode] = useState<"auto" | "semiauto">("semiauto");
   const [messages, setMessages] = useState<
     {
@@ -74,7 +74,10 @@ const Studio: React.FC<Props> = ({ setIsMenuOpen }) => {
   // })
 
   useEffect(() => {
-    if (platform === "tiktok") createConnection(livestreamingId);
+    if (platform === "tiktok" && isTiktokConected.current === false) {
+      createConnection(livestreamingId);
+      isTiktokConected.current = true;
+    }
 
     // return () => {
     //   closeConnection()
@@ -131,8 +134,7 @@ const Studio: React.FC<Props> = ({ setIsMenuOpen }) => {
     if (platform === "tiktok") {
       const fetchData = async () => {
         if (mode === "semiauto") return;
-        if (isGenerateAnswer.current === true) return;
-        isGenerateAnswer.current = true;
+        if (messages.length === 0) return;
 
         const chat = {
           author: messages[0]?.author,
@@ -152,10 +154,8 @@ const Studio: React.FC<Props> = ({ setIsMenuOpen }) => {
         );
         if (response === null) return;
 
-        setMessages((prev) => {
-          prev.shift();
-          return [...prev, chat];
-        });
+        if (messages.length > 1) setMessages(messages.slice(1));
+        if (messages.length >= 1) setMessages([]);
 
         console.log("add queue auto");
 
@@ -170,9 +170,10 @@ const Studio: React.FC<Props> = ({ setIsMenuOpen }) => {
           },
         ]);
 
-        isGenerateAnswer.current = false;
+        if (messages.length === 0) return;
         fetchData();
       };
+
       fetchData();
 
       TikTokComponent(setMessages, setQueues, props);

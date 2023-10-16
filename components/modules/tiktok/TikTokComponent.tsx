@@ -16,7 +16,7 @@ export function createConnection(uniqueId: string) {
       .then((state: any) => {
         // $('#stateText').text(`Connected to roomId ${state.roomId}`)
         console.log(`Connected to roomId ${state.roomId}`);
-
+        alert(`Connected to roomId ${state.roomId}`);
         // reset stats
         // viewerCount = 0
         // likeCount = 0
@@ -26,7 +26,7 @@ export function createConnection(uniqueId: string) {
       .catch((errorMessage: any) => {
         // $('#stateText').text(errorMessage)
         console.log(errorMessage);
-
+        alert(errorMessage);
         // schedule next try if obs username set
         // if (window.settings.username) {
         //   setTimeout(() => {
@@ -94,6 +94,5 @@ export const TikTokComponent = async (
       if (prev.length > 20) prev.shift();
       return [...prev, chat];
     });
-   
   });
 };
