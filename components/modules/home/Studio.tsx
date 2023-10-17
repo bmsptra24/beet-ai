@@ -4,7 +4,13 @@ import { RootState } from '@/store/store'
 import { ytMessageDummy } from '@/utils/dummyData'
 import { ytGetLiveChat } from '@/utils/services/youtube'
 import { AudioPlayer } from '@/utils/sound'
-import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import React, {
+  useRef,
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useState,
+} from 'react'
 import { useSelector } from 'react-redux'
 import Header from './Header'
 import { textToSpeech } from '@/utils/tts'
@@ -24,7 +30,12 @@ type Props = {
   setIsMenuOpen: Dispatch<SetStateAction<boolean>>
 }
 const Studio: React.FC<Props> = ({ setIsMenuOpen }) => {
-  const [mode, setMode] = useState<'auto' | 'semiauto'>('auto')
+  const isTiktokConected = useRef(false)
+  const [mode, setMode] = useState<'auto' | 'semiauto'>('semiauto')
+  const [currAnswer, setCurrAnswer] = useState<{
+    author: string
+    message: string
+  }>()
   const [messages, setMessages] = useState<
     {
       author: string
@@ -67,7 +78,10 @@ const Studio: React.FC<Props> = ({ setIsMenuOpen }) => {
   // })
 
   useEffect(() => {
-    if (platform === 'tiktok') createConnection(livestreamingId)
+    if (platform === 'tiktok' && isTiktokConected.current === false) {
+      createConnection(livestreamingId)
+      isTiktokConected.current = true
+    }
 
     // return () => {
     //   closeConnection()
@@ -91,7 +105,7 @@ const Studio: React.FC<Props> = ({ setIsMenuOpen }) => {
           const chat = { author: msg.author, message: msg.message }
           console.log('get ai answer')
 
-          const answerGPT = await generateAiAnswer(
+          const response = await generateAiAnswer(
             chat,
             avatarName,
             aiRole,
@@ -100,8 +114,17 @@ const Studio: React.FC<Props> = ({ setIsMenuOpen }) => {
             language,
             aiKnowlagge,
           )
-          setQueues([...queues, { author: msg.author, message: answerGPT }])
           console.log('add queue auto')
+          setQueues([
+            ...queues,
+            {
+              author: msg.author,
+              message:
+                (response?.content as string) ||
+                (response?.data as string) ||
+                (response?.body?.content as string),
+            },
+          ])
         })
       }
 
@@ -113,30 +136,54 @@ const Studio: React.FC<Props> = ({ setIsMenuOpen }) => {
     }
 
     if (platform === 'tiktok') {
-      // const fetchData = async () => {
-      // console.log(await tiktokLiveChat(livestreamingId))
+      const fetchData = async () => {
+        if (mode === 'semiauto') return
+        if (messages.length === 0) return
+        if (queues.length > 5) return
 
-      // const data: any = await axios.get(
-      //   baseurl + '/api/tiktok',
-      //   { headers: { Connection: 'keep-alive' } },
-      //   // ! error
-      // )
-      // setMessages((prev) => {
-      //   if (prev.length > 10) prev.shift()
-      //   return [...prev, { author: data.uniqueId, message: data.comment }]
-      // })
+        console.log('cracked')
 
-      // }
-      // fetchData()
+        const chat = {
+          author: messages[0]?.author,
+          message: messages[0]?.message,
+        }
+
+        console.log('get ai answer')
+
+        const response = await generateAiAnswer(
+          chat,
+          avatarName,
+          aiRole,
+          livestreamTopic,
+          mood,
+          language,
+          aiKnowlagge,
+        )
+        if (response === null) return
+
+        if (messages.length > 1) setMessages((prev) => prev.slice(1))
+        if (messages.length <= 1) setMessages([])
+
+        console.log('add queue auto')
+
+        const newAnswer = {
+          author: messages[0]?.author,
+          message:
+            (response?.content as string) ||
+            (response?.data as string) ||
+            (response?.body?.content as string),
+        }
+
+        setQueues((prev) => [...prev, newAnswer])
+        setCurrAnswer(newAnswer)
+      }
+      fetchData()
+
       TikTokComponent(setMessages, setQueues, props)
     }
-  }, [livestreamingId])
+  }, [livestreamingId, mode, currAnswer])
 
-  // useEffect(() => {
-  //   if (mode === 'auto') setQueues([...queues, editAnswer])
-  // }, [editAnswer])
-
-  console.log({ messages })
+  // console.log({ messages })
 
   return (
     <>
