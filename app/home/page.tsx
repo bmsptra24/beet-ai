@@ -16,20 +16,19 @@ import { useDispatch, useSelector } from 'react-redux'
 const page: React.FC = () => {
   const { data: session } = useSession()
   const [isLoading, setIsLoading] = useState(true)
-  const { projects } = useSelector((state: RootState) => state.currProject)
+  const { projects, id } = useSelector((state: RootState) => state.currProject)
   const [navigation, setNavigation] = useState(1)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const dummyProjects = ['Minato Yamata', 'AI Chef Yunita', 'Tsubasa']
   const dispatch = useDispatch()
 
   useEffect(() => {
-    if (projects?.length > 0) setIsLoading(false)
+    if (projects) setIsLoading(false)
   }, [projects])
-  console.log({ projects, isLoading })
 
   useEffect(() => {
     if (window.screen.width > 1020) setIsMenuOpen(true)
-    if (projects?.length > 0) setIsLoading(false)
+    if (projects) setIsLoading(false)
   }, [])
 
   return (
@@ -81,6 +80,7 @@ const page: React.FC = () => {
             <div className="flex flex-col gap-2">
               <p className="font-bold">Project</p>
               {isLoading === false &&
+                projects?.length > 0 &&
                 projects?.map((project, index) => {
                   return (
                     <p
@@ -103,7 +103,8 @@ const page: React.FC = () => {
                         setNavigation(3)
                       }}
                       className={`${
-                        navigation === index + 3 &&
+                        navigation === 3 &&
+                        project.id === id &&
                         'bg-primary-white hover:bg-primary-white border-2 cursor-default'
                       } text-sm flex items-center gap-2 px-2 py-1.5 rounded-lg cursor-pointer hover:bg-primary-one/30 border-primary-black`}
                     >
@@ -111,6 +112,9 @@ const page: React.FC = () => {
                     </p>
                   )
                 })}
+              {isLoading === false && projects?.length === 0 && (
+                <p>Project empty...</p>
+              )}
               {isLoading === true && (
                 <>
                   <ProjectNavLoading />

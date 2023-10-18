@@ -24,7 +24,8 @@ const Dashboard = ({
   setIsMenuOpen: Dispatch<SetStateAction<boolean>>
 }) => {
   const { data: session } = useSession()
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState<true | false>(true)
+
   const { projects } = useSelector((state: RootState) => state.currProject)
   const dispatch = useDispatch()
 
@@ -34,8 +35,7 @@ const Dashboard = ({
       where: { user: { email: session?.user?.email as string } },
       orderBy: { lastOpenAt: 'desc' },
     })
-    dispatch(setProjects(response))
-    setIsLoading(false)
+    dispatch(setProjects(response || []))
   }
 
   useEffect(() => {
@@ -43,6 +43,10 @@ const Dashboard = ({
       getProject()
     }
   }, [projects, session])
+
+  useEffect(() => {
+    if (projects) setIsLoading(false)
+  }, [projects])
 
   const Project: React.FC<{
     projectId: number
@@ -85,8 +89,10 @@ const Dashboard = ({
 
               console.log({ projectId })
               await prismaUniqueDeleteProject({ where: { id: projectId } })
-              return setProjects(() =>
-                projects.filter((project) => project.id !== projectId),
+              return dispatch(
+                setProjects(
+                  projects?.filter((project) => project.id !== projectId),
+                ),
               )
             }}
           />
@@ -94,6 +100,7 @@ const Dashboard = ({
       </tr>
     )
   }
+  console.log({ isLoading, projects })
 
   return (
     <>
@@ -128,35 +135,15 @@ const Dashboard = ({
       <div
         onClick={async () => {
           // create new project
-          const {
-            id,
-            aiKnowlagge,
-            aiRole,
-            avatarName,
-            language,
-            livestreamTopic,
-            livestreamingId,
-            mood,
-            platform,
-          } = await prismaCreateProject({
+          const response = await prismaCreateProject({
             data: {
-              user: { connect: { email: 'admin@prisma.io' } },
+              user: { connect: { email: session?.user?.email as string } },
+              avatarName: 'New project',
             },
           })
 
-          dispatch(
-            initState({
-              id,
-              aiKnowlagge,
-              aiRole,
-              avatarName,
-              language,
-              livestreamingId,
-              livestreamTopic,
-              mood,
-              platform,
-            }),
-          )
+          dispatch(initState({ ...response }))
+          dispatch(setProjects([response, ...projects]))
 
           setNavigation(2)
         }}
@@ -173,19 +160,9 @@ const Dashboard = ({
               <th className="font-normal text-left ml-2">Platform</th>
               <th className="font-normal text-left ml-2">Last Open</th>
             </tr>
-            {Array(3).map((_, index) => {
-              console.log('hi')
-
-              return <ProjectLoading key={index} />
-            })}
-            {isLoading === true ? (
-              <>
-                <ProjectLoading />
-                <ProjectLoading />
-                <ProjectLoading />
-              </>
-            ) : (
-              projects.map((project, index) => {
+            {isLoading === false &&
+              projects?.length > 0 &&
+              projects?.map((project, index) => {
                 return (
                   <Project
                     key={index}
@@ -195,8 +172,22 @@ const Dashboard = ({
                     lastOpen={project.lastOpenAt?.toDateString() as string}
                   />
                 )
-              })
+              })}
+            {isLoading === false && projects?.length === 0 && (
+              <p>Project empty...</p>
             )}
+            {isLoading === true && (
+              <>
+                <ProjectLoading />
+                <ProjectLoading />
+                <ProjectLoading />
+              </>
+            )}
+            {/* {Array(3).map((_, index) => {
+              console.log('hi')
+
+              return <ProjectLoading key={index} />
+            })} */}
           </tbody>
         </table>
       </div>

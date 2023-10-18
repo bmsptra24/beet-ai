@@ -32,10 +32,12 @@ type Props = {
 const Studio: React.FC<Props> = ({ setIsMenuOpen }) => {
   const isTiktokConected = useRef(false)
   const [mode, setMode] = useState<'auto' | 'semiauto'>('semiauto')
+
   const [currAnswer, setCurrAnswer] = useState<{
     author: string
     message: string
   }>()
+
   const [messages, setMessages] = useState<
     {
       author: string
@@ -139,6 +141,7 @@ const Studio: React.FC<Props> = ({ setIsMenuOpen }) => {
       const fetchData = async () => {
         if (mode === 'semiauto') return
         if (messages.length === 0) return
+
         if (queues.length > 5) return
 
         console.log('cracked')
@@ -163,6 +166,9 @@ const Studio: React.FC<Props> = ({ setIsMenuOpen }) => {
         // const response: any = { data: 'DUmmy response' }
 
         if (response === null) return
+        // const response: any = { data: 'DUmmy response' }
+
+        if (response === null) return
 
         if (messages.length > 1) setMessages((prev) => prev.slice(1))
         if (messages.length <= 1) setMessages([])
@@ -179,18 +185,20 @@ const Studio: React.FC<Props> = ({ setIsMenuOpen }) => {
 
         setQueues((prev) => [...prev, newAnswer])
         setCurrAnswer(newAnswer)
+
+        // solusi sementara untuk mengatasi pesan yang duplikat
+        setMessages([])
       }
+
       fetchData()
 
       TikTokComponent(setMessages, setQueues, props)
     }
 
-    return () => {
-      setMessages([])
-    }
-  }, [livestreamingId, mode, currAnswer])
-
-  // console.log({ messages })
+    // return () => {
+    //   setMessages([]);
+    // };
+  }, [livestreamingId, mode, currAnswer, messages.length === 0])
 
   return (
     <>
