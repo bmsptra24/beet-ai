@@ -86,7 +86,9 @@ const Dashboard = ({
               console.log({ projectId });
               await prismaUniqueDeleteProject({ where: { id: projectId } });
               return setProjects(() =>
-                projects.filter((project) => project.id !== projectId)
+                                 
+                projects?.filter((project) => project.id !== projectId)
+
               );
             }}
           />
@@ -140,6 +142,7 @@ const Dashboard = ({
             platform,
           } = await prismaCreateProject({
             data: {
+
               user: { connect: { email: session?.user?.email as string } },
             },
           });

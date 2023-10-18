@@ -32,10 +32,12 @@ type Props = {
 const Studio: React.FC<Props> = ({ setIsMenuOpen }) => {
   const isTiktokConected = useRef(false);
   const [mode, setMode] = useState<"auto" | "semiauto">("semiauto");
+
   const [currAnswer, setCurrAnswer] = useState<{
     author: string;
     message: string;
   }>();
+
   const [messages, setMessages] = useState<
     {
       author: string;
@@ -139,9 +141,11 @@ const Studio: React.FC<Props> = ({ setIsMenuOpen }) => {
       const fetchData = async () => {
         if (mode === "semiauto") return;
         if (messages.length === 0) return;
+
         if (queues.length > 5) return;
 
         console.log("cracked");
+
 
         const chat = {
           author: messages[0]?.author,
@@ -159,6 +163,7 @@ const Studio: React.FC<Props> = ({ setIsMenuOpen }) => {
           language,
           aiKnowlagge
         );
+
 
         // const response: any = { data: 'DUmmy response' }
 
@@ -183,6 +188,7 @@ const Studio: React.FC<Props> = ({ setIsMenuOpen }) => {
         // solusi sementara untuk mengatasi pesan yang duplikat
         setMessages([]);
       };
+
       fetchData();
 
       TikTokComponent(setMessages, setQueues, props);
@@ -193,7 +199,6 @@ const Studio: React.FC<Props> = ({ setIsMenuOpen }) => {
     // };
   }, [livestreamingId, mode, currAnswer, messages.length === 0]);
 
-  // console.log({ messages })
 
   return (
     <>
