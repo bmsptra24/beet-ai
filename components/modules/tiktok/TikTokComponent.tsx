@@ -86,13 +86,28 @@ export const TikTokComponent = async (
   }: CurrProjectProps
 ) => {
   // New chat comment received
-  await connection.on("chat", async (msg: any) => {
-    const chat = { author: msg.uniqueId, message: msg.comment };
-    // console.log({ chat });
+
+  connection.on('chat', async (msg: any) => {
+    const chat = { author: msg.uniqueId, message: msg.comment }
+    // console.log({ chat })
 
     setMessages((prev) => {
-      if (prev.length > 20) prev.shift();
-      return [...prev, chat];
-    });
-  });
-};
+      if (prev.length > 20) prev.shift()
+      return [...prev, chat]
+    })
+
+    // console.log('get ai answer')
+    // const response: string = await generateAiAnswer(
+    //   chat,
+    //   avatarName,
+    //   aiRole,
+    //   livestreamTopic,
+    //   mood,
+    //   language,
+    //   aiKnowlagge,
+    // )
+    // console.log('add queue auto')
+    // setQueues((prev) => [...prev, { author: msg.uniqueId, message: response }])
+  })
+}
+

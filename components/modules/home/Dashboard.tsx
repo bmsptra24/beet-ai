@@ -86,7 +86,9 @@ const Dashboard = ({
               console.log({ projectId });
               await prismaUniqueDeleteProject({ where: { id: projectId } });
               return setProjects(() =>
+                                 
                 projects?.filter((project) => project.id !== projectId)
+
               );
             }}
           />
@@ -140,7 +142,8 @@ const Dashboard = ({
             platform,
           } = await prismaCreateProject({
             data: {
-              user: { connect: { email: "admin@prisma.io" } },
+
+              user: { connect: { email: session?.user?.email as string } },
             },
           });
 
@@ -178,14 +181,16 @@ const Dashboard = ({
 
               return <ProjectLoading key={index} />;
             })}
-            {isLoading === true ? (
+            {isLoading === true && (
               <>
                 <ProjectLoading />
                 <ProjectLoading />
                 <ProjectLoading />
               </>
-            ) : (
-              projects?.map((project, index) => {
+            )}
+            {isLoading === false &&
+              projects.length > 0 &&
+              projects.map((project, index) => {
                 return (
                   <Project
                     key={index}
@@ -195,7 +200,9 @@ const Dashboard = ({
                     lastOpen={project.lastOpenAt?.toDateString() as string}
                   />
                 );
-              })
+              })}
+            {isLoading === false && projects.length === 0 && (
+              <p>Project empty...</p>
             )}
           </tbody>
         </table>

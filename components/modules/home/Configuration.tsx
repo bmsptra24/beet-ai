@@ -192,22 +192,27 @@ const Configuration: React.FC<Props> = ({ setIsMenuOpen }) => {
             Test AI
           </button>
           <button
-            onClick={async () =>
-              await prismaUpdateProject({
-                where: { id },
-                data: {
-                  aiKnowlagge,
-                  aiRole,
-                  avatarName,
-                  id,
-                  language,
-                  livestreamTopic,
-                  livestreamingId,
-                  mood,
-                  platform,
-                },
-              })
-            }
+            onClick={async () => {
+              try {
+                await prismaUpdateProject({
+                  where: { id },
+                  data: {
+                    aiKnowlagge,
+                    aiRole,
+                    avatarName,
+                    id,
+                    language,
+                    livestreamTopic,
+                    livestreamingId,
+                    mood,
+                    platform,
+                  },
+                })
+                alert('Data saved!')
+              } catch (error) {
+                alert(error)
+              }
+            }}
             className="bg-primary-two flex items-center py-1.5 px-6 rounded press-sm press-sm-active cursor-pointer"
           >
             Save

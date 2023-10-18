@@ -32,6 +32,12 @@ type Props = {
 const Studio: React.FC<Props> = ({ setIsMenuOpen }) => {
   const isTiktokConected = useRef(false);
   const [mode, setMode] = useState<"auto" | "semiauto">("semiauto");
+
+  const [currAnswer, setCurrAnswer] = useState<{
+    author: string;
+    message: string;
+  }>();
+
   const [messages, setMessages] = useState<
     {
       author: string;
@@ -136,6 +142,11 @@ const Studio: React.FC<Props> = ({ setIsMenuOpen }) => {
         if (mode === "semiauto") return;
         if (messages.length === 0) return;
 
+        if (queues.length > 5) return;
+
+        console.log("cracked");
+
+
         const chat = {
           author: messages[0]?.author,
           message: messages[0]?.message,
@@ -152,39 +163,42 @@ const Studio: React.FC<Props> = ({ setIsMenuOpen }) => {
           language,
           aiKnowlagge
         );
+
+
+        // const response: any = { data: 'DUmmy response' }
+
         if (response === null) return;
 
-        if (messages.length > 1) setMessages(messages.slice(1));
-        if (messages.length >= 1) setMessages([]);
+        if (messages.length > 1) setMessages((prev) => prev.slice(1));
+        if (messages.length <= 1) setMessages([]);
 
         console.log("add queue auto");
 
-        setQueues((prev) => [
-          ...prev,
-          {
-            author: messages[0]?.author,
-            message:
-              (response?.content as string) ||
-              (response?.data as string) ||
-              (response?.body?.content as string),
-          },
-        ]);
+        const newAnswer = {
+          author: messages[0]?.author,
+          message:
+            (response?.content as string) ||
+            (response?.data as string) ||
+            (response?.body?.content as string),
+        };
 
-        if (messages.length === 0) return;
-        fetchData();
+        setQueues((prev) => [...prev, newAnswer]);
+        setCurrAnswer(newAnswer);
+
+        // solusi sementara untuk mengatasi pesan yang duplikat
+        setMessages([]);
       };
 
       fetchData();
 
       TikTokComponent(setMessages, setQueues, props);
     }
-  }, [livestreamingId, mode]);
 
-  // useEffect(() => {
-  //   if (mode === 'auto') setQueues([...queues, editAnswer])
-  // }, [editAnswer])
+    // return () => {
+    //   setMessages([]);
+    // };
+  }, [livestreamingId, mode, currAnswer, messages.length === 0]);
 
-  console.log({ messages });
 
   return (
     <>
