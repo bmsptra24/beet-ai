@@ -150,17 +150,18 @@ const Studio: React.FC<Props> = ({ setIsMenuOpen }) => {
 
         console.log('get ai answer')
 
-        // const response = await generateAiAnswer(
-        //   chat,
-        //   avatarName,
-        //   aiRole,
-        //   livestreamTopic,
-        //   mood,
-        //   language,
-        //   aiKnowlagge,
-        // )
+        const response = await generateAiAnswer(
+          chat,
+          avatarName,
+          aiRole,
+          livestreamTopic,
+          mood,
+          language,
+          aiKnowlagge,
+        )
 
-        const response: any = { data: 'DUmmy response' }
+        // const response: any = { data: 'DUmmy response' }
+
         if (response === null) return
 
         if (messages.length > 1) setMessages((prev) => prev.slice(1))
