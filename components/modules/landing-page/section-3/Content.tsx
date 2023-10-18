@@ -39,7 +39,7 @@ const Content: React.FC = () => {
       <img
         src={hero.src}
         alt="hero"
-        className="lg:h-[35rem] absolute right-auto lg:right-0 bottom-0"
+        className="h-[35rem] md:h-[27rem] lg:h-[30rem] xl:h-[35rem] absolute right-auto lg:right-0 bottom-0"
       />
     </div>
   )
