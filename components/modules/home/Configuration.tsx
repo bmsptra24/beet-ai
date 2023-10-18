@@ -17,11 +17,14 @@ import React, {
 import { RxTriangleDown } from 'react-icons/rx'
 import { useDispatch, useSelector } from 'react-redux'
 import Header from './Header'
+import { FaSpinner } from 'react-icons/fa'
 type Props = {
   setIsMenuOpen: Dispatch<SetStateAction<boolean>>
 }
 const Configuration: React.FC<Props> = ({ setIsMenuOpen }) => {
-  // const [projects, setProjects] = useState<Project[]>([])
+  const [isLoading, setIsLoading] = useState<true | false>(false)
+  const [outputTestAI, setOutputTestAI] = useState('')
+
   const {
     aiKnowlagge,
     aiRole,
@@ -35,7 +38,9 @@ const Configuration: React.FC<Props> = ({ setIsMenuOpen }) => {
     projects,
   } = useSelector((state: RootState) => state.currProject)
 
-  const [currProject, setCurrProject] = useState(projects[0].id)
+  const [currProject, setCurrProject] = useState(
+    projects ? projects[0]?.id : '',
+  )
   const { data: session } = useSession()
   const dispatch = useDispatch()
 
@@ -65,14 +70,16 @@ const Configuration: React.FC<Props> = ({ setIsMenuOpen }) => {
       select: { id: true, platform: true, avatarName: true },
       orderBy: { lastOpenAt: 'desc' },
     })
+    console.log({ response })
+
     dispatch(setProjects(response))
   }
 
   useEffect(() => {
-    if (projects.length === 0) {
+    if (projects?.length === 0) {
       getProject()
     }
-  }, [projects, session])
+  }, [])
 
   console.log({
     aiKnowlagge,
@@ -107,7 +114,7 @@ const Configuration: React.FC<Props> = ({ setIsMenuOpen }) => {
           <Dropdown
             setState={(event) => setCurrProject(Number(event))}
             className={`bg-primary-tree flex items-center py-1 px-2 rounded press-sm cursor-pointer`}
-            state={currProject.toString()}
+            state={currProject?.toString()}
             callback={async (id) => {
               // if (projects.length === 0) return
               // const response = await prismaUpdateProject({
@@ -122,7 +129,7 @@ const Configuration: React.FC<Props> = ({ setIsMenuOpen }) => {
 
               // if (response === null) throw new Error('Project not found!')
 
-              const project = projects.find((e) => e.id === Number(id))
+              const project = projects?.find((e) => e.id === Number(id))
               // console.log({ project })
 
               dispatch(initState({ ...project, projects }))
@@ -187,14 +194,18 @@ const Configuration: React.FC<Props> = ({ setIsMenuOpen }) => {
           state={aiKnowlagge}
           setState={(event) => dispatch(setAiKnowlagge(event))}
         />
-        <div className="flex justify-between gap-2">
-          <button className="bg-primary-tree grow flex items-center py-1.5 px-6 rounded press-sm press-sm-active cursor-pointer">
-            Test AI
-          </button>
+        <div className="flex justify-end gap-2">
+          {/* <button
+            onClick={async () => {}}
+            className="bg-primary-tree grow flex items-center py-1.5 px-6 rounded press-sm press-sm-active cursor-pointer"
+          >
+            {outputTestAI ? outputTestAI : 'Test AI'}
+          </button> */}
           <button
             onClick={async () => {
               try {
-                await prismaUpdateProject({
+                setIsLoading(true)
+                const response = await prismaUpdateProject({
                   where: { id },
                   data: {
                     aiKnowlagge,
@@ -208,6 +219,12 @@ const Configuration: React.FC<Props> = ({ setIsMenuOpen }) => {
                     platform,
                   },
                 })
+                const updatedProjet = projects?.map((project) => {
+                  if (project.id === id) return response
+                  return project
+                })
+                dispatch(setProjects(updatedProjet))
+                setIsLoading(false)
                 alert('Data saved!')
               } catch (error) {
                 alert(error)
@@ -215,7 +232,7 @@ const Configuration: React.FC<Props> = ({ setIsMenuOpen }) => {
             }}
             className="bg-primary-two flex items-center py-1.5 px-6 rounded press-sm press-sm-active cursor-pointer"
           >
-            Save
+            {isLoading ? <FaSpinner className="animate-spin" /> : 'Save'}
           </button>
         </div>
       </div>

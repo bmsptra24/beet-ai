@@ -1,54 +1,58 @@
-import { initState, setProjects } from "@/store/actions/currIdProject.slice";
-import { RootState } from "@/store/store";
-import { Project } from "@/types/types";
+import { initState, setProjects } from '@/store/actions/currIdProject.slice'
+import { RootState } from '@/store/store'
+import { Project } from '@/types/types'
 import {
   prismaCreateProject,
   prismaDeleteProject,
   prismaFindManyProjects,
   prismaUniqueDeleteProject,
   prismaUpdateProject,
-} from "@/utils/prisma";
-import { signOut, useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { AiOutlinePlus } from "react-icons/ai";
-import { HiLogout, HiOutlineTrash } from "react-icons/hi";
-import { useDispatch, useSelector } from "react-redux";
-import Header, { HeaderClose } from "./Header";
-import { ProjectLoading } from "@/components/loading/ProjectLoading";
+} from '@/utils/prisma'
+import { signOut, useSession } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
+import { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import { AiOutlinePlus } from 'react-icons/ai'
+import { HiLogout, HiOutlineTrash } from 'react-icons/hi'
+import { useDispatch, useSelector } from 'react-redux'
+import Header, { HeaderClose } from './Header'
+import { ProjectLoading } from '@/components/loading/ProjectLoading'
 const Dashboard = ({
   setNavigation,
   setIsMenuOpen,
 }: {
-  setNavigation: Dispatch<SetStateAction<number>>;
-  setIsMenuOpen: Dispatch<SetStateAction<boolean>>;
+  setNavigation: Dispatch<SetStateAction<number>>
+  setIsMenuOpen: Dispatch<SetStateAction<boolean>>
 }) => {
-  const { data: session } = useSession();
-  const [isLoading, setIsLoading] = useState(true);
-  const { projects } = useSelector((state: RootState) => state.currProject);
-  const dispatch = useDispatch();
+  const { data: session } = useSession()
+  const [isLoading, setIsLoading] = useState<true | false>(true)
+
+  const { projects } = useSelector((state: RootState) => state.currProject)
+  const dispatch = useDispatch()
 
   const getProject = async () => {
-    if (!session) return;
+    if (!session) return
     const response = await prismaFindManyProjects({
       where: { user: { email: session?.user?.email as string } },
-      orderBy: { lastOpenAt: "desc" },
-    });
-    dispatch(setProjects(response));
-    setIsLoading(false);
-  };
+      orderBy: { lastOpenAt: 'desc' },
+    })
+    dispatch(setProjects(response || []))
+  }
 
   useEffect(() => {
     if (projects?.length === 0) {
-      getProject();
+      getProject()
     }
-  }, [projects, session]);
+  }, [projects, session])
+
+  useEffect(() => {
+    if (projects) setIsLoading(false)
+  }, [projects])
 
   const Project: React.FC<{
-    projectId: number;
-    name: string;
-    platform: string;
-    lastOpen: string;
+    projectId: number
+    name: string
+    platform: string
+    lastOpen: string
   }> = ({ projectId, name, platform, lastOpen }) => {
     return (
       <tr
@@ -62,11 +66,11 @@ const Dashboard = ({
             data: {
               lastOpenAt: new Date().toJSON(),
             },
-          });
+          })
 
-          if (response === null) throw new Error("Project not found!");
-          dispatch(initState({ ...response, projects }));
-          setNavigation(3);
+          if (response === null) throw new Error('Project not found!')
+          dispatch(initState({ ...response, projects }))
+          setNavigation(3)
         }}
         className="grid pr-3 relative bg-primary-eight hover:brightness-95 transition-all ease-in-out cursor-pointer grid-cols-3 border-2 border-primary-black rounded"
       >
@@ -79,23 +83,24 @@ const Dashboard = ({
             className="hover:text-red-600 text-xl transition-all ease-in-out z-20"
             onClick={async (event: Event) => {
               // Mencegah event klik dari merambat ke elemen induk (tr)
-              event.stopPropagation();
+              event.stopPropagation()
 
-              if (!confirm("Are you sure want delete this project?")) return;
+              if (!confirm('Are you sure want delete this project?')) return
 
-              console.log({ projectId });
-              await prismaUniqueDeleteProject({ where: { id: projectId } });
-              return setProjects(() =>
-                                 
-                projects?.filter((project) => project.id !== projectId)
-
-              );
+              console.log({ projectId })
+              await prismaUniqueDeleteProject({ where: { id: projectId } })
+              return dispatch(
+                setProjects(
+                  projects?.filter((project) => project.id !== projectId),
+                ),
+              )
             }}
           />
         </td>
       </tr>
-    );
-  };
+    )
+  }
+  console.log({ isLoading, projects })
 
   return (
     <>
@@ -110,7 +115,7 @@ const Dashboard = ({
         <div
           title="log out"
           onClick={() => {
-            signOut({ redirect: true, callbackUrl: "/sign/in" });
+            signOut({ redirect: true, callbackUrl: '/sign/in' })
           }}
           className="hidden lg:block bg-primary-danger px-3 py-4 text-2xl rounded border-2 border-primary-black cursor-pointer hover:brightness-95"
         >
@@ -130,38 +135,17 @@ const Dashboard = ({
       <div
         onClick={async () => {
           // create new project
-          const {
-            id,
-            aiKnowlagge,
-            aiRole,
-            avatarName,
-            language,
-            livestreamTopic,
-            livestreamingId,
-            mood,
-            platform,
-          } = await prismaCreateProject({
+          const response = await prismaCreateProject({
             data: {
-
               user: { connect: { email: session?.user?.email as string } },
+              avatarName: 'New project',
             },
-          });
+          })
 
-          dispatch(
-            initState({
-              id,
-              aiKnowlagge,
-              aiRole,
-              avatarName,
-              language,
-              livestreamingId,
-              livestreamTopic,
-              mood,
-              platform,
-            })
-          );
+          dispatch(initState({ ...response }))
+          dispatch(setProjects([response, ...projects]))
 
-          setNavigation(2);
+          setNavigation(2)
         }}
         className="border-2 flex gap-2 items-center border-primary-black hover:bg-primary-black/10 cursor-pointer transition-all ease-in-out rounded-full p-3"
       >
@@ -176,21 +160,9 @@ const Dashboard = ({
               <th className="font-normal text-left ml-2">Platform</th>
               <th className="font-normal text-left ml-2">Last Open</th>
             </tr>
-            {Array(3).map((_, index) => {
-              console.log("hi");
-
-              return <ProjectLoading key={index} />;
-            })}
-            {isLoading === true && (
-              <>
-                <ProjectLoading />
-                <ProjectLoading />
-                <ProjectLoading />
-              </>
-            )}
             {isLoading === false &&
-              projects.length > 0 &&
-              projects.map((project, index) => {
+              projects?.length > 0 &&
+              projects?.map((project, index) => {
                 return (
                   <Project
                     key={index}
@@ -199,16 +171,28 @@ const Dashboard = ({
                     platform={project.platform as string}
                     lastOpen={project.lastOpenAt?.toDateString() as string}
                   />
-                );
+                )
               })}
-            {isLoading === false && projects.length === 0 && (
+            {isLoading === false && projects?.length === 0 && (
               <p>Project empty...</p>
             )}
+            {isLoading === true && (
+              <>
+                <ProjectLoading />
+                <ProjectLoading />
+                <ProjectLoading />
+              </>
+            )}
+            {/* {Array(3).map((_, index) => {
+              console.log('hi')
+
+              return <ProjectLoading key={index} />
+            })} */}
           </tbody>
         </table>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default Dashboard;
+export default Dashboard

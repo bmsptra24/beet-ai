@@ -1,36 +1,35 @@
-"use client";
-import { ProjectNavLoading } from "@/components/loading/ProjectLoading";
-import Configuration from "@/components/modules/home/Configuration";
-import Dashboard from "@/components/modules/home/Dashboard";
-import { HeaderClose } from "@/components/modules/home/Header";
-import Studio from "@/components/modules/home/Studio";
-import { initState } from "@/store/actions/currIdProject.slice";
-import { RootState } from "@/store/store";
-import { Project } from "@/types/types";
-import { prismaFindManyProjects, prismaUpdateProject } from "@/utils/prisma";
-import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
-import { FaStarOfLife } from "react-icons/fa";
-import { GrHomeRounded, GrConfigure } from "react-icons/gr";
-import { useDispatch, useSelector } from "react-redux";
+'use client'
+import { ProjectNavLoading } from '@/components/loading/ProjectLoading'
+import Configuration from '@/components/modules/home/Configuration'
+import Dashboard from '@/components/modules/home/Dashboard'
+import { HeaderClose } from '@/components/modules/home/Header'
+import Studio from '@/components/modules/home/Studio'
+import { initState } from '@/store/actions/currIdProject.slice'
+import { RootState } from '@/store/store'
+import { Project } from '@/types/types'
+import { prismaFindManyProjects, prismaUpdateProject } from '@/utils/prisma'
+import { useSession } from 'next-auth/react'
+import { useEffect, useState } from 'react'
+import { FaStarOfLife } from 'react-icons/fa'
+import { GrHomeRounded, GrConfigure } from 'react-icons/gr'
+import { useDispatch, useSelector } from 'react-redux'
 const page: React.FC = () => {
-  const { data: session } = useSession();
-  const [isLoading, setIsLoading] = useState(true);
-  const { projects } = useSelector((state: RootState) => state.currProject);
-  const [navigation, setNavigation] = useState(1);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const dummyProjects = ["Minato Yamata", "AI Chef Yunita", "Tsubasa"];
-  const dispatch = useDispatch();
+  const { data: session } = useSession()
+  const [isLoading, setIsLoading] = useState(true)
+  const { projects, id } = useSelector((state: RootState) => state.currProject)
+  const [navigation, setNavigation] = useState(1)
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const dummyProjects = ['Minato Yamata', 'AI Chef Yunita', 'Tsubasa']
+  const dispatch = useDispatch()
 
   useEffect(() => {
-    if (projects) setIsLoading(false);
-  }, [projects]);
-  console.log({ projects, isLoading });
+    if (projects) setIsLoading(false)
+  }, [projects])
 
   useEffect(() => {
-    if (window.screen.width > 1020) setIsMenuOpen(true);
-    if (projects) setIsLoading(false);
-  }, []);
+    if (window.screen.width > 1020) setIsMenuOpen(true)
+    if (projects) setIsLoading(false)
+  }, [])
 
   return (
     <main className="min-h-screen relative text-base flex bg-primary-tree/25 ">
@@ -53,12 +52,12 @@ const page: React.FC = () => {
               <p className="font-bold">Home</p>
               <p
                 onClick={() => {
-                  setNavigation(1);
-                  if (window.screen.width < 1020) setIsMenuOpen(false);
+                  setNavigation(1)
+                  if (window.screen.width < 1020) setIsMenuOpen(false)
                 }}
                 className={`${
                   navigation === 1 &&
-                  "bg-primary-white hover:bg-primary-white border-2 cursor-default"
+                  'bg-primary-white hover:bg-primary-white border-2 cursor-default'
                 } text-sm flex items-center gap-2 px-2 py-1.5 rounded-lg cursor-pointer hover:bg-primary-one/30 border-primary-black`}
               >
                 <GrHomeRounded />
@@ -66,12 +65,12 @@ const page: React.FC = () => {
               </p>
               <p
                 onClick={() => {
-                  setNavigation(2);
-                  if (window.screen.width < 1020) setIsMenuOpen(false);
+                  setNavigation(2)
+                  if (window.screen.width < 1020) setIsMenuOpen(false)
                 }}
                 className={`${
                   navigation === 2 &&
-                  "bg-primary-white hover:bg-primary-white border-2 cursor-default"
+                  'bg-primary-white hover:bg-primary-white border-2 cursor-default'
                 } text-sm flex items-center gap-2 px-2 py-1.5 rounded-lg cursor-pointer hover:bg-primary-one/30 border-primary-black`}
               >
                 <GrConfigure />
@@ -96,23 +95,24 @@ const page: React.FC = () => {
                           data: {
                             lastOpenAt: new Date().toJSON(),
                           },
-                        });
-                        if (window.screen.width < 1020) setIsMenuOpen(false);
+                        })
+                        if (window.screen.width < 1020) setIsMenuOpen(false)
                         if (response === null)
-                          throw new Error("Project not found!");
-                        dispatch(initState({ ...response, projects }));
-                        setNavigation(3);
+                          throw new Error('Project not found!')
+                        dispatch(initState({ ...response, projects }))
+                        setNavigation(3)
                       }}
                       className={`${
-                        navigation === index + 3 &&
-                        "bg-primary-white hover:bg-primary-white border-2 cursor-default"
+                        navigation === 3 &&
+                        project.id === id &&
+                        'bg-primary-white hover:bg-primary-white border-2 cursor-default'
                       } text-sm flex items-center gap-2 px-2 py-1.5 rounded-lg cursor-pointer hover:bg-primary-one/30 border-primary-black`}
                     >
                       <FaStarOfLife /> {project?.avatarName as string}
                     </p>
-                  );
+                  )
                 })}
-              {isLoading === false && projects.length === 0 && (
+              {isLoading === false && projects?.length === 0 && (
                 <p>Project empty...</p>
               )}
               {isLoading === true && (
@@ -144,7 +144,7 @@ const page: React.FC = () => {
       </section>
       {/* <section className="flex flex-col bg-primary-seven py-10 px-5 w-60"></section> */}
     </main>
-  );
-};
+  )
+}
 
-export default page;
+export default page
