@@ -127,7 +127,7 @@ const page: React.FC = () => {
             </div>
           </section>
           <section
-            className="absolute inset-0 bg-primary-black/30 backdrop-blur-sm lg:hidden"
+            className="absolute inset-0 bg-primary-black/30 backdrop-blur-sm lg:hidden z-10"
             onClick={() => setIsMenuOpen(false)}
           ></section>
         </>

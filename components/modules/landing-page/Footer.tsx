@@ -2,7 +2,8 @@
 import { multipleRef, multipleState } from '@/app/hooks/multipleHook'
 import logo from '@/public/logo/logo-white.png'
 import observer from '@/utils/observer'
-import { LegacyRef, useEffect } from 'react'
+import Link from 'next/link'
+import { LegacyRef, Ref, useEffect } from 'react'
 import { BsInstagram, BsYoutube, BsTiktok } from 'react-icons/bs'
 
 const Footer = () => {
@@ -30,14 +31,15 @@ const Footer = () => {
         <BsYoutube className="cursor-pointer hover:text-slate-300 transition-all ease-in-out" />
         <BsTiktok className="cursor-pointer hover:text-slate-300 transition-all ease-in-out" />
       </div>
-      <p
-        ref={refs[1] as LegacyRef<HTMLDivElement> | undefined}
+      <Link
+        ref={refs[1] as Ref<HTMLAnchorElement> | undefined}
         className={`${
           isInViewPorts[1] ? 'animate__animated animate__fadeInUp ' : ''
         }cursor-pointer hover:text-slate-300 transition-all ease-in-out`}
+        href={'https://bmsptra.medium.com/cara-pakai-beet-ai-5bd5a7b38756'}
       >
         Help
-      </p>
+      </Link>
     </div>
   )
 }

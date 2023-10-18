@@ -9,7 +9,7 @@ const Content = () => {
   // console.log({ session });
 
   return (
-    <div className="min-h-full flex flex-col lg:flex-row justify-center lg:justify-between items-start lg:items-center static gap-5 py-20 lg:py-0 ">
+    <div className="min-h-screen flex flex-col lg:flex-row justify-center lg:justify-between items-start lg:items-center static gap-5 py-20 lg:py-0 ">
       <section className="flex flex-col justify-center text-primary-black gap-7 lg:w-[25rem]">
         <div className={`${jost.className} font-bold text-5xl lg:text-6xl`}>
           <div className="ring-1 ring-primary-black w-fit mb-2">

@@ -10,9 +10,9 @@ const Header: React.FC = () => {
       </div>
 
       <div className="justify-between gap-10 hidden md:flex">
-        {/* <Link className="hover:underline" href={'#'}>
+        <Link className="hover:underline" href={'#'}>
           Service
-        </Link> 
+        </Link>
         <Link className="hover:underline" href={'#'}>
           About us
         </Link>
@@ -21,10 +21,10 @@ const Header: React.FC = () => {
         </Link>
         <Link className="hover:underline" href={'#'}>
           Team
-        </Link> 
+        </Link>
         <Link className="hover:underline" href={'#'}>
           Contact us
-        </Link> */}
+        </Link>
         <ButtonSignIn />
       </div>
       <div className="block md:hidden">

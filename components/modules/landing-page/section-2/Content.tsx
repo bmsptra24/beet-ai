@@ -15,7 +15,7 @@ const Content: React.FC = () => {
   }, [])
 
   return (
-    <div className="h-[720px] flex flex-col lg:flex-row-reverse items-center justify-center lg:justify-between gap-10 text-primary-black">
+    <div className="min-h-screen flex flex-col xl:flex-row-reverse items-center justify-center lg:justify-evenly gap-10 text-primary-black">
       <div className="flex flex-col gap-4">
         <p
           ref={refs[0]}
