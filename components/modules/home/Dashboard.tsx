@@ -78,9 +78,9 @@ const Dashboard = ({
         <td className="p-2">{platform}</td>
         <td className="p-2 rounded">{lastOpen}</td>
         {/* ! eror : Error: Cannot read properties of undefined (reading 'workers') */}
-        <td className="absolute right-2 top-0 bottom-0 flex items-center z-50">
+        <td className="absolute right-2 top-0 bottom-0 flex items-center">
           <HiOutlineTrash
-            className="hover:text-red-600 text-xl transition-all ease-in-out z-20"
+            className="hover:text-red-600 text-xl transition-all ease-in-out"
             onClick={async (event: Event) => {
               // Mencegah event klik dari merambat ke elemen induk (tr)
               event.stopPropagation()
@@ -117,7 +117,7 @@ const Dashboard = ({
           onClick={() => {
             signOut({ redirect: true, callbackUrl: '/sign/in' })
           }}
-          className="hidden lg:block bg-primary-danger px-3 py-4 text-2xl rounded border-2 border-primary-black cursor-pointer hover:brightness-95"
+          className="bg-primary-danger px-3 py-4 text-2xl rounded border-2 border-primary-black cursor-pointer hover:brightness-95"
         >
           <HiLogout />
         </div>
