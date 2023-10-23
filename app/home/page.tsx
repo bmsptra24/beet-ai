@@ -7,8 +7,12 @@ import Studio from '@/components/modules/home/Studio'
 import { initState } from '@/store/actions/currIdProject.slice'
 import { RootState } from '@/store/store'
 import { Project } from '@/types/types'
-import { prismaFindManyProjects, prismaUpdateProject } from '@/utils/prisma'
-import { useSession } from 'next-auth/react'
+import {
+  prismaFindManyProjects,
+  prismaFindUniqueUser,
+  prismaUpdateProject,
+} from '@/utils/prisma'
+import { signOut, useSession } from 'next-auth/react'
 import { useEffect, useState } from 'react'
 import { FaStarOfLife } from 'react-icons/fa'
 import { GrHomeRounded, GrConfigure } from 'react-icons/gr'
@@ -30,6 +34,20 @@ const page: React.FC = () => {
     if (window.screen.width > 1020) setIsMenuOpen(true)
     if (projects) setIsLoading(false)
   }, [])
+
+  useEffect(() => {
+    if (!session) return
+    const isUserValid = async () => {
+      const response = await prismaFindUniqueUser({
+        where: { email: session?.user?.email as string },
+      })
+
+      if (response === null)
+        return signOut({ redirect: true, callbackUrl: '/sign/in' })
+    }
+
+    isUserValid()
+  }, [session])
 
   return (
     <main className="min-h-screen relative text-base flex bg-primary-tree/25 ">
